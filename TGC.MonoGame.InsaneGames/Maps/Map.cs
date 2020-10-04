@@ -98,11 +98,13 @@ namespace TGC.MonoGame.InsaneGames.Maps
                     { 
                         //Logica colision con enemigo
                     }
-                    var collidedBullets = Bullets.FindAll(bullets => bullets.CollidesWith(enemy.BottomVertex, enemy.UpVertex));
+                    var collidedBullets = bullets.FindAll(bullets => bullets.CollidesWith(enemy.BottomVertex, enemy.UpVertex));
                     //Logica de colision con bala
-                    collidedBullets.foreach(b => b.Collided());
+                    collidedBullets.ForEach(b => b.Collided());
                 }
+                bullets.FindAll(b => room.CollidesWithWall(b.BottomVertex, b.UpVertex) != null).ForEach(b => b.Collided());
             }
+            Bullets.RemoveAll(b => b.Remove);
         }
     }
 }
