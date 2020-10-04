@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using TGC.MonoGame.InsaneGames.Entities;
+using TGC.MonoGame.InsaneGames.Entities.Collectibles;
 
 namespace TGC.MonoGame.InsaneGames.Maps
 {
@@ -10,7 +12,8 @@ namespace TGC.MonoGame.InsaneGames.Maps
         private Vector3 BottomVertex, UpVertex;
         private Dictionary<WallId, Wall> Walls = new Dictionary<WallId, Wall>();
         private SpawnableSpace SpawnSpace { get; set; }
-        public Box(Dictionary<WallId, BasicEffect> effects, Vector3 size, Vector3 center, bool spawnable = true, Dictionary<WallId, (float, float)> textureRepeats = null)
+        private Collectible[] Collectibles { get; set;}
+        public Box(Dictionary<WallId, BasicEffect> effects, Vector3 size, Vector3 center, Collectible[] collectibles, bool spawnable = true, Dictionary<WallId, (float, float)> textureRepeats = null)
         {
             Vector2 floorSize = new Vector2(size.X, size.Z),
                     sideWallSize = new Vector2(size.Y, size.Z),
@@ -47,20 +50,34 @@ namespace TGC.MonoGame.InsaneGames.Maps
 
             BottomVertex = new Vector3(center.X - xLength, center.Y - yLength, center.Z - zLength);
             UpVertex = new Vector3(center.X + xLength, center.Y + yLength, center.Z + zLength);
+
+            Collectibles = collectibles;
         }
 
         public override void Initialize(TGCGame game)
         {
             foreach (var wall in Walls.Values)
                 wall.Initialize(game);
+
+            foreach (var collectible in Collectibles)
+                collectible.Initialize(game);
             
             base.Initialize(game);
+        }
+
+        public override void Load()
+        {
+            foreach (var collectible in Collectibles)
+                collectible.Load();
+            base.Load();
         }
 
         public override void Draw(GameTime gameTime)
         {
             foreach (var wall in Walls.Values)
                 wall.Draw(gameTime);
+            foreach (var collectible in Collectibles)
+                collectible.Draw(gameTime);
         }
 
         public override SpawnableSpace SpawnableSpace()
@@ -80,6 +97,12 @@ namespace TGC.MonoGame.InsaneGames.Maps
             foreach(var wall in Walls.Values)
                 if(wall.Collides(lowerPoint, higherPoint)) return wall;
             return null;
+        }
+
+        public override void CheckCollectiblesCollision(Player player)
+        {
+            var collided = Array.Find(Collectibles, coll => coll.CollidesWith(player.BottomVertex, player.UpVertex));
+            //Logica de colision
         }
     }
 }

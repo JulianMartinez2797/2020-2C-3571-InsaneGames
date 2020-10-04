@@ -11,14 +11,12 @@ namespace TGC.MonoGame.InsaneGames.Maps
         private Room[] Rooms;
         private Enemy[] Enemies;
         private Random Random;
-        private Collectible[] Collectibles;
         private Player Player;
-        public Map(Room[] rooms, Enemy[] enemies, Collectible[] collectibles, Player player) 
+        public Map(Room[] rooms, Enemy[] enemies, Player player) 
         {
             Rooms = rooms;
             Enemies = enemies;
             Random = new Random();
-            Collectibles = collectibles;
             Player = player;
         }
 
@@ -49,9 +47,6 @@ namespace TGC.MonoGame.InsaneGames.Maps
                     break;
                 }
             });
-
-            foreach (var collectible in Collectibles)
-                collectible.Initialize(game);
         }
 
         public override void Draw(GameTime gameTime)
@@ -63,9 +58,6 @@ namespace TGC.MonoGame.InsaneGames.Maps
 
             foreach (var enemy in Enemies)
                 enemy.Draw(gameTime);
-
-            foreach (var collectible in Collectibles)
-                collectible.Draw(gameTime);
         }
         public override void Load()
         {
@@ -76,9 +68,6 @@ namespace TGC.MonoGame.InsaneGames.Maps
 
             foreach (var enemy in Enemies)
                 enemy.Load();
-
-            foreach (var collectible in Collectibles)
-                collectible.Load();
         }
 
         public override void Update(GameTime gameTime)
@@ -87,9 +76,23 @@ namespace TGC.MonoGame.InsaneGames.Maps
 
             foreach (var room in Rooms)
                 room.Update(gameTime);
-
+            
+            Room playerRoom;
+            playerRoom = Array.Find(Rooms, room => room.IsInRoom(Player.position.Value.Translation));
+            var collidedWall = playerRoom.CollidesWithWall(Player.BottomVertex, Player.UpVertex);
+            //Logica de colision con pared
+            playerRoom.CheckCollectiblesCollision(Player);           
+            
             foreach (var enemy in Enemies)
+            {
                 enemy.Update(gameTime);
+                var enemyRoom = Array.Find(Rooms, room => room.IsInRoom(enemy.position.Value.Translation));
+                //Logica de colision con pared
+                if(enemyRoom == playerRoom && Player.CollidesWith(enemy.BottomVertex, enemy.BottomVertex))
+                { 
+                    //Logica colision con enemigo
+                }
+            }
         }
     }
 }
