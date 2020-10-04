@@ -6,8 +6,9 @@ namespace TGC.MonoGame.InsaneGames.Entities
     class Bullet : Entity
     {
         protected Vector3 Speed, InitialPos;
-        
-        protected Vector3 LastPosition, CurrentPosition;
+        public Boolean Remove { get; protected set; }
+        public Vector3 LastPosition { get; protected set; } 
+        public Vector3 CurrentPosition { get; protected set; }
         protected float Damage;
         override public Vector3 BottomVertex 
         { 
@@ -30,6 +31,11 @@ namespace TGC.MonoGame.InsaneGames.Entities
             LastPosition = CurrentPosition;
             var time = gameTime.ElapsedGameTime.TotalSeconds;
             CurrentPosition = Speed * (float) time + InitialPos;
+        }
+
+        public void Collided()
+        {
+            this.Remove = true;
         }
     }
 }

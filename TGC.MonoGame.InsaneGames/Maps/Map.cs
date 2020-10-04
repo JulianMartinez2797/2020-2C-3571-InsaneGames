@@ -1,5 +1,5 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using TGC.MonoGame.InsaneGames.Entities.Enemies;
 using TGC.MonoGame.InsaneGames.Entities;
 using Microsoft.Xna.Framework;
@@ -12,14 +12,14 @@ namespace TGC.MonoGame.InsaneGames.Maps
         private Enemy[] Enemies;
         private Random Random;
         private Player Player;
-        private ArrayList Bullets;
+        private List<Bullet> Bullets;
         public Map(Room[] rooms, Enemy[] enemies, Player player) 
         {
             Rooms = rooms;
             Enemies = enemies;
             Random = new Random();
             Player = player;
-            Bullets = new ArrayList();
+            Bullets = new List<Bullet>();
         }
 
         public override void Initialize(TGCGame game)
@@ -74,18 +74,20 @@ namespace TGC.MonoGame.InsaneGames.Maps
 
         public override void Update(GameTime gameTime)
         {
-            Player.Update(gameTime);
+            Bullets.ForEach(b => b.Update(gameTime));
             foreach (var room in Rooms)
             {
                 room.Update(gameTime);
                 Boolean playerInRoom = false;
                 if(room.IsInRoom(Player.position.Value.Translation))
                 {
+                    Player.Update(gameTime);
                     var collidedWall = room.CollidesWithWall(Player.BottomVertex, Player.UpVertex);
                     //Logica de colision con pared
                     room.CheckCollectiblesCollision(Player);
                     playerInRoom = true;
                 }
+                var bullets = Bullets.FindAll(bullet => room.IsInRoom(bullet.LastPosition) || room.IsInRoom(bullet.CurrentPosition));
                 var enemies = Array.FindAll(Enemies, enemy => room.IsInRoom(enemy.position.Value.Translation));
                 foreach(var enemy in enemies)
                 {
@@ -96,6 +98,9 @@ namespace TGC.MonoGame.InsaneGames.Maps
                     { 
                         //Logica colision con enemigo
                     }
+                    var collidedBullets = Bullets.FindAll(bullets => bullets.CollidesWith(enemy.BottomVertex, enemy.UpVertex));
+                    //Logica de colision con bala
+                    collidedBullets.foreach(b => b.Collided());
                 }
             }
         }
