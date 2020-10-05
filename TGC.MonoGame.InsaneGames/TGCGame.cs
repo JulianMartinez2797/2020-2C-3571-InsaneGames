@@ -217,8 +217,10 @@ namespace TGC.MonoGame.InsaneGames
         {
             List<Enemy> enemies = new List<Enemy>();
 
-            //enemies.Add(new TGCito(Matrix.CreateTranslation(0, 0, 25)));
-            //enemies.Add(new TGCito(Matrix.CreateTranslation(0, 0, 0)));
+            enemies.Add(new TGCito(Matrix.CreateRotationY(-90f) * Matrix.CreateTranslation(80, 0, -200)));
+
+            //enemies.Add(new TGCito(Matrix.CreateRotationY(-90f) * Matrix.CreateTranslation(80, 0, -200)));
+            //enemies.Add(new TGCito(Matrix.CreateRotationY(90f) * Matrix.CreateTranslation(-80, 0, -400)));
             //enemies.Add(new TGCito(Matrix.CreateTranslation(0, 0, -25)));
             //enemies.Add(new TGCito(Matrix.CreateTranslation(0, 0, -50)));
             //enemies.Add(new TGCito(Matrix.CreateTranslation(0, 0, -75)));
@@ -243,14 +245,26 @@ namespace TGC.MonoGame.InsaneGames
             List<Obstacle> obstacles = new List<Obstacle>();
 
             // Boxes
-            //obstacles = obstacles.Union(ObstaclesBuilder.ObtainStackedBoxesObstacles(4, Matrix.CreateTranslation(-50, 0, -300))).ToList();
-            
+            obstacles = obstacles.Union(ObstaclesBuilder.ObtainBoxesObstaclesInLine(3, Matrix.CreateTranslation(-50, 0, -50), true)).ToList();
+            obstacles.Add(new BoxObstacle(Matrix.CreateTranslation(-25, 25, -50)));
+
+            obstacles = obstacles.Union(ObstaclesBuilder.ObtainBoxesObstaclesInLine(2, Matrix.CreateTranslation(80, 0, -150), true)).ToList();
+            obstacles.Add(new BoxObstacle(Matrix.CreateTranslation(105, 25, -150)));
+
+            obstacles = obstacles.Union(ObstaclesBuilder.ObtainBoxesObstaclesInLine(3, Matrix.CreateTranslation(-112, 0, -350), true)).ToList();
+            obstacles = obstacles.Union(ObstaclesBuilder.ObtainBoxesObstaclesInLine(3, Matrix.CreateTranslation(-112, 25, -350), true)).ToList();
+            obstacles = obstacles.Union(ObstaclesBuilder.ObtainBoxesObstaclesInLine(3, Matrix.CreateTranslation(-112, 50, -350), true)).ToList();
+
             // Barriers
-            obstacles = obstacles.Union(ObstaclesBuilder.ObtainBarriersObstaclesInLine(4, Matrix.CreateRotationY(MathHelper.ToRadians(90f)) * Matrix.CreateTranslation(370, 0, -100), false)).ToList();
-            
+            obstacles = obstacles.Union(ObstaclesBuilder.ObtainBarriersObstaclesInLine(3, Matrix.CreateRotationY(MathHelper.ToRadians(-90f)) * Matrix.CreateTranslation(200, 0, -475), false)).ToList();
+            obstacles = obstacles.Union(ObstaclesBuilder.ObtainBarriersObstaclesInLine(3, Matrix.CreateRotationY(MathHelper.ToRadians(-90f)) * Matrix.CreateTranslation(350, 0, -605), false)).ToList();
+            obstacles = obstacles.Union(ObstaclesBuilder.ObtainBarriersObstaclesInLine(3, Matrix.CreateRotationY(MathHelper.ToRadians(-90f)) * Matrix.CreateTranslation(500, 0, -475), false)).ToList();
+            obstacles = obstacles.Union(ObstaclesBuilder.ObtainBarriersObstaclesInLine(3, Matrix.CreateRotationY(MathHelper.ToRadians(-90f)) * Matrix.CreateTranslation(650, 0, -605), false)).ToList();
+
             // Sawhorses
-            //obstacles = obstacles.Union(ObstaclesBuilder.ObtainSawhorsesObstaclesInLine(4, Matrix.CreateTranslation(-300, 0, 0), true)).ToList();
-            
+            obstacles = obstacles.Union(ObstaclesBuilder.ObtainSawhorsesObstaclesInLine(2, Matrix.CreateTranslation(665, 0, -300), true)).ToList();
+            obstacles = obstacles.Union(ObstaclesBuilder.ObtainSawhorsesObstaclesInLine(2, Matrix.CreateTranslation(760, 0, -175), true)).ToList();
+
             // Cones
             //obstacles = obstacles.Union(ObstaclesBuilder.ObtainConesObstaclesInLine(6, Matrix.CreateTranslation(0, 0, -200), true)).ToList();
 
