@@ -195,16 +195,18 @@ namespace TGC.MonoGame.InsaneGames
             var finalDict = new Dictionary<WallId, BasicEffect> { { WallId.Ceiling, ceilingEffect }, { WallId.Floor, floorEffect }, { WallId.Left, wallsEffect }, { WallId.Right, wallsEffect }, { WallId.Front, wallsEffect } };
             //var textRepet = new Dictionary<WallId, (float, float)> { { WallId.Front, (2, 1) } };
 
-            var life = new Life(Matrix.CreateTranslation(475, 0, 0));
-            var armor = new Armor(Matrix.CreateRotationY(MathHelper.ToRadians(180F)) * Matrix.CreateTranslation(525, 5, 0));
+            var life = new Life(Matrix.CreateRotationY(MathHelper.ToRadians(90f)) * Matrix.CreateTranslation(370, 0, 70));
+            var armor = new Armor(Matrix.CreateRotationY(MathHelper.ToRadians(90f)) * Matrix.CreateTranslation(370, 5, 90));
 
             rooms.Add(new Box(initialDict, new Vector3(250, 100, 250), new Vector3(0, 50, 0), new Collectible[] { }));
             rooms.Add(new Box(dictCorridorInZ, new Vector3(250, 100, 250), new Vector3(0, 50, -250), new Collectible[] { }));
             rooms.Add(new Box(dictCorner1, new Vector3(250, 100, 250), new Vector3(0, 50, -500), new Collectible[] { }));
             rooms.Add(new Box(dictCorridorInX, new Vector3(250, 100, 250), new Vector3(250, 50, -500), new Collectible[] { }));
-            rooms.Add(new Box(dictCorner2, new Vector3(250, 100, 250), new Vector3(500, 50, -500), new Collectible[] { }));
-            rooms.Add(new Box(dictCorridorInZ, new Vector3(250, 100, 250), new Vector3(500, 50, -250), new Collectible[] { }));
-            rooms.Add(new Box(dictCorner3, new Vector3(250, 100, 250), new Vector3(500, 50, 0), new Collectible[] { }));
+            rooms.Add(new Box(dictCorridorInX, new Vector3(250, 100, 250), new Vector3(500, 50, -500), new Collectible[] { }));
+            rooms.Add(new Box(dictCorner2, new Vector3(250, 100, 250), new Vector3(750, 50, -500), new Collectible[] { }));
+            rooms.Add(new Box(dictCorridorInZ, new Vector3(250, 100, 250), new Vector3(750, 50, -250), new Collectible[] { }));
+            rooms.Add(new Box(dictCorner3, new Vector3(250, 100, 250), new Vector3(750, 50, 0), new Collectible[] { }));
+            rooms.Add(new Box(dictCorridorInX, new Vector3(250, 100, 250), new Vector3(500, 50, 0), new Collectible[] { }));
             rooms.Add(new Box(dictCorner4, new Vector3(250, 100, 250), new Vector3(250, 50, 0), new Collectible[] { life, armor }));
             rooms.Add(new Box(finalDict, new Vector3(250, 100, 250), new Vector3(250, 50, -250), new Collectible[] { }));
 
