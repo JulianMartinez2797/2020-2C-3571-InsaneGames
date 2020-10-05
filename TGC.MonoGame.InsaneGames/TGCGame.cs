@@ -156,27 +156,13 @@ namespace TGC.MonoGame.InsaneGames
         //Temporal
         private Map CreateMap()
         {
-            var wallsEffect = new BasicEffect(GraphicsDevice);
-            wallsEffect.TextureEnabled = true;
-            wallsEffect.Texture = ContentManager.Instance.LoadTexture2D("Wall/Wall2");
-            var floorEffect = new BasicEffect(GraphicsDevice);
-            floorEffect.TextureEnabled = true;
-            floorEffect.Texture = ContentManager.Instance.LoadTexture2D("Checked-Floor/Checked-Floor");
-            var ceilingEffect = new BasicEffect(GraphicsDevice);
-            ceilingEffect.TextureEnabled = true;
-            ceilingEffect.Texture = ContentManager.Instance.LoadTexture2D("ceiling/Ceiling");
-            var dict1 = new Dictionary<WallId, BasicEffect> { { WallId.Ceiling, ceilingEffect }, { WallId.Floor, floorEffect }, { WallId.Right, wallsEffect }, { WallId.Back, wallsEffect } };
-            var dict2 = new Dictionary<WallId, BasicEffect> { { WallId.Ceiling, ceilingEffect }, { WallId.Floor, floorEffect }, { WallId.Right, wallsEffect }, { WallId.Front, wallsEffect } };
-            var dict3 = new Dictionary<WallId, BasicEffect> { { WallId.Ceiling, ceilingEffect }, { WallId.Floor, floorEffect }, { WallId.Left, wallsEffect }, { WallId.Front, wallsEffect } };
-            var dict4 = new Dictionary<WallId, BasicEffect> { { WallId.Ceiling, ceilingEffect }, { WallId.Floor, floorEffect }, { WallId.Left, wallsEffect }, { WallId.Back, wallsEffect } };
-            var textRepet = new Dictionary<WallId, (float, float)> { { WallId.Front, (2, 1) } };
-            var box1 = new Box(dict1, new Vector3(500, 100, 500), new Vector3(0, 50, 0));
-            var box2 = new Box(dict2, new Vector3(500, 100, 500), new Vector3(0, 50, -500), textureRepeats: textRepet);
-            var box3 = new Box(dict3, new Vector3(500, 100, 500), new Vector3(-500, 50, -500));
-            var box4 = new Box(dict4, new Vector3(500, 100, 500), new Vector3(-500, 50, 0));
+
             var TGCito = new TGCito(Matrix.CreateTranslation(25, 0, 25));
+            var TGCito2 = new TGCito(Matrix.CreateTranslation(500, 0, -250));
             var life = new Life(Matrix.CreateTranslation(50, 0, -100));
             var armor = new Armor(Matrix.CreateTranslation(25, 8, -100));
+
+            List<Room> rooms = CreateRooms();
 
             List<Obstacle> obstacles = CreateObstacles();
 
@@ -186,7 +172,60 @@ namespace TGC.MonoGame.InsaneGames
 
             var player = new Player(Camera, Matrix.CreateTranslation(1, 0, 60) );
 
-            return new Map(new Room[] { box1, box2, box3, box4 }, new Enemy[] { TGCito }, new Collectible[] { life, armor }, obstacles.ToArray(), player);
+            return new Map(rooms.ToArray(), new Enemy[] { TGCito, TGCito2 }, new Collectible[] { life, armor }, obstacles.ToArray(), player);
+        }
+
+        private List<Room> CreateRooms()
+        {
+            List<Room> rooms = new List<Room>();
+
+            var wallsEffect = new BasicEffect(GraphicsDevice);
+            wallsEffect.TextureEnabled = true;
+            wallsEffect.Texture = ContentManager.Instance.LoadTexture2D("Wall/Wall2");
+            var floorEffect = new BasicEffect(GraphicsDevice);
+            floorEffect.TextureEnabled = true;
+            floorEffect.Texture = ContentManager.Instance.LoadTexture2D("Checked-Floor/Checked-Floor");
+            var ceilingEffect = new BasicEffect(GraphicsDevice);
+            ceilingEffect.TextureEnabled = true;
+            ceilingEffect.Texture = ContentManager.Instance.LoadTexture2D("ceiling/Ceiling");
+            var initialDict = new Dictionary<WallId, BasicEffect> { { WallId.Ceiling, ceilingEffect }, { WallId.Floor, floorEffect }, { WallId.Right, wallsEffect }, { WallId.Left, wallsEffect }, { WallId.Back, wallsEffect } };
+            var dictCorridorInZ = new Dictionary<WallId, BasicEffect> { { WallId.Ceiling, ceilingEffect }, { WallId.Floor, floorEffect }, { WallId.Right, wallsEffect }, { WallId.Left, wallsEffect } };
+            var dictCorridorInX = new Dictionary<WallId, BasicEffect> { { WallId.Ceiling, ceilingEffect }, { WallId.Floor, floorEffect }, { WallId.Back, wallsEffect }, { WallId.Front, wallsEffect } };
+            var dictCorner1 = new Dictionary<WallId, BasicEffect> { { WallId.Ceiling, ceilingEffect }, { WallId.Floor, floorEffect }, { WallId.Left, wallsEffect }, { WallId.Front, wallsEffect } };
+            var dictCorner2 = new Dictionary<WallId, BasicEffect> { { WallId.Ceiling, ceilingEffect }, { WallId.Floor, floorEffect }, { WallId.Right, wallsEffect }, { WallId.Front, wallsEffect } };
+            var dictCorner3 = new Dictionary<WallId, BasicEffect> { { WallId.Ceiling, ceilingEffect }, { WallId.Floor, floorEffect }, { WallId.Right, wallsEffect }, { WallId.Back, wallsEffect } };
+            var dictCorner4 = new Dictionary<WallId, BasicEffect> { { WallId.Ceiling, ceilingEffect }, { WallId.Floor, floorEffect }, { WallId.Left, wallsEffect }, { WallId.Back, wallsEffect } };
+            var finalDict = new Dictionary<WallId, BasicEffect> { { WallId.Ceiling, ceilingEffect }, { WallId.Floor, floorEffect }, { WallId.Left, wallsEffect }, { WallId.Right, wallsEffect }, { WallId.Front, wallsEffect } };
+            //var textRepet = new Dictionary<WallId, (float, float)> { { WallId.Front, (2, 1) } };
+            
+            rooms.Add(new Box(initialDict, new Vector3(250, 100, 250), new Vector3(0, 50, 250)));
+            rooms.Add(new Box(dictCorridorInZ, new Vector3(250, 100, 250), new Vector3(0, 50, 0)));
+            rooms.Add(new Box(dictCorridorInZ, new Vector3(250, 100, 250), new Vector3(0, 50, -250)));
+            rooms.Add(new Box(dictCorridorInZ, new Vector3(250, 100, 250), new Vector3(0, 50, -500)));
+            rooms.Add(new Box(dictCorner1, new Vector3(250, 100, 250), new Vector3(0, 50, -750)));
+            rooms.Add(new Box(dictCorridorInX, new Vector3(250, 100, 250), new Vector3(250, 50, -750)));
+            rooms.Add(new Box(dictCorridorInX, new Vector3(250, 100, 250), new Vector3(500, 50, -750)));
+            rooms.Add(new Box(dictCorridorInX, new Vector3(250, 100, 250), new Vector3(750, 50, -750)));
+            rooms.Add(new Box(dictCorner2, new Vector3(250, 100, 250), new Vector3(1000, 50, -750)));
+            rooms.Add(new Box(dictCorridorInZ, new Vector3(250, 100, 250), new Vector3(1000, 50, -500)));
+            rooms.Add(new Box(dictCorridorInZ, new Vector3(250, 100, 250), new Vector3(1000, 50, -250)));
+            rooms.Add(new Box(dictCorridorInZ, new Vector3(250, 100, 250), new Vector3(1000, 50, 0)));
+            rooms.Add(new Box(dictCorner3, new Vector3(250, 100, 250), new Vector3(1000, 50, 250)));
+            rooms.Add(new Box(dictCorridorInX, new Vector3(250, 100, 250), new Vector3(750, 50, 250)));
+            rooms.Add(new Box(dictCorridorInX, new Vector3(250, 100, 250), new Vector3(500, 50, 250)));
+            rooms.Add(new Box(dictCorner4, new Vector3(250, 100, 250), new Vector3(250, 50, 250)));
+            rooms.Add(new Box(dictCorridorInZ, new Vector3(250, 100, 250), new Vector3(250, 50, 0)));
+            rooms.Add(new Box(dictCorridorInZ, new Vector3(250, 100, 250), new Vector3(250, 50, -250)));
+            rooms.Add(new Box(dictCorner1, new Vector3(250, 100, 250), new Vector3(250, 50, -500)));
+            rooms.Add(new Box(dictCorridorInX, new Vector3(250, 100, 250), new Vector3(250, 50, -500)));
+            rooms.Add(new Box(dictCorridorInX, new Vector3(250, 100, 250), new Vector3(500, 50, -500)));
+            rooms.Add(new Box(dictCorner2, new Vector3(250, 100, 250), new Vector3(750, 50, -500)));
+            rooms.Add(new Box(dictCorridorInZ, new Vector3(250, 100, 250), new Vector3(750, 50, -250)));
+            rooms.Add(new Box(dictCorner3, new Vector3(250, 100, 250), new Vector3(750, 50, 0)));
+            rooms.Add(new Box(dictCorner4, new Vector3(250, 100, 250), new Vector3(500, 50, 0)));
+            rooms.Add(new Box(finalDict, new Vector3(250, 100, 250), new Vector3(500, 50, -250)));
+
+            return rooms;
         }
 
         private List<Obstacle> CreateObstacles()
