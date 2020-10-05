@@ -16,7 +16,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
                 Misalignment = Matrix.CreateTranslation(0, 0, 0);
             }
             SpawnPoint = Misalignment *
-                        scaling.GetValueOrDefault(Matrix.CreateScale(0.5f)) *
+                        scaling.GetValueOrDefault(Matrix.CreateScale(0.3f)) *
                         spawnPoint;
         }
         public override void Load()

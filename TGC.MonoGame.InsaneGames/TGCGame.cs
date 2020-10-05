@@ -157,12 +157,11 @@ namespace TGC.MonoGame.InsaneGames
         private Map CreateMap()
         {
 
-            var TGCito = new TGCito(Matrix.CreateTranslation(25, 0, 25));
-            var TGCito2 = new TGCito(Matrix.CreateTranslation(500, 0, -250));
-
             List<Room> rooms = CreateRooms();
 
             List<Obstacle> obstacles = CreateObstacles();
+
+            List<Enemy> enemies = CreateEnemies();
 
             Point center_point;
             center_point.Y = Graphics.GraphicsDevice.Viewport.Height / 2;
@@ -170,7 +169,7 @@ namespace TGC.MonoGame.InsaneGames
 
             var player = new Player(Camera, Matrix.CreateTranslation(1, 0, 60) );
 
-            return new Map(rooms.ToArray(), new Enemy[] { TGCito, TGCito2 }, obstacles.ToArray(), player);
+            return new Map(rooms.ToArray(), enemies.ToArray(), obstacles.ToArray(), player);
         }
 
         private List<Room> CreateRooms()
@@ -196,37 +195,45 @@ namespace TGC.MonoGame.InsaneGames
             var finalDict = new Dictionary<WallId, BasicEffect> { { WallId.Ceiling, ceilingEffect }, { WallId.Floor, floorEffect }, { WallId.Left, wallsEffect }, { WallId.Right, wallsEffect }, { WallId.Front, wallsEffect } };
             //var textRepet = new Dictionary<WallId, (float, float)> { { WallId.Front, (2, 1) } };
 
-            var life = new Life(Matrix.CreateTranslation(50, 0, -100));
-            var armor = new Armor(Matrix.CreateTranslation(25, 8, -100));
+            var life = new Life(Matrix.CreateTranslation(475, 0, 0));
+            var armor = new Armor(Matrix.CreateRotationY(MathHelper.ToRadians(180F)) * Matrix.CreateTranslation(525, 5, 0));
 
-            rooms.Add(new Box(initialDict, new Vector3(250, 100, 250), new Vector3(0, 50, 250), new Collectible[] { life, armor }));
-            rooms.Add(new Box(dictCorridorInZ, new Vector3(250, 100, 250), new Vector3(0, 50, 0), new Collectible[] { }));
+            rooms.Add(new Box(initialDict, new Vector3(250, 100, 250), new Vector3(0, 50, 0), new Collectible[] { }));
             rooms.Add(new Box(dictCorridorInZ, new Vector3(250, 100, 250), new Vector3(0, 50, -250), new Collectible[] { }));
-            rooms.Add(new Box(dictCorridorInZ, new Vector3(250, 100, 250), new Vector3(0, 50, -500), new Collectible[] { }));
-            rooms.Add(new Box(dictCorner1, new Vector3(250, 100, 250), new Vector3(0, 50, -750), new Collectible[] { }));
-            rooms.Add(new Box(dictCorridorInX, new Vector3(250, 100, 250), new Vector3(250, 50, -750), new Collectible[] { }));
-            rooms.Add(new Box(dictCorridorInX, new Vector3(250, 100, 250), new Vector3(500, 50, -750), new Collectible[] { }));
-            rooms.Add(new Box(dictCorridorInX, new Vector3(250, 100, 250), new Vector3(750, 50, -750), new Collectible[] { }));
-            rooms.Add(new Box(dictCorner2, new Vector3(250, 100, 250), new Vector3(1000, 50, -750), new Collectible[] { }));
-            rooms.Add(new Box(dictCorridorInZ, new Vector3(250, 100, 250), new Vector3(1000, 50, -500), new Collectible[] { }));
-            rooms.Add(new Box(dictCorridorInZ, new Vector3(250, 100, 250), new Vector3(1000, 50, -250), new Collectible[] { }));
-            rooms.Add(new Box(dictCorridorInZ, new Vector3(250, 100, 250), new Vector3(1000, 50, 0), new Collectible[] { }));
-            rooms.Add(new Box(dictCorner3, new Vector3(250, 100, 250), new Vector3(1000, 50, 250), new Collectible[] { }));
-            rooms.Add(new Box(dictCorridorInX, new Vector3(250, 100, 250), new Vector3(750, 50, 250), new Collectible[] { }));
-            rooms.Add(new Box(dictCorridorInX, new Vector3(250, 100, 250), new Vector3(500, 50, 250), new Collectible[] { }));
-            rooms.Add(new Box(dictCorner4, new Vector3(250, 100, 250), new Vector3(250, 50, 250), new Collectible[] { }));
-            rooms.Add(new Box(dictCorridorInZ, new Vector3(250, 100, 250), new Vector3(250, 50, 0), new Collectible[] { }));
-            rooms.Add(new Box(dictCorridorInZ, new Vector3(250, 100, 250), new Vector3(250, 50, -250), new Collectible[] { }));
-            rooms.Add(new Box(dictCorner1, new Vector3(250, 100, 250), new Vector3(250, 50, -500), new Collectible[] { }));
+            rooms.Add(new Box(dictCorner1, new Vector3(250, 100, 250), new Vector3(0, 50, -500), new Collectible[] { }));
             rooms.Add(new Box(dictCorridorInX, new Vector3(250, 100, 250), new Vector3(250, 50, -500), new Collectible[] { }));
-            rooms.Add(new Box(dictCorridorInX, new Vector3(250, 100, 250), new Vector3(500, 50, -500), new Collectible[] { }));
-            rooms.Add(new Box(dictCorner2, new Vector3(250, 100, 250), new Vector3(750, 50, -500), new Collectible[] { }));
-            rooms.Add(new Box(dictCorridorInZ, new Vector3(250, 100, 250), new Vector3(750, 50, -250), new Collectible[] { }));
-            rooms.Add(new Box(dictCorner3, new Vector3(250, 100, 250), new Vector3(750, 50, 0), new Collectible[] { }));
-            rooms.Add(new Box(dictCorner4, new Vector3(250, 100, 250), new Vector3(500, 50, 0), new Collectible[] { }));
-            rooms.Add(new Box(finalDict, new Vector3(250, 100, 250), new Vector3(500, 50, -250), new Collectible[] { }));
+            rooms.Add(new Box(dictCorner2, new Vector3(250, 100, 250), new Vector3(500, 50, -500), new Collectible[] { }));
+            rooms.Add(new Box(dictCorridorInZ, new Vector3(250, 100, 250), new Vector3(500, 50, -250), new Collectible[] { }));
+            rooms.Add(new Box(dictCorner3, new Vector3(250, 100, 250), new Vector3(500, 50, 0), new Collectible[] { }));
+            rooms.Add(new Box(dictCorner4, new Vector3(250, 100, 250), new Vector3(250, 50, 0), new Collectible[] { life, armor }));
+            rooms.Add(new Box(finalDict, new Vector3(250, 100, 250), new Vector3(250, 50, -250), new Collectible[] { }));
 
             return rooms;
+        }
+
+        private List<Enemy> CreateEnemies()
+        {
+            List<Enemy> enemies = new List<Enemy>();
+
+            //enemies.Add(new TGCito(Matrix.CreateTranslation(0, 0, 25)));
+            //enemies.Add(new TGCito(Matrix.CreateTranslation(0, 0, 0)));
+            //enemies.Add(new TGCito(Matrix.CreateTranslation(0, 0, -25)));
+            //enemies.Add(new TGCito(Matrix.CreateTranslation(0, 0, -50)));
+            //enemies.Add(new TGCito(Matrix.CreateTranslation(0, 0, -75)));
+            //enemies.Add(new TGCito(Matrix.CreateTranslation(0, 0, -100)));
+            //enemies.Add(new TGCito(Matrix.CreateTranslation(0, 0, -125)));
+            //enemies.Add(new TGCito(Matrix.CreateTranslation(0, 0, -150)));
+            //enemies.Add(new TGCito(Matrix.CreateTranslation(0, 0, -175)));
+            //enemies.Add(new TGCito(Matrix.CreateTranslation(0, 0, -200)));
+            //enemies.Add(new TGCito(Matrix.CreateTranslation(0, 0, -225)));
+            enemies.Add(new TGCito(Matrix.CreateTranslation(200, 0, -250)));
+            enemies.Add(new TGCito(Matrix.CreateTranslation(225, 0, -225)));
+            enemies.Add(new TGCito(Matrix.CreateTranslation(250, 0, -250)));
+            enemies.Add(new TGCito(Matrix.CreateTranslation(275, 0, -225)));
+            enemies.Add(new TGCito(Matrix.CreateTranslation(300, 0, -250)));
+
+
+            return enemies;
         }
 
         private List<Obstacle> CreateObstacles()
@@ -234,16 +241,16 @@ namespace TGC.MonoGame.InsaneGames
             List<Obstacle> obstacles = new List<Obstacle>();
 
             // Boxes
-            obstacles = obstacles.Union(ObstaclesBuilder.ObtainStackedBoxesObstacles(4, Matrix.CreateTranslation(-50, 0, -300))).ToList();
+            //obstacles = obstacles.Union(ObstaclesBuilder.ObtainStackedBoxesObstacles(4, Matrix.CreateTranslation(-50, 0, -300))).ToList();
             
             // Barriers
-            obstacles = obstacles.Union(ObstaclesBuilder.ObtainBarriersObstaclesInLine(4, Matrix.CreateRotationY(MathHelper.ToRadians(90f)) * Matrix.CreateTranslation(-250, 0, -500), false)).ToList();
+            obstacles = obstacles.Union(ObstaclesBuilder.ObtainBarriersObstaclesInLine(4, Matrix.CreateRotationY(MathHelper.ToRadians(90f)) * Matrix.CreateTranslation(370, 0, -100), false)).ToList();
             
             // Sawhorses
-            obstacles = obstacles.Union(ObstaclesBuilder.ObtainSawhorsesObstaclesInLine(4, Matrix.CreateTranslation(-300, 0, 0), true)).ToList();
+            //obstacles = obstacles.Union(ObstaclesBuilder.ObtainSawhorsesObstaclesInLine(4, Matrix.CreateTranslation(-300, 0, 0), true)).ToList();
             
             // Cones
-            obstacles = obstacles.Union(ObstaclesBuilder.ObtainConesObstaclesInLine(6, Matrix.CreateTranslation(0, 0, -200), true)).ToList();
+            //obstacles = obstacles.Union(ObstaclesBuilder.ObtainConesObstaclesInLine(6, Matrix.CreateTranslation(0, 0, -200), true)).ToList();
 
             return obstacles;
         }
