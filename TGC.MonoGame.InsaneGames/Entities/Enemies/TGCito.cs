@@ -35,7 +35,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         {
             Vector2 vecA2 = new Vector2(vecA.X,vecA.Z);
             Vector2 vecB2 = new Vector2(vecB.X,vecB.Z);
-            // Calculo manual
+
             float dotResult = Vector2.Dot(vecA2, vecB2);
             float vecA2Length = vecA2.Length();
             float vecB2Length = vecB2.Length();
@@ -47,22 +47,8 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
             Vector3 cross = Vector3.Cross(vecA,vecB);
             if(cross.Y < 0)
                 angle *= -1;
-            //Math.Atan2(b.Y - a.Y,b.X - a.X);
-            // NO FUNCIONO double angle = Math.Atan2(vecB2.Y - vecA2.Y, vecB2.X - vecA2.X);
-            // NO FUNCIONO double angle = Math.Atan2(vecA2.Y - vecB2.Y, vecA2.X - vecB2.X);
-            // NO FUNCIONO double angle = Math.Atan2(vecB2.X - vecA2.X, vecB2.Y - vecA2.Y);
-           // double angle = Math.Atan2(vecA2.X * vecB2.Y - vecA2.Y * vecB2.X, vecA2.X * vecB2.X + vecA2.Y * vecB2.Y);
             float angleF = Convert.ToSingle(angle);
-            // angle = MathHelper.ToRadians(angleF);
             return angleF;
-
-// cross = crossProduct(Va, Vb);
-// if (dotProduct(Vn, cross) < 0) { // Or > 0
-//   angle = -angle;
-// }
-            //float cross = Vector2.Multiply(vecA2, vecB2);
-
-            //return angleF;
         }
         private bool _mirandoPlayer = false;
         public override void Update(GameTime gameTime)
