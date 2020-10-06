@@ -71,7 +71,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
                 Vector3 vec_to_player = playerReference.NewPosition - this.position.Value.Translation;
                 
                 // Rotar el tgcito
-                float rot_speed = MathHelper.ToRadians(2f);
+                float rot_speed = MathHelper.ToRadians(200f * Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds));
                 float angle = getAngleBetweenVectorsInPlaneXZ(this.position.Value.Backward, playerReference.NewPosition - this.position.Value.Translation);
                 if (float.IsNaN(angle))
                     angle = 0f;
@@ -84,7 +84,8 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
 
                 // Empezar a mover el tgcito
                 vec_to_player.Normalize();
-                position = position * Matrix.CreateTranslation(vec_to_player * 1f);
+                float enemy_speed = 70f * Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
+                position = position * Matrix.CreateTranslation(vec_to_player * enemy_speed);
             }
         }
 
