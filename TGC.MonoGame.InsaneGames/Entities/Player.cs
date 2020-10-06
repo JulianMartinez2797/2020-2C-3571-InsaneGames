@@ -6,7 +6,7 @@ using TGC.MonoGame.Samples.Cameras;
 using TGC.MonoGame.InsaneGames.Maps;
 using TGC.MonoGame.InsaneGames.Entities.Obstacles;
 using System;
-
+using TGC.MonoGame.InsaneGames.Weapons;
 namespace TGC.MonoGame.InsaneGames.Entities
 {
     class Player : Entity
@@ -68,7 +68,8 @@ namespace TGC.MonoGame.InsaneGames.Entities
         public bool changed;
 
         private float pitch;
-
+        public List<Weapon> Weapons {get;set;}
+        public Weapon CurrentWeapon {get;set;}
         // Angles
         private float yaw = -90f;
         public float MovementSpeed { get; set; } = 100f;
@@ -78,13 +79,25 @@ namespace TGC.MonoGame.InsaneGames.Entities
         public Vector3 LastBottomVertex { get; set;}
         public Vector3 LastUpVertex { get; set;}
         private readonly Vector3 HitboxSize = new Vector3(15, 0, 15);
-        public Player(Camera camera, Matrix spawnPoint, Matrix? scaling = null)
+        public Player(TGCGame game, Camera camera, Matrix spawnPoint, Matrix? scaling = null)
         {
             this.Camera = camera;
             CameraCorrection = Camera.Position;
             NewPosition = Camera.Position - CameraCorrection + new Vector3(0, 0.01f, 0);
             UpVertex = spawnPoint.Translation + HitboxSize;
             BottomVertex = spawnPoint.Translation - HitboxSize;
+
+            // Remover
+            Weapons = new List<Weapon>();
+            Weapon machineGun = new MachineGun();
+            Weapon handgun = new Handgun();
+            Weapon rpg7 = new Rpg7();
+            Weapon shotgun = new Shotgun();
+            Weapons.Add(handgun);
+            Weapons.Add(machineGun);
+            Weapons.Add(shotgun);
+            Weapons.Add(rpg7);
+            CurrentWeapon = Weapons[1];
         }
 
         private void CalculateView()
@@ -93,6 +106,21 @@ namespace TGC.MonoGame.InsaneGames.Entities
         }
 
         /// <inheritdoc />
+        public override void Load() 
+        {
+            foreach (Weapon weapon in Weapons)
+            {
+                weapon.Load();
+            }
+        }
+        public override void Initialize(TGCGame game) 
+        {
+            foreach (Weapon weapon in Weapons)
+            {
+                weapon.Initialize(game);
+            }
+            base.Initialize(game);
+        }
         public override void Update(GameTime gameTime)
         {
 
@@ -119,7 +147,12 @@ namespace TGC.MonoGame.InsaneGames.Entities
             }
             BottomVertex = NewPosition - HitboxSize;
             UpVertex = NewPosition + HitboxSize;
-                
+            CurrentWeapon.Update(gameTime);
+        }
+
+        private void ChangeWeapon(int weaponIdx)
+        {
+            CurrentWeapon = Weapons[weaponIdx];
         }
 
         private void ProcessKeyboard(float elapsedTime)
@@ -152,6 +185,22 @@ namespace TGC.MonoGame.InsaneGames.Entities
             {
                 NewPosition -= FrontDirection * currentMovementSpeed * elapsedTime;
                 changed = true;
+            }
+            if (keyboardState.IsKeyDown(Keys.D1))
+            {
+                ChangeWeapon(0); // Pistol
+            }
+            if (keyboardState.IsKeyDown(Keys.D2))
+            {
+                ChangeWeapon(1); // Rifle
+            }
+            if (keyboardState.IsKeyDown(Keys.D3))
+            {
+                ChangeWeapon(2); // Shotgun
+            }
+            if (keyboardState.IsKeyDown(Keys.D4))
+            {
+                ChangeWeapon(3); // RPG
             }
         }
 
@@ -188,6 +237,11 @@ namespace TGC.MonoGame.InsaneGames.Entities
             // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
             RightDirection = Vector3.Normalize(Vector3.Cross(FrontDirection, Vector3.Up));
             UpDirection = Vector3.Normalize(Vector3.Cross(RightDirection, FrontDirection));
+        }
+        public override void Draw(GameTime gameTime)
+        {
+            // Draw gun
+            CurrentWeapon.Draw(gameTime);
         }
         public void AddToLife(float amount)
         {

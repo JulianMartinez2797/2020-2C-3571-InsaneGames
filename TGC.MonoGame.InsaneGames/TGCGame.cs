@@ -67,12 +67,15 @@ namespace TGC.MonoGame.InsaneGames
             center_point.X = Graphics.GraphicsDevice.Viewport.Width / 2;
 
             Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(0, 20, 0), center_point);            
-            Player = new Player(Camera, Matrix.CreateTranslation(1, 0.01f, 60));
+            Player = new Player(this, Camera, Matrix.CreateTranslation(1, 0.01f, 60));
             Map = CreateMap(Player);
 
             Map.Initialize(this);
-            Weapon = new MachineGun();
-            Weapon.Initialize(this);
+            // Weapon = new MachineGun();
+            // Weapon = new Shotgun(); No funciona
+            // Weapon = new Handgun();
+            // Weapon.Initialize(this);
+            Player.Initialize(this);
             base.Initialize();
         }
 
@@ -84,7 +87,8 @@ namespace TGC.MonoGame.InsaneGames
         protected override void LoadContent()
         {
             Map.Load(GraphicsDevice);
-            Weapon.Load();
+            Player.Load();
+            //Weapon.Load();
             
             base.LoadContent();
         }
@@ -106,7 +110,7 @@ namespace TGC.MonoGame.InsaneGames
             Camera.Update(gameTime);
 
             Map.Update(gameTime);
-            Weapon.Update(gameTime);
+            //Weapon.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -124,7 +128,7 @@ namespace TGC.MonoGame.InsaneGames
             GraphicsDevice.BlendState = BlendState.Opaque;
 
             Map.Draw(gameTime);
-            Weapon.Draw(gameTime);
+            //Weapon.Draw(gameTime);
             base.Draw(gameTime);
         }
 

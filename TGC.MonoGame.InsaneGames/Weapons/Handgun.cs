@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 
 namespace TGC.MonoGame.InsaneGames.Weapons
 {
-    class MachineGun : Weapon
+    class Handgun : Weapon
     {
         protected Matrix World;
         static protected Matrix RotationMatrix = Matrix.CreateScale(0.02f) *
@@ -10,7 +10,7 @@ namespace TGC.MonoGame.InsaneGames.Weapons
                                                 Matrix.CreateRotationX(MathHelper.ToRadians(-3f)) * 
                                                 Matrix.CreateRotationY(MathHelper.ToRadians(-178f));
 
-        public MachineGun () : base("armas/rifle/mp5k") {}
+        public Handgun () : base("armas/pistol/m1911-handgun") {}
         public override void Initialize(TGCGame game) {
             World = Matrix.CreateScale(0.1f);
             base.Initialize(game);
@@ -20,7 +20,7 @@ namespace TGC.MonoGame.InsaneGames.Weapons
             Matrix cameraWorld = Matrix.Invert(Game.Camera.View);
             Matrix weaponWorld = cameraWorld;   //gives your weapon a matrix that is co-located and co-rotated with camera
 
-            float distInFrontOfCam = 2.5f;
+            float distInFrontOfCam = 2f;
             float amountWeaponIsLoweredFromCenterOfScreen = 0.8f;
             float leftOrRightOffset = 0.4f;
             
