@@ -10,7 +10,6 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
         static private Matrix Misalignment;
         private Matrix SpawnPoint;
         private float RecoveryAmount;
-        private bool Collected = false;
         public Armor(Matrix spawnPoint, Matrix? scaling = null, float recoveryAmount = 10)
         {
             if (Model is null)

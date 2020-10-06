@@ -101,7 +101,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
 
         public override void CheckCollectiblesCollision(Player player)
         {
-            var collided = Array.Find(Collectibles, coll => coll.CollidesWith(player.BottomVertex, player.UpVertex));
+            var collided = Array.Find(Collectibles, coll => !coll.Collected && coll.CollidesWith(player.BottomVertex, player.UpVertex));
             collided?.CollidedWith(player);
         }
     }
