@@ -6,16 +6,13 @@ namespace TGC.MonoGame.InsaneGames.Entities.Obstacles
     public class Obstacle : Entity
     {
         private string ModelName;
-        static private Model Model;
-        static private Matrix Misalignment;
+        private Model Model;
+        private Matrix Misalignment;
         private Matrix SpawnPoint;
 
         public Obstacle(string modelName, Matrix spawnPoint, Matrix scaling)
         {
-            if (Model is null)
-            {
-                Misalignment = Matrix.CreateTranslation(0, 0, 0);
-            }
+            Misalignment = Matrix.CreateTranslation(0, 0, 0);
             SpawnPoint = Misalignment *
                         scaling *
                         spawnPoint;
@@ -23,8 +20,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Obstacles
         }
         public override void Load()
         {
-            if (Model is null)
-                Model = ContentManager.Instance.LoadModel(ModelName);
+            Model = ContentManager.Instance.LoadModel(ModelName);
         }
         public override void Draw(GameTime gameTime)
         {
