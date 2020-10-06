@@ -6,7 +6,7 @@ using TGC.MonoGame.Samples.Cameras;
 using TGC.MonoGame.InsaneGames.Maps;
 using TGC.MonoGame.InsaneGames.Entities;
 using TGC.MonoGame.InsaneGames.Weapons;
-using TGC.MonoGame.InsaneGames.Obstacles;
+using TGC.MonoGame.InsaneGames.Entities.Obstacles;
 using TGC.MonoGame.InsaneGames.Utils;
 using System.Linq;
 using TGC.MonoGame.InsaneGames.Entities.Collectibles;
@@ -242,10 +242,10 @@ namespace TGC.MonoGame.InsaneGames
 
             // Boxes
             obstacles = obstacles.Union(ObstaclesBuilder.ObtainBoxesObstaclesInLine(3, Matrix.CreateTranslation(-50, 0, -50), true)).ToList();
-            obstacles.Add(new BoxObstacle(Matrix.CreateTranslation(-25, 25, -50)));
+            obstacles.Add(ObstaclesFactory.WoodenCrate(Matrix.CreateTranslation(-25, 25, -50)));
 
             obstacles = obstacles.Union(ObstaclesBuilder.ObtainBoxesObstaclesInLine(2, Matrix.CreateTranslation(87, 0, -200), true)).ToList();
-            obstacles.Add(new BoxObstacle(Matrix.CreateTranslation(112, 25, -200)));
+            obstacles.Add(ObstaclesFactory.WoodenCrate(Matrix.CreateTranslation(112, 25, -200)));
 
             obstacles = obstacles.Union(ObstaclesBuilder.ObtainBoxesObstaclesInLine(3, Matrix.CreateTranslation(-112, 0, -350), true)).ToList();
             obstacles = obstacles.Union(ObstaclesBuilder.ObtainBoxesObstaclesInLine(3, Matrix.CreateTranslation(-112, 25, -350), true)).ToList();

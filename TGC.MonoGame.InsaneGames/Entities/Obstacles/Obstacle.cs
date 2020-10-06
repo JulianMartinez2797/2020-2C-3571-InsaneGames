@@ -1,25 +1,25 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace TGC.MonoGame.InsaneGames.Obstacles
-
+namespace TGC.MonoGame.InsaneGames.Entities.Obstacles
 {
-    class Barrel : Obstacle
+    public class Obstacle : Entity
     {
-        private const string ModelName = "obstacles/barrel/barrel";
+        private string ModelName;
         static private Model Model;
         static private Matrix Misalignment;
         private Matrix SpawnPoint;
 
-        public Barrel(Matrix spawnPoint, Matrix? scaling = null)
+        public Obstacle(string modelName, Matrix spawnPoint, Matrix scaling)
         {
             if (Model is null)
             {
                 Misalignment = Matrix.CreateTranslation(0, 0, 0);
             }
             SpawnPoint = Misalignment *
-                        scaling.GetValueOrDefault(Matrix.CreateScale(10.2f)) *
+                        scaling *
                         spawnPoint;
+            ModelName = modelName;
         }
         public override void Load()
         {

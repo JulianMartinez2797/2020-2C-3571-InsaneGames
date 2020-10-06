@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TGC.MonoGame.InsaneGames.Entities.Enemies;
 using TGC.MonoGame.InsaneGames.Entities;
 using Microsoft.Xna.Framework;
-using TGC.MonoGame.InsaneGames.Obstacles;
+using TGC.MonoGame.InsaneGames.Entities.Obstacles;
 
 namespace TGC.MonoGame.InsaneGames.Maps
 {
