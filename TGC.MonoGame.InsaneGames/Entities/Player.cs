@@ -16,7 +16,8 @@ namespace TGC.MonoGame.InsaneGames.Entities
 
         public Vector3 LowerPoint { get; protected set; }
         public Vector3 HigherPoint { get; protected set; }
-
+        public float Life { get; private set; }
+        public float Armor { get; private set; }
         /// <summary>
         ///     Aspect ratio, defined as view space width divided by height.
         /// </summary>
@@ -198,6 +199,15 @@ namespace TGC.MonoGame.InsaneGames.Entities
             // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
             RightDirection = Vector3.Normalize(Vector3.Cross(FrontDirection, Vector3.Up));
             UpDirection = Vector3.Normalize(Vector3.Cross(RightDirection, FrontDirection));
+        }
+
+        public void AddToLife(float amount)
+        {
+            Life += amount;
+        }
+        public void AddToArmor(float amount)
+        {
+            Armor += amount;
         }
     }
 }

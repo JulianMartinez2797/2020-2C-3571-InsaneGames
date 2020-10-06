@@ -13,6 +13,5 @@ namespace TGC.MonoGame.InsaneGames.Maps
         abstract public bool IsInRoom(Vector3 center);
         abstract public Wall CollidesWithWall(Vector3 lowerPoint, Vector3 higherPoint);
         abstract public void CheckCollectiblesCollision(Player player);
-        private Collectible[] Collectibles;
     }
 }

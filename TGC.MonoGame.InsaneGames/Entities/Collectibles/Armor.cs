@@ -9,7 +9,9 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
         static private Model Model;
         static private Matrix Misalignment;
         private Matrix SpawnPoint;
-        public Armor(Matrix spawnPoint, Matrix? scaling = null)
+        private float RecoveryAmount;
+        private bool Collected = false;
+        public Armor(Matrix spawnPoint, Matrix? scaling = null, float recoveryAmount = 10)
         {
             if (Model is null)
             {
@@ -18,6 +20,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
             SpawnPoint = Misalignment *
                         scaling.GetValueOrDefault(Matrix.CreateScale(0.3f)) *
                         spawnPoint;
+            RecoveryAmount = recoveryAmount;
         }
         public override void Load()
         {
@@ -26,7 +29,13 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
         }
         public override void Draw(GameTime gameTime)
         {
-            Model.Draw(SpawnPoint, Game.Camera.View, Game.Camera.Projection);
+            if(!Collected)
+                Model.Draw(SpawnPoint, Game.Camera.View, Game.Camera.Projection);
+        }
+        public override void CollidedWith(Player player)
+        {
+            player.AddToArmor(RecoveryAmount);
+            Collected = true;
         }
     }
 }
