@@ -87,6 +87,8 @@ namespace TGC.MonoGame.InsaneGames.Maps
         public override void Update(GameTime gameTime)
         {
             Bullets.ForEach(b => b.Update(gameTime));
+            var collidedObstacles = Array.Find(Obstacles, obs => obs.CollidesWith(Player.BottomVertex, Player.UpVertex));
+            //Logica de colision obstaculo - jugador
             foreach (var room in Rooms)
             {
                 room.Update(gameTime);
@@ -106,6 +108,8 @@ namespace TGC.MonoGame.InsaneGames.Maps
                     enemy.Update(gameTime);
                     var collidedWall = room.CollidesWithWall(enemy.BottomVertex, enemy.UpVertex);
                     //Logica de colision con pared
+                    collidedObstacles = Array.Find(Obstacles, obs => obs.CollidesWith(enemy.BottomVertex, enemy.UpVertex));
+                    //Logica de colision enemigo - obstaculo
                     if(playerInRoom && Player.CollidesWith(enemy.BottomVertex, enemy.BottomVertex))
                     { 
                         enemy.CollidedWith(Player);
