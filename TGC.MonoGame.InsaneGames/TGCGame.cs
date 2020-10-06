@@ -11,6 +11,7 @@ using TGC.MonoGame.InsaneGames.Utils;
 using System.Linq;
 using TGC.MonoGame.InsaneGames.Entities.Collectibles;
 using TGC.MonoGame.InsaneGames.Entities.Enemies;
+using System.Runtime.CompilerServices;
 
 namespace TGC.MonoGame.InsaneGames
 {
@@ -195,19 +196,25 @@ namespace TGC.MonoGame.InsaneGames
             var finalDict = new Dictionary<WallId, BasicEffect> { { WallId.Ceiling, ceilingEffect }, { WallId.Floor, floorEffect }, { WallId.Left, wallsEffect }, { WallId.Right, wallsEffect }, { WallId.Front, wallsEffect } };
             //var textRepet = new Dictionary<WallId, (float, float)> { { WallId.Front, (2, 1) } };
 
-            var life = new Life(Matrix.CreateRotationY(MathHelper.ToRadians(90f)) * Matrix.CreateTranslation(350, 0, 70));
-            var armor = new Armor(Matrix.CreateRotationY(MathHelper.ToRadians(90f)) * Matrix.CreateTranslation(350, 5, 90));
+            var life = new Life(Matrix.CreateTranslation(10, 0, -500));
+            var armor = new Armor(Matrix.CreateTranslation(40, 5, -500));
+            var life2 = new Life(Matrix.CreateTranslation(840, 0, -320));
+            var armor2 = new Armor(Matrix.CreateRotationY(MathHelper.ToRadians(180f)) * Matrix.CreateTranslation(810, 5, -320));
+            var life3 = new Life(Matrix.CreateTranslation(750, 0, -50));
+            var armor3 = new Armor(Matrix.CreateRotationY(MathHelper.ToRadians(180f)) * Matrix.CreateTranslation(780, 5, -50));
+            var life4 = new Life(Matrix.CreateRotationY(MathHelper.ToRadians(90f)) * Matrix.CreateTranslation(350, 0, 70));
+            var armor4 = new Armor(Matrix.CreateRotationY(MathHelper.ToRadians(90f)) * Matrix.CreateTranslation(350, 5, 90));
 
             rooms.Add(new Box(initialDict, new Vector3(250, 100, 250), new Vector3(0, 50, 0), new Collectible[] { }));
             rooms.Add(new Box(dictCorridorInZ, new Vector3(250, 100, 250), new Vector3(0, 50, -250), new Collectible[] { }));
-            rooms.Add(new Box(dictCorner1, new Vector3(250, 100, 250), new Vector3(0, 50, -500), new Collectible[] { }));
+            rooms.Add(new Box(dictCorner1, new Vector3(250, 100, 250), new Vector3(0, 50, -500), new Collectible[] { life, armor }));
             rooms.Add(new Box(dictCorridorInX, new Vector3(250, 100, 250), new Vector3(250, 50, -500), new Collectible[] { }));
             rooms.Add(new Box(dictCorridorInX, new Vector3(250, 100, 250), new Vector3(500, 50, -500), new Collectible[] { }));
-            rooms.Add(new Box(dictCorner2, new Vector3(250, 100, 250), new Vector3(750, 50, -500), new Collectible[] { }));
+            rooms.Add(new Box(dictCorner2, new Vector3(250, 100, 250), new Vector3(750, 50, -500), new Collectible[] { life2, armor2 }));
             rooms.Add(new Box(dictCorridorInZ, new Vector3(250, 100, 250), new Vector3(750, 50, -250), new Collectible[] { }));
-            rooms.Add(new Box(dictCorner3, new Vector3(250, 100, 250), new Vector3(750, 50, 0), new Collectible[] { }));
+            rooms.Add(new Box(dictCorner3, new Vector3(250, 100, 250), new Vector3(750, 50, 0), new Collectible[] { life3, armor3 }));
             rooms.Add(new Box(dictCorridorInX, new Vector3(250, 100, 250), new Vector3(500, 50, 0), new Collectible[] { }));
-            rooms.Add(new Box(dictCorner4, new Vector3(250, 100, 250), new Vector3(250, 50, 0), new Collectible[] { life, armor }));
+            rooms.Add(new Box(dictCorner4, new Vector3(250, 100, 250), new Vector3(250, 50, 0), new Collectible[] { life4, armor4 }));
             rooms.Add(new Box(finalDict, new Vector3(250, 100, 250), new Vector3(250, 50, -250), new Collectible[] { }));
 
             return rooms;
@@ -219,17 +226,6 @@ namespace TGC.MonoGame.InsaneGames
 
             enemies.Add(new TGCito(Matrix.CreateRotationY(-90f) * Matrix.CreateTranslation(80, 0, -250)));
 
-            //enemies.Add(new TGCito(Matrix.CreateRotationY(-90f) * Matrix.CreateTranslation(80, 0, -200)));
-            //enemies.Add(new TGCito(Matrix.CreateRotationY(90f) * Matrix.CreateTranslation(-80, 0, -400)));
-            //enemies.Add(new TGCito(Matrix.CreateTranslation(0, 0, -25)));
-            //enemies.Add(new TGCito(Matrix.CreateTranslation(0, 0, -50)));
-            //enemies.Add(new TGCito(Matrix.CreateTranslation(0, 0, -75)));
-            //enemies.Add(new TGCito(Matrix.CreateTranslation(0, 0, -100)));
-            //enemies.Add(new TGCito(Matrix.CreateTranslation(0, 0, -125)));
-            //enemies.Add(new TGCito(Matrix.CreateTranslation(0, 0, -150)));
-            //enemies.Add(new TGCito(Matrix.CreateTranslation(0, 0, -175)));
-            //enemies.Add(new TGCito(Matrix.CreateTranslation(0, 0, -200)));
-            //enemies.Add(new TGCito(Matrix.CreateTranslation(0, 0, -225)));
             enemies.Add(new TGCito(Matrix.CreateTranslation(200, 0, -250)));
             enemies.Add(new TGCito(Matrix.CreateTranslation(225, 0, -225)));
             enemies.Add(new TGCito(Matrix.CreateTranslation(250, 0, -250)));
