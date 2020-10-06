@@ -8,12 +8,13 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         private const string ModelName = "tgcito/tgcito-classic";
         static private Model Model;
         private Matrix Misalignment { get; }
-        public TGCito(Matrix? spawnPoint = null, Matrix? scaling = null)
+        public TGCito(Matrix? spawnPoint = null, Matrix? scaling = null, float life = 100)
         {
             Misalignment = Matrix.CreateTranslation(0, 44.5f, 0) * scaling.GetValueOrDefault(Matrix.CreateScale(0.2f));
             if(spawnPoint.HasValue)
                 position = spawnPoint.Value;
             floorEnemy = true;
+            Life = life;
         }
         public override void Load()
         {

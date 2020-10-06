@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Xna.Framework;
+using TGC.MonoGame.InsaneGames.Entities.Enemies;
 
 namespace TGC.MonoGame.InsaneGames.Entities
 {
@@ -36,6 +37,11 @@ namespace TGC.MonoGame.InsaneGames.Entities
         public void Collided()
         {
             this.Remove = true;
+        }
+        public void CollidedWith(Enemy enemy)
+        {
+            enemy.RemoveFromLife(Damage);
+            Collided();
         }
     }
 }
