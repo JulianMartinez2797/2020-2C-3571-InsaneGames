@@ -11,7 +11,6 @@ using TGC.MonoGame.InsaneGames.Utils;
 using System.Linq;
 using TGC.MonoGame.InsaneGames.Entities.Collectibles;
 using TGC.MonoGame.InsaneGames.Entities.Enemies;
-using System.Runtime.CompilerServices;
 
 namespace TGC.MonoGame.InsaneGames
 {
@@ -68,8 +67,9 @@ namespace TGC.MonoGame.InsaneGames
             center_point.Y = Graphics.GraphicsDevice.Viewport.Height / 2;
             center_point.X = Graphics.GraphicsDevice.Viewport.Width / 2;
 
-            Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(0, 20, 60), center_point);            
-            Map = CreateMap();
+            Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(0, 20, 0), center_point);            
+            var player = new Player(Camera, Matrix.CreateTranslation(1, 0.01f, 60));
+            Map = CreateMap(player);
 
             Map.Initialize(this);
             Weapon = new MachineGun();
@@ -136,8 +136,8 @@ namespace TGC.MonoGame.InsaneGames
 
             spriteBatch.Begin();
             // TODO: Take life and armor from player
-            spriteBatch.DrawString(font, "LIFE: 100", lifeStringPosition, Color.Red);
-            spriteBatch.DrawString(font, "ARMOR: 100", armorStringPosition, Color.DarkBlue);
+            //spriteBatch.DrawString(font, "LIFE: 100", lifeStringPosition, Color.Red);
+            //spriteBatch.DrawString(font, "ARMOR: 100", armorStringPosition, Color.DarkBlue);
             spriteBatch.End();
 
             base.Draw(gameTime);
@@ -155,7 +155,7 @@ namespace TGC.MonoGame.InsaneGames
         }
 
         //Temporal
-        private Map CreateMap()
+        private Map CreateMap(Player player)
         {
 
             List<Room> rooms = CreateRooms();
@@ -167,8 +167,6 @@ namespace TGC.MonoGame.InsaneGames
             Point center_point;
             center_point.Y = Graphics.GraphicsDevice.Viewport.Height / 2;
             center_point.X = Graphics.GraphicsDevice.Viewport.Width / 2;
-
-            var player = new Player(Camera, Matrix.CreateTranslation(1, 0, 60) );
 
             return new Map(rooms.ToArray(), enemies.ToArray(), obstacles.ToArray(), player);
         }

@@ -93,11 +93,11 @@ namespace TGC.MonoGame.InsaneGames.Maps
             {
                 room.Update(gameTime);
                 Boolean playerInRoom = false;
-                if(room.IsInRoom(Player.position.Value.Translation))
+                if(room.IsInRoom(Player.NewPosition))
                 {
                     Player.Update(gameTime);
                     var collidedWall = room.CollidesWithWall(Player.BottomVertex, Player.UpVertex);
-                    //Logica de colision con pared
+                    Player.CollidedWith(collidedWall);
                     room.CheckCollectiblesCollision(Player);
                     playerInRoom = true;
                 }

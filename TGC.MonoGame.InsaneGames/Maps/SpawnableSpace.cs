@@ -20,7 +20,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
             var center = area.Item2;
             float x, y, z;
             x = (float) Random.NextDouble() * area.Item1.X - area.Item1.X / 2 + area.Item2.X;
-            y = floorLevel ? area.Item2.Y - area.Item1.Y / 2  + float.MinValue: 
+            y = floorLevel ? area.Item2.Y - area.Item1.Y / 2  + 0.01f: 
                 (float) Random.NextDouble() * area.Item1.Y - area.Item1.Y / 2 + area.Item2.Y;
             z = (float) Random.NextDouble() * area.Item1.Z - area.Item1.Z / 2 + area.Item2.Z;
             return new Vector3(x, y, z);

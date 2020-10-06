@@ -4,8 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.Samples.Cameras;
 using TGC.MonoGame.InsaneGames.Maps;
-using TGC.MonoGame.InsaneGames.Entities;
-using TGC.MonoGame.InsaneGames.Weapons;
+using TGC.MonoGame.InsaneGames.Entities.Obstacles;
 using System;
 
 namespace TGC.MonoGame.InsaneGames.Entities
@@ -75,37 +74,17 @@ namespace TGC.MonoGame.InsaneGames.Entities
         public float MovementSpeed { get; set; } = 100f;
         public float MouseSensitivity { get; set; } = 5f;
         
-        public Vector3 CameraCorrection { get; set; } = new Vector3(0, 20, 60);
-        private const string ModelName = "tgcito/tgcito-classic";
-        static private Model Model;
-        private Matrix Misalignment { get; }
+        public Vector3 CameraCorrection { get; set; }
         public Vector3 LastBottomVertex { get; set;}
         public Vector3 LastUpVertex { get; set;}
-
-        public Player(Camera camera, Matrix? spawnPoint = null, Matrix? scaling = null)
+        private readonly Vector3 HitboxSize = new Vector3(5, 0, 5);
+        public Player(Camera camera, Matrix spawnPoint, Matrix? scaling = null)
         {
             this.Camera = camera;
-            Misalignment = Matrix.CreateTranslation(0, 44.5f, -600f) * scaling.GetValueOrDefault(Matrix.CreateScale(0.2f));
-
-
-            if (spawnPoint.HasValue){
-                position = spawnPoint.Value;
-            }
-
-        }
- 
-      
-        public override void Load()
-        {
-            if (Model is null)
-                Model = ContentManager.Instance.LoadModel(ModelName);
-        }
-        public override void Draw(GameTime gameTime)
-        {
-            if (!position.HasValue)
-                throw new System.Exception("The position of the TGCito was not set");
-            var world = Misalignment * position.Value * Matrix.CreateTranslation(NewPosition);
-            Model.Draw(world,Matrix.CreateRotationY(MathHelper.ToRadians(-180f)) * Camera.View, Camera.Projection);
+            CameraCorrection = Camera.Position;
+            NewPosition = spawnPoint.Translation;
+            UpVertex = spawnPoint.Translation + HitboxSize;
+            BottomVertex = spawnPoint.Translation - HitboxSize;
         }
 
         private void CalculateView()
@@ -133,11 +112,13 @@ namespace TGC.MonoGame.InsaneGames.Entities
             UpDirection = Vector3.Normalize(Camera.UpDirection);
 
             CalculateView();
-            if (changed){
-                Camera.Position = -NewPosition + CameraCorrection;
+            if (changed)
+            {
+                Camera.Position = NewPosition + CameraCorrection;
                 //UpdatePlayerVectors();
             }
-                    
+            BottomVertex = NewPosition - HitboxSize;
+            UpVertex = NewPosition + HitboxSize;
                 
         }
 
@@ -151,35 +132,40 @@ namespace TGC.MonoGame.InsaneGames.Entities
 
             if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
             {
-                NewPosition += RightDirection * currentMovementSpeed * elapsedTime;
-                BottomVertex += RightDirection * currentMovementSpeed * elapsedTime;
-                UpVertex += RightDirection * currentMovementSpeed * elapsedTime;
+                NewPosition -= RightDirection * currentMovementSpeed * elapsedTime;
                 changed = true;
             }
 
             if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
             {
-                NewPosition += -RightDirection * currentMovementSpeed * elapsedTime;
-                BottomVertex += -RightDirection * currentMovementSpeed * elapsedTime;
-                UpVertex +=  -RightDirection * currentMovementSpeed * elapsedTime;
+                NewPosition += RightDirection * currentMovementSpeed * elapsedTime;
                 changed = true;
             }
 
             if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
             {
-                NewPosition += -FrontDirection * currentMovementSpeed * elapsedTime;
-                BottomVertex += -FrontDirection * currentMovementSpeed * elapsedTime;
-                UpVertex += -FrontDirection * currentMovementSpeed * elapsedTime;
+                NewPosition += FrontDirection * currentMovementSpeed * elapsedTime;
                 changed = true;
             }
 
             if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
             {
-                NewPosition += FrontDirection * currentMovementSpeed * elapsedTime;
-                BottomVertex += FrontDirection * currentMovementSpeed * elapsedTime;
-                UpVertex += FrontDirection * currentMovementSpeed * elapsedTime;
+                NewPosition -= FrontDirection * currentMovementSpeed * elapsedTime;
                 changed = true;
             }
+        }
+
+        public void CollidedWith(Wall wall)
+        {
+            if(wall is null)
+                return;
+            ResetPosition();
+        }
+        public void CollidedWith(Obstacle obstacle)
+        {
+            if(obstacle is null)
+                return;
+            ResetPosition();
         }
 
         public void ResetPosition(){
