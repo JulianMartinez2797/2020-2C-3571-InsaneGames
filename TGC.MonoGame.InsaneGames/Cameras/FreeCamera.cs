@@ -42,7 +42,7 @@ namespace TGC.MonoGame.Samples.Cameras
         {
             var elapsedTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
             changed = false;
-            ProcessKeyboard(elapsedTime);
+            //ProcessKeyboard(elapsedTime);
             ProcessMouseMovement(elapsedTime);
 
             if (changed)

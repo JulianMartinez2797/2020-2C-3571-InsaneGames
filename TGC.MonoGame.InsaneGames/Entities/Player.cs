@@ -1,4 +1,4 @@
-﻿﻿using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -12,12 +12,9 @@ namespace TGC.MonoGame.InsaneGames.Entities
 {
     class Player : Entity
     {
-        public Camera Camera { get; set; }
-
-        public Vector3 LowerPoint { get; protected set; }
-        public Vector3 HigherPoint { get; protected set; }
         public float Life { get; private set; }
         public float Armor { get; private set; }
+        public Camera Camera { get; set; }
         /// <summary>
         ///     Aspect ratio, defined as view space width divided by height.
         /// </summary>
@@ -51,7 +48,8 @@ namespace TGC.MonoGame.InsaneGames.Entities
         /// <summary>
         ///     Position where the camera is located.
         /// </summary>
-        public Vector3 Position { get; set; }
+        public Vector3 NewPosition { get; set; }
+        public Vector3 LastPosition { get; set; }
 
         /// <summary>
         ///     Represents the positive x-axis of the camera space.
@@ -68,29 +66,31 @@ namespace TGC.MonoGame.InsaneGames.Entities
         /// </summary>
         public Matrix View { get; set; }
         
-        private readonly Point screenCenter;
-        private bool changed;
+        public bool changed;
 
-        private Vector2 pastMousePosition;
         private float pitch;
 
         // Angles
         private float yaw = -90f;
         public float MovementSpeed { get; set; } = 100f;
         public float MouseSensitivity { get; set; } = 5f;
-
+        
+        public Vector3 CameraCorrection { get; set; } = new Vector3(0, 20, 60);
         private const string ModelName = "tgcito/tgcito-classic";
         static private Model Model;
         private Matrix Misalignment { get; }
+        public Vector3 LastBottomVertex { get; set;}
+        public Vector3 LastUpVertex { get; set;}
 
         public Player(Camera camera, Matrix? spawnPoint = null, Matrix? scaling = null)
         {
             this.Camera = camera;
-            Misalignment = Matrix.CreateTranslation(0, 44.5f, 0) * scaling.GetValueOrDefault(Matrix.CreateScale(0.2f));
+            Misalignment = Matrix.CreateTranslation(0, 44.5f, -600f) * scaling.GetValueOrDefault(Matrix.CreateScale(0.2f));
 
 
-            if (spawnPoint.HasValue)
+            if (spawnPoint.HasValue){
                 position = spawnPoint.Value;
+            }
 
         }
  
@@ -104,29 +104,41 @@ namespace TGC.MonoGame.InsaneGames.Entities
         {
             if (!position.HasValue)
                 throw new System.Exception("The position of the TGCito was not set");
-            var world = Misalignment * position.Value;
-            Model.Draw(world, Game.Camera.View, Game.Camera.Projection);
+            var world = Misalignment * position.Value * Matrix.CreateTranslation(NewPosition);
+            Model.Draw(world,Matrix.CreateRotationY(MathHelper.ToRadians(-180f)) * Camera.View, Camera.Projection);
         }
 
         private void CalculateView()
         {
-            View = Matrix.CreateLookAt(Position, Position + FrontDirection, UpDirection);
+            View = Matrix.CreateLookAt(NewPosition, NewPosition + FrontDirection, UpDirection);
         }
 
         /// <inheritdoc />
         public override void Update(GameTime gameTime)
         {
-            this.Camera.Update(gameTime);
 
-            /*
+            LastPosition = NewPosition;
+            LastBottomVertex = BottomVertex;
+            LastUpVertex = UpVertex;    
+            
             var elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             changed = false;
             ProcessKeyboard(elapsedTime);
-            ProcessMouseMovement(elapsedTime);
+           
+            this.Camera.Update(gameTime);
 
-            if (changed)
-                CalculateView();
-                */
+            //Les saco el componente Y para que no se mueva verticalmente
+            FrontDirection = Vector3.Normalize(Camera.FrontDirection * new Vector3(1, 0, 1));
+            RightDirection = Vector3.Normalize(Camera.RightDirection * new Vector3(1, 0, 1));
+            UpDirection = Vector3.Normalize(Camera.UpDirection);
+
+            CalculateView();
+            if (changed){
+                Camera.Position = -NewPosition + CameraCorrection;
+                //UpdatePlayerVectors();
+            }
+                    
+                
         }
 
         private void ProcessKeyboard(float elapsedTime)
@@ -139,53 +151,44 @@ namespace TGC.MonoGame.InsaneGames.Entities
 
             if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
             {
-                Position += -RightDirection * currentMovementSpeed * elapsedTime;
+                NewPosition += RightDirection * currentMovementSpeed * elapsedTime;
+                BottomVertex += RightDirection * currentMovementSpeed * elapsedTime;
+                UpVertex += RightDirection * currentMovementSpeed * elapsedTime;
                 changed = true;
             }
 
             if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
             {
-                Position += RightDirection * currentMovementSpeed * elapsedTime;
+                NewPosition += -RightDirection * currentMovementSpeed * elapsedTime;
+                BottomVertex += -RightDirection * currentMovementSpeed * elapsedTime;
+                UpVertex +=  -RightDirection * currentMovementSpeed * elapsedTime;
                 changed = true;
             }
 
             if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
             {
-                Position += FrontDirection * currentMovementSpeed * elapsedTime;
+                NewPosition += -FrontDirection * currentMovementSpeed * elapsedTime;
+                BottomVertex += -FrontDirection * currentMovementSpeed * elapsedTime;
+                UpVertex += -FrontDirection * currentMovementSpeed * elapsedTime;
                 changed = true;
             }
 
             if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
             {
-                Position += -FrontDirection * currentMovementSpeed * elapsedTime;
+                NewPosition += FrontDirection * currentMovementSpeed * elapsedTime;
+                BottomVertex += FrontDirection * currentMovementSpeed * elapsedTime;
+                UpVertex += FrontDirection * currentMovementSpeed * elapsedTime;
                 changed = true;
             }
         }
 
-        private void ProcessMouseMovement(float elapsedTime)
-        {
-            var mouseState = Mouse.GetState();
-            var mouseDelta = mouseState.Position.ToVector2() - pastMousePosition;
-            mouseDelta *= MouseSensitivity * elapsedTime;
-
-            yaw += mouseDelta.X;
-            pitch -= mouseDelta.Y;
-
-            if (pitch > 89.0f)
-                pitch = 89.0f;
-            if (pitch < -89.0f)
-                pitch = -89.0f;
-
-            changed = true;
-            UpdateCameraVectors();
-            Mouse.SetPosition(screenCenter.X, screenCenter.Y);
-            // Mouse cursor should be an sprite in the center of the screen
-            Mouse.SetCursor(MouseCursor.Crosshair);
-
-            pastMousePosition = Mouse.GetState().Position.ToVector2();
+        public void ResetPosition(){
+            NewPosition = LastPosition;
+            BottomVertex = LastBottomVertex;
+            UpVertex = LastUpVertex;
         }
 
-        private void UpdateCameraVectors()
+        private void UpdatePlayerVectors()
         {
             // Calculate the new Front vector
             Vector3 tempFront;
@@ -200,7 +203,6 @@ namespace TGC.MonoGame.InsaneGames.Entities
             RightDirection = Vector3.Normalize(Vector3.Cross(FrontDirection, Vector3.Up));
             UpDirection = Vector3.Normalize(Vector3.Cross(RightDirection, FrontDirection));
         }
-
         public void AddToLife(float amount)
         {
             Life = Math.Min(Life + amount, 100);

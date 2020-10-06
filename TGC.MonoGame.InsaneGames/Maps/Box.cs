@@ -87,9 +87,9 @@ namespace TGC.MonoGame.InsaneGames.Maps
 
         public override bool IsInRoom(Vector3 point)
         {
-            return BottomVertex.X < point.X && point.X < UpVertex.X &&
-                    BottomVertex.Y < point.Y && point.Y < UpVertex.Y &&
-                    BottomVertex.Z < point.Z && point.Z < UpVertex.Z;
+            return BottomVertex.X <= point.X && point.X <= UpVertex.X &&
+                    BottomVertex.Y <= point.Y && point.Y <= UpVertex.Y &&
+                    BottomVertex.Z <= point.Z && point.Z <= UpVertex.Z;
         }
 
         public override Wall CollidesWithWall(Vector3 lowerPoint, Vector3 higherPoint)
@@ -102,7 +102,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
         public override void CheckCollectiblesCollision(Player player)
         {
             var collided = Array.Find(Collectibles, coll => coll.CollidesWith(player.BottomVertex, player.UpVertex));
-            collided.CollidedWith(player);
+            collided?.CollidedWith(player);
         }
     }
 }
