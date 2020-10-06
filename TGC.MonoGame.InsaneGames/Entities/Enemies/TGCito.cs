@@ -64,6 +64,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
 
             //return angleF;
         }
+        private bool _mirandoPlayer = false;
         public override void Update(GameTime gameTime)
         {
             if (isPlayerNear())
@@ -76,16 +77,24 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
                 if (float.IsNaN(angle))
                     angle = 0f;
                 if (Math.Abs(angle) < rot_speed)
+                {
                     rot_speed = angle;
+                    _mirandoPlayer = true;
+                }
                 else
                     rot_speed *= angle / Math.Abs(angle);
                 float angle_in_degrees = MathHelper.ToDegrees(angle);
                 position = Matrix.CreateRotationY(rot_speed) * position.Value;
 
                 // Empezar a mover el tgcito
-                vec_to_player.Normalize();
-                float enemy_speed = 70f * Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
-                position = position * Matrix.CreateTranslation(vec_to_player * enemy_speed);
+                if (_mirandoPlayer)
+                {
+                    vec_to_player.Normalize();
+                    float enemy_speed = 70f * Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
+                    position = position * Matrix.CreateTranslation(vec_to_player * enemy_speed);
+                }
+            } else {
+                _mirandoPlayer = false;
             }
         }
 
