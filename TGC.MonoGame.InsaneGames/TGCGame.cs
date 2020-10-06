@@ -42,8 +42,6 @@ namespace TGC.MonoGame.InsaneGames
         private Map Map { get; set; }
 
         private Weapon Weapon { get; set; }
-        private SpriteBatch spriteBatch;
-        private SpriteFont font;
 
 
         /// <summary>
@@ -84,12 +82,9 @@ namespace TGC.MonoGame.InsaneGames
         /// </summary>
         protected override void LoadContent()
         {
-            Map.Load();
+            Map.Load(GraphicsDevice);
             Weapon.Load();
-
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            font = ContentManager.Instance.LoadSpriteFont("Basic");
-
+            
             base.LoadContent();
         }
 
@@ -129,17 +124,6 @@ namespace TGC.MonoGame.InsaneGames
 
             Map.Draw(gameTime);
             Weapon.Draw(gameTime);
-
-
-            Vector2 lifeStringPosition = new Vector2(10, GraphicsDevice.Viewport.Height - 50);
-            Vector2 armorStringPosition = new Vector2(170, GraphicsDevice.Viewport.Height - 50);
-
-            spriteBatch.Begin();
-            // TODO: Take life and armor from player
-            //spriteBatch.DrawString(font, "LIFE: 100", lifeStringPosition, Color.Red);
-            //spriteBatch.DrawString(font, "ARMOR: 100", armorStringPosition, Color.DarkBlue);
-            spriteBatch.End();
-
             base.Draw(gameTime);
         }
 

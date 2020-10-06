@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TGC.MonoGame.InsaneGames.Entities.Enemies;
 using TGC.MonoGame.InsaneGames.Entities;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using TGC.MonoGame.InsaneGames.Entities.Obstacles;
 
 namespace TGC.MonoGame.InsaneGames.Maps
@@ -15,6 +16,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
         private Obstacle[] Obstacles;
         private Player Player;
         private List<Bullet> Bullets;
+        private InfoUI UI;
 
         public Map(Room[] rooms, Enemy[] enemies, Obstacle[] obstacles, Player player) 
         {
@@ -24,6 +26,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
             Obstacles = obstacles;
             Player = player;
             Bullets = new List<Bullet>();
+            UI = new InfoUI();
         }
 
         public override void Initialize(TGCGame game)
@@ -69,9 +72,13 @@ namespace TGC.MonoGame.InsaneGames.Maps
             
             foreach (var obstacle in Obstacles)
                 obstacle.Draw(gameTime);
+            
+            UI.Draw(gameTime, Player);
         }
-        public override void Load()
+        public void Load(GraphicsDevice gd) 
         {
+            UI.Load(gd);
+
             Player.Load();
 
             foreach (var room in Rooms)
