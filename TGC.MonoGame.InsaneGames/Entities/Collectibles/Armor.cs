@@ -10,6 +10,8 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
         static private Matrix Misalignment;
         private Matrix SpawnPoint;
         private float RecoveryAmount;
+        private readonly Vector3 HitboxSize = new Vector3(15, 5, 15);
+
         public Armor(Matrix spawnPoint, Matrix? scaling = null, float recoveryAmount = 10)
         {
             if (Model is null)
@@ -20,6 +22,8 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
                         scaling.GetValueOrDefault(Matrix.CreateScale(0.3f)) *
                         spawnPoint;
             RecoveryAmount = recoveryAmount;
+            UpVertex = SpawnPoint.Translation + HitboxSize;
+            BottomVertex = SpawnPoint.Translation - HitboxSize;
         }
         public override void Load()
         {
