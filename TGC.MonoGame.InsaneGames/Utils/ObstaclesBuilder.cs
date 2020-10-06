@@ -87,9 +87,9 @@ namespace TGC.MonoGame.InsaneGames.Utils
             float translationZ = 0;
 
             if (inX)
-                translationX = 15;
+                translationX = 25;
             else
-                translationZ = 15;
+                translationZ = 25;
 
             // add first cone
             List<Cone> cones = new List<Cone>();
