@@ -108,7 +108,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
                     //Logica de colision con pared
                     if(playerInRoom && Player.CollidesWith(enemy.BottomVertex, enemy.BottomVertex))
                     { 
-                        //Logica colision con enemigo
+                        enemy.CollidedWith(Player);
                     }
                     var collidedBullets = bullets.FindAll(bullets => bullets.CollidesWith(enemy.BottomVertex, enemy.UpVertex));
                     collidedBullets.ForEach(b => b.CollidedWith(enemy));

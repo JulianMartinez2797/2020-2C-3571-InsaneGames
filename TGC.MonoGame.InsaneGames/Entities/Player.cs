@@ -203,11 +203,26 @@ namespace TGC.MonoGame.InsaneGames.Entities
 
         public void AddToLife(float amount)
         {
-            Life += amount;
+            Life = Math.Min(Life + amount, 100);
+        }
+        public void RemoveFromLife(float amount)
+        {
+            Life = Math.Max(Life - amount, 0);
         }
         public void AddToArmor(float amount)
         {
-            Armor += amount;
+            Armor = Math.Min(Armor + amount, 100);
+        }
+        public void RemoveFromArmor(float amount)
+        {
+            Armor = Math.Max(Armor - amount, 0);
+        }
+        public void BeAttacked(float damage)
+        {
+            if(Armor < damage)
+                RemoveFromLife(damage - Armor);
+            if(Armor != 0)
+                RemoveFromArmor(damage);
         }
     }
 }
