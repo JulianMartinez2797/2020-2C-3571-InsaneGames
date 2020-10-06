@@ -77,12 +77,12 @@ namespace TGC.MonoGame.InsaneGames.Entities
         public Vector3 CameraCorrection { get; set; }
         public Vector3 LastBottomVertex { get; set;}
         public Vector3 LastUpVertex { get; set;}
-        private readonly Vector3 HitboxSize = new Vector3(5, 0, 5);
+        private readonly Vector3 HitboxSize = new Vector3(15, 0, 15);
         public Player(Camera camera, Matrix spawnPoint, Matrix? scaling = null)
         {
             this.Camera = camera;
             CameraCorrection = Camera.Position;
-            NewPosition = spawnPoint.Translation;
+            NewPosition = Camera.Position - CameraCorrection + new Vector3(0, 0.01f, 0);
             UpVertex = spawnPoint.Translation + HitboxSize;
             BottomVertex = spawnPoint.Translation - HitboxSize;
         }
