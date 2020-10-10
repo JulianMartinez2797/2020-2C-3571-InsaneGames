@@ -9,6 +9,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         private Player playerReference { set; get; }
         private const string ModelName = "tgcito/tgcito-classic";
         static private Model Model;
+        private readonly Vector3 HitboxSize = new Vector3(5, 5, 5);
         private Matrix Misalignment { get; }
         public TGCito(Player player, Matrix? spawnPoint = null, Matrix? scaling = null, float life = 100, float damage = 5)
         {
@@ -19,6 +20,8 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
             floorEnemy = true;
             Life = life;
             Damage = damage;
+            UpVertex = HitboxSize;
+            BottomVertex = HitboxSize;
         }
 
         public bool isPlayerNear()

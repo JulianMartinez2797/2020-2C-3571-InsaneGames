@@ -211,21 +211,16 @@ namespace TGC.MonoGame.InsaneGames
         {
             List<Enemy> enemies = new List<Enemy>();
 
-            // TODO: Add enemies with random tool
-            enemies.Add(new TGCito(Player, Matrix.CreateRotationY(MathHelper.ToRadians(-90f)) * Matrix.CreateTranslation(80, 0, -250)));
-            enemies.Add(new TGCito(Player, Matrix.CreateRotationY(MathHelper.ToRadians(90f)) * Matrix.CreateTranslation(-60, 0, -400)));
-            enemies.Add(new TGCito(Player, Matrix.CreateRotationY(MathHelper.ToRadians(-90f)) * Matrix.CreateTranslation(300, 0, -425)));
-            enemies.Add(new TGCito(Player, Matrix.CreateRotationY(MathHelper.ToRadians(-90f)) * Matrix.CreateTranslation(500, 0, -550)));
-            enemies.Add(new TGCito(Player, Matrix.CreateRotationY(MathHelper.ToRadians(180f)) * Matrix.CreateTranslation(650, 0, -200)));
-            enemies.Add(new TGCito(Player, Matrix.CreateRotationY(MathHelper.ToRadians(180f)) * Matrix.CreateTranslation(800, 0, -250)));
-            enemies.Add(new TGCito(Player, Matrix.CreateRotationY(MathHelper.ToRadians(180f)) * Matrix.CreateTranslation(590, 0, 80)));
-            enemies.Add(new TGCito(Player, Matrix.CreateTranslation(510, 0, -80)));
-            enemies.Add(new TGCito(Player, Matrix.CreateTranslation(200, 0, -250)));
-            enemies.Add(new TGCito(Player, Matrix.CreateTranslation(225, 0, -225)));
-            enemies.Add(new TGCito(Player, Matrix.CreateTranslation(250, 0, -250)));
-            enemies.Add(new TGCito(Player, Matrix.CreateTranslation(275, 0, -225)));
-            enemies.Add(new TGCito(Player, Matrix.CreateTranslation(300, 0, -250)));
-
+            enemies.Add(new TGCito(Player));
+            enemies.Add(new TGCito(Player));
+            enemies.Add(new TGCito(Player));
+            enemies.Add(new TGCito(Player));
+            enemies.Add(new TGCito(Player));
+            enemies.Add(new TGCito(Player));
+            enemies.Add(new TGCito(Player));
+            enemies.Add(new TGCito(Player));
+            enemies.Add(new TGCito(Player));
+            enemies.Add(new TGCito(Player));
 
             return enemies;
         }
