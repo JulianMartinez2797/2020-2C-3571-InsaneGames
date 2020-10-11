@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Diagnostics;
 
 namespace TGC.MonoGame.InsaneGames.Entities.Obstacles
 {
@@ -9,7 +10,12 @@ namespace TGC.MonoGame.InsaneGames.Entities.Obstacles
         private Model Model;
         private Matrix Misalignment;
         private Matrix SpawnPoint;
-
+        private readonly Vector3 HitboxSize = new Vector3(5, 10, 5);
+        public void PrintHitbox() 
+        {
+            Debug.WriteLine("UpVertex: "+UpVertex);
+            Debug.WriteLine("BottomVertex: "+BottomVertex);
+        }
         public Obstacle(string modelName, Matrix spawnPoint, Matrix scaling)
         {
             Misalignment = Matrix.CreateTranslation(0, 0, 0);
@@ -17,6 +23,8 @@ namespace TGC.MonoGame.InsaneGames.Entities.Obstacles
                         scaling *
                         spawnPoint;
             ModelName = modelName;
+            UpVertex = SpawnPoint.Translation + HitboxSize;
+            BottomVertex = SpawnPoint.Translation - HitboxSize;
         }
         public override void Load()
         {
@@ -26,5 +34,6 @@ namespace TGC.MonoGame.InsaneGames.Entities.Obstacles
         {
             Model.Draw(SpawnPoint, Game.Camera.View, Game.Camera.Projection);
         }
+
     }
 }

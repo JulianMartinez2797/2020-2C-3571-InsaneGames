@@ -5,6 +5,7 @@ using TGC.MonoGame.InsaneGames.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TGC.MonoGame.InsaneGames.Entities.Obstacles;
+using System.Diagnostics;
 
 namespace TGC.MonoGame.InsaneGames.Maps
 {
@@ -94,7 +95,6 @@ namespace TGC.MonoGame.InsaneGames.Maps
         public override void Update(GameTime gameTime)
         {
             Bullets.ForEach(b => b.Update(gameTime));
-            var collidedObstacles = Array.Find(Obstacles, obs => obs.CollidesWith(Player.BottomVertex, Player.UpVertex));
             //Logica de colision obstaculo - jugador
             foreach (var room in Rooms)
             {
@@ -102,12 +102,17 @@ namespace TGC.MonoGame.InsaneGames.Maps
                 Boolean playerInRoom = false;
                 if(room.IsInRoom(Player.NewPosition))
                 {
+                    
                     Player.Update(gameTime);
+                    
                     var collidedWall = room.CollidesWithWall(Player.BottomVertex, Player.UpVertex);
                     Player.CollidedWith(collidedWall);
                     room.CheckCollectiblesCollision(Player);
+                    var collidedObstacle = Array.Find(Obstacles, obs => obs.CollidesWith(Player.BottomVertex, Player.UpVertex));
+                    Player.CollidedWith(collidedObstacle);
                     playerInRoom = true;
                 }
+
                 var bullets = Bullets.FindAll(bullet => room.IsInRoom(bullet.LastPosition) || room.IsInRoom(bullet.CurrentPosition));
                 var enemies = Array.FindAll(Enemies, enemy => room.IsInRoom(enemy.position.Value.Translation));
                 foreach(var enemy in enemies)
@@ -115,7 +120,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
                     enemy.Update(gameTime);
                     var collidedWall = room.CollidesWithWall(enemy.BottomVertex, enemy.UpVertex);
                     //Logica de colision con pared
-                    collidedObstacles = Array.Find(Obstacles, obs => obs.CollidesWith(enemy.BottomVertex, enemy.UpVertex));
+                    var collidedObstacleEnemy = Array.Find(Obstacles, obs => obs.CollidesWith(enemy.BottomVertex, enemy.UpVertex));
                     //Logica de colision enemigo - obstaculo
                     if(playerInRoom && Player.CollidesWith(enemy.BottomVertex, enemy.BottomVertex))
                     { 

@@ -140,6 +140,7 @@ namespace TGC.MonoGame.InsaneGames.Entities
             UpDirection = Vector3.Normalize(Camera.UpDirection);
 
             CalculateView();
+            
             if (changed)
             {
                 Camera.Position = NewPosition + CameraCorrection;
