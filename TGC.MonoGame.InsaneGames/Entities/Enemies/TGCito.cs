@@ -11,17 +11,20 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         static private Model Model;
         private readonly Vector3 HitboxSize = new Vector3(5, 5, 5);
         private Matrix Misalignment { get; }
+        private Boolean Death = false;
         public TGCito(Player player, Matrix? spawnPoint = null, Matrix? scaling = null, float life = 100, float damage = 5)
         {
             playerReference = player;
             Misalignment = Matrix.CreateTranslation(0, 44.5f, 0) * scaling.GetValueOrDefault(Matrix.CreateScale(0.2f));
             if(spawnPoint.HasValue)
+            {
                 position = spawnPoint.Value;
+                UpVertex = spawnPoint.Value.Translation + new Vector3(HitboxSize.X / 2, HitboxSize.Y, HitboxSize.Z / 2);
+                BottomVertex = spawnPoint.Value.Translation - new Vector3(HitboxSize.X / 2, 0, HitboxSize.Z / 2);
+            }
             floorEnemy = true;
             Life = life;
             Damage = damage;
-            UpVertex = HitboxSize;
-            BottomVertex = HitboxSize;
         }
 
         public bool isPlayerNear()
@@ -56,7 +59,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         private bool _mirandoPlayer = false;
         public override void Update(GameTime gameTime)
         {
-            if (isPlayerNear())
+            if (isPlayerNear() && !Death)
             {   //Detectado
                 Vector3 vec_to_player = playerReference.NewPosition - this.position.Value.Translation;
                 
@@ -85,6 +88,9 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
             } else {
                 _mirandoPlayer = false;
             }
+            
+            UpVertex = position.Value.Translation + new Vector3(HitboxSize.X / 2, HitboxSize.Y, HitboxSize.Z / 2);
+            BottomVertex = position.Value.Translation - new Vector3(HitboxSize.X / 2, 0, HitboxSize.Z / 2);
         }
 
         public override void Load()
@@ -99,6 +105,10 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
             var world = Misalignment * position.Value; 
             Model.Draw(world, Game.Camera.View, Game.Camera.Projection);
         }
-
+        public override void RemoveFromLife(float amount) 
+        {
+            base.RemoveFromLife(amount);
+            Death = Life == 0;
+        }
     }
 }

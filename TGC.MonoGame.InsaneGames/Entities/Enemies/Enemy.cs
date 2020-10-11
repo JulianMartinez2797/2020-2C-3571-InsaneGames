@@ -1,3 +1,5 @@
+using System;
+
 namespace TGC.MonoGame.InsaneGames.Entities.Enemies
 {
     abstract class Enemy : Entity 
@@ -8,7 +10,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
 
         public virtual void RemoveFromLife(float amount) 
         {
-            Life -= amount;
+            Life = Math.Max(Life - amount, 0);
         }
 
         public virtual void CollidedWith(Player player)
