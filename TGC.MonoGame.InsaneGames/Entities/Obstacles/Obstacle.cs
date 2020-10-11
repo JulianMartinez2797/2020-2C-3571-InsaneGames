@@ -10,7 +10,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Obstacles
         private Model Model;
         private Matrix Misalignment;
         private Matrix SpawnPoint;
-        private readonly Vector3 HitboxSize = new Vector3(20, 5, 20);
+        private readonly Vector3 HitboxSize = new Vector3(5, 10, 5);
         public void PrintHitbox() 
         {
             Debug.WriteLine("UpVertex: "+UpVertex);
