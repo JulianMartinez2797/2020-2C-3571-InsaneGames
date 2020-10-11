@@ -5,6 +5,7 @@ using TGC.MonoGame.InsaneGames.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TGC.MonoGame.InsaneGames.Entities.Obstacles;
+using System.Diagnostics;
 
 namespace TGC.MonoGame.InsaneGames.Maps
 {
@@ -102,12 +103,23 @@ namespace TGC.MonoGame.InsaneGames.Maps
                 Boolean playerInRoom = false;
                 if(room.IsInRoom(Player.NewPosition))
                 {
+                    
                     Player.Update(gameTime);
+                    
                     var collidedWall = room.CollidesWithWall(Player.BottomVertex, Player.UpVertex);
                     Player.CollidedWith(collidedWall);
                     room.CheckCollectiblesCollision(Player);
                     playerInRoom = true;
                 }
+                if (collidedObstacles != null)
+                {
+                    Debug.WriteLine("Obstacle:");
+                    collidedObstacles.PrintHitbox();
+                    Debug.WriteLine("Player:");
+                    Debug.WriteLine("BottomVertex: " + Player.BottomVertex);
+                    Debug.WriteLine("UpVertex: " +Player.UpVertex);
+                }
+                Player.CollidedWith(collidedObstacles);
                 var bullets = Bullets.FindAll(bullet => room.IsInRoom(bullet.LastPosition) || room.IsInRoom(bullet.CurrentPosition));
                 var enemies = Array.FindAll(Enemies, enemy => room.IsInRoom(enemy.position.Value.Translation));
                 foreach(var enemy in enemies)
