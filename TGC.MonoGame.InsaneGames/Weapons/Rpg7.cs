@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace TGC.MonoGame.InsaneGames.Weapons
 {
@@ -9,7 +10,10 @@ namespace TGC.MonoGame.InsaneGames.Weapons
                                                 /*Matrix.CreateTranslation(0, -0.5f, 0)* */
                                                 Matrix.CreateRotationX(MathHelper.ToRadians(-3f)) * 
                                                 Matrix.CreateRotationY(MathHelper.ToRadians(-90f));
-
+        static readonly protected float Damage = 100;
+        static readonly protected Vector3 BulletSize = new Vector3(3, 3, 3); 
+        static readonly protected Vector3 ExplosionSize = new Vector3(30, 30, 30);
+        protected bool Shooting = false;
         public Rpg7 () : base("armas/rpg7/Rpg7") {}
         public override void Initialize(TGCGame game) {
             World = Matrix.CreateScale(0.1f);
@@ -33,6 +37,20 @@ namespace TGC.MonoGame.InsaneGames.Weapons
         public override void Draw(GameTime gameTime)
         {
             Model.Draw(World, Game.Camera.View, Game.Camera.Projection);
+        }
+        public override void Update(GameTime gameTime, Vector3 direction, Vector3 playerPosition)
+        {
+            Update(gameTime);
+            var mouseState = Mouse.GetState();
+            if(!Shooting && mouseState.LeftButton == ButtonState.Pressed)
+            {
+                Shooting = true;
+                Maps.MapRepo.CurrentMap.AddBullet(new Entities.Bullets.Missile(Damage, direction, playerPosition, BulletSize, ExplosionSize));
+            }
+            else if(mouseState.LeftButton == ButtonState.Released)
+            {
+                Shooting = false;
+            }
         }
     }
 }

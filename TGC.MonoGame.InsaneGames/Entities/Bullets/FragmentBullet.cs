@@ -12,7 +12,8 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
         protected Vector3 Position;
         protected Vector3 FrontRadius;
         protected float Radius;
-        public FragmentBullet(float baseDamage, Vector3 direction, Vector3 position, Vector3 hitboxSize)
+        protected bool HalfExplosion;
+        public FragmentBullet(float baseDamage, Vector3 direction, Vector3 position, Vector3 hitboxSize, bool halfExplosion = true)
         {
             BaseDamage = baseDamage;
             Position = position;
@@ -20,6 +21,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
             UpVertex = position + hitboxSize;
             Radius = (UpVertex - BottomVertex).Length();
             FrontRadius = direction * Radius;
+            HalfExplosion = halfExplosion;
         }
         public override void Update(GameTime gameTime)
         {
@@ -28,11 +30,13 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
         }
         public override bool CollidesWith(Vector3 bVertex, Vector3 uVertex)
         {
-            if(base.CollidesWith(bVertex, uVertex))
-                return true;
-            if(uVertex.X <= Position.X || FrontRadius.X <= bVertex.X) return false;
-            if(uVertex.Y <= Position.Y || FrontRadius.Y <= bVertex.Y) return false;
-            if(uVertex.Z <= Position.Z || FrontRadius.Z <= bVertex.Z) return false;
+            if(base.CollidesWith(bVertex, uVertex)) return true;
+            if(HalfExplosion)
+            {
+                if(uVertex.X <= Position.X || FrontRadius.X <= bVertex.X) return false;
+                if(uVertex.Y <= Position.Y || FrontRadius.Y <= bVertex.Y) return false;
+                if(uVertex.Z <= Position.Z || FrontRadius.Z <= bVertex.Z) return false;
+            }
             // get box closest point to sphere center by clamping
             var x = Math.Max(bVertex.X, Math.Min(Position.X, uVertex.X));
             var y = Math.Max(bVertex.Y, Math.Min(Position.Y, uVertex.Y));
