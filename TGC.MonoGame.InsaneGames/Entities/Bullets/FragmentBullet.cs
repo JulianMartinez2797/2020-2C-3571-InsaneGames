@@ -47,7 +47,8 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
         }
         public override void CollidedWith(Enemy enemy)
         {
-            enemy.RemoveFromLife(BaseDamage);
+            var mult = (1 - (enemy.position.Value.Translation - Position).Length() / Radius);
+            enemy.RemoveFromLife(BaseDamage * mult);
         }
         public override void CollidedWith()
         {
