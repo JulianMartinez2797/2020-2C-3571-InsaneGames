@@ -62,20 +62,17 @@ namespace TGC.MonoGame.Samples.Cameras
                 Position += -RightDirection * currentMovementSpeed * elapsedTime;
                 changed = true;
             }
-
-            if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
+            else if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
             {
                 Position += RightDirection * currentMovementSpeed * elapsedTime;
                 changed = true;
             }
-
-            if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
+            else if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
             {
                 Position += FrontDirection * currentMovementSpeed * elapsedTime;
                 changed = true;
             }
-
-            if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
+            else if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
             {
                 Position += -FrontDirection * currentMovementSpeed * elapsedTime;
                 changed = true;

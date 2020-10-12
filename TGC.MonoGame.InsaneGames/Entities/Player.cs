@@ -11,8 +11,8 @@ namespace TGC.MonoGame.InsaneGames.Entities
 {
     class Player : Entity
     {
-        public float Life { get; private set; }
-        public float Armor { get; private set; }
+        public float Life { get; private set; } = 90;
+        public float Armor { get; private set; } = 0;
         public Camera Camera { get; set; }
         /// <summary>
         ///     Aspect ratio, defined as view space width divided by height.
@@ -64,8 +64,6 @@ namespace TGC.MonoGame.InsaneGames.Entities
         ///     The created view matrix.
         /// </summary>
         public Matrix View { get; set; }
-        
-        public bool changed;
 
         private float pitch;
         public List<Weapon> Weapons {get;set;}
@@ -78,7 +76,7 @@ namespace TGC.MonoGame.InsaneGames.Entities
         public Vector3 CameraCorrection { get; set; }
         public Vector3 LastBottomVertex { get; set;}
         public Vector3 LastUpVertex { get; set;}
-        private readonly Vector3 HitboxSize = new Vector3(15, 0, 15);
+        private readonly Vector3 HitboxSize = new Vector3(15, 4, 15);
         public Player(TGCGame game, Camera camera, Matrix spawnPoint, Matrix? scaling = null)
         {
             this.Camera = camera;
@@ -129,7 +127,6 @@ namespace TGC.MonoGame.InsaneGames.Entities
             LastUpVertex = UpVertex;    
             
             var elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            changed = false;
             ProcessKeyboard(elapsedTime);
            
             this.Camera.Update(gameTime);
@@ -140,12 +137,10 @@ namespace TGC.MonoGame.InsaneGames.Entities
             UpDirection = Vector3.Normalize(Camera.UpDirection);
 
             CalculateView();
-            
-            if (changed)
-            {
-                Camera.Position = NewPosition + CameraCorrection;
-                //UpdatePlayerVectors();
-            }
+
+            Camera.Position = NewPosition + CameraCorrection;
+            //UpdatePlayerVectors();
+
             BottomVertex = NewPosition - HitboxSize;
             UpVertex = NewPosition + HitboxSize;
             CurrentWeapon.Update(gameTime, Camera.FrontDirection, Camera.Position);
@@ -167,39 +162,32 @@ namespace TGC.MonoGame.InsaneGames.Entities
             if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
             {
                 NewPosition -= RightDirection * currentMovementSpeed * elapsedTime;
-                changed = true;
-            }
-
-            if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
+            } 
+            else if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
             {
                 NewPosition += RightDirection * currentMovementSpeed * elapsedTime;
-                changed = true;
             }
-
-            if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
+            else if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
             {
                 NewPosition += FrontDirection * currentMovementSpeed * elapsedTime;
-                changed = true;
             }
-
-            if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
+            else if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
             {
                 NewPosition -= FrontDirection * currentMovementSpeed * elapsedTime;
-                changed = true;
             }
             if (keyboardState.IsKeyDown(Keys.D1))
             {
                 ChangeWeapon(0); // Pistol
             }
-            if (keyboardState.IsKeyDown(Keys.D2))
+            else if (keyboardState.IsKeyDown(Keys.D2))
             {
                 ChangeWeapon(1); // Rifle
             }
-            if (keyboardState.IsKeyDown(Keys.D3))
+            else if (keyboardState.IsKeyDown(Keys.D3))
             {
                 ChangeWeapon(2); // Shotgun
             }
-            if (keyboardState.IsKeyDown(Keys.D4))
+            else if (keyboardState.IsKeyDown(Keys.D4))
             {
                 ChangeWeapon(3); // RPG
             }

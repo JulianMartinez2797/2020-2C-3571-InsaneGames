@@ -1,13 +1,13 @@
 using System;
 using Microsoft.Xna.Framework;
 using TGC.MonoGame.InsaneGames.Entities.Enemies;
-
+using TGC.MonoGame.InsaneGames.Entities.Obstacles;
 namespace TGC.MonoGame.InsaneGames.Entities
 {
     class Bullet : Entity
     {
         protected Vector3 Speed, InitialPos;
-        public Boolean Remove { get; protected set; }
+        public Boolean Collided { get; protected set; } = false;
         public Vector3 LastPosition { get; protected set; } 
         public Vector3 CurrentPosition { get; protected set; }
         protected float Damage;
@@ -20,6 +20,10 @@ namespace TGC.MonoGame.InsaneGames.Entities
         { 
             get { return CurrentPosition + HitboxSize / 2; }
         }
+        public Boolean Remove 
+        {
+            get { return Collided; }
+        }
         public Bullet(float damage, Vector3 speed, Vector3 initialPos, Vector3 hitboxSize)
         {
             Damage = damage;
@@ -28,7 +32,6 @@ namespace TGC.MonoGame.InsaneGames.Entities
             CurrentPosition = initialPos;
             LastPosition = CurrentPosition;
             HitboxSize = hitboxSize;
-            Remove = false;
         }
 
         public override void Update(GameTime gameTime)
@@ -37,15 +40,25 @@ namespace TGC.MonoGame.InsaneGames.Entities
             var time = gameTime.ElapsedGameTime.TotalSeconds;
             CurrentPosition = Speed * (float) time + LastPosition;
         }
-
-        public void Collided()
-        {
-            this.Remove = true;
-        }
         public void CollidedWith(Enemy enemy)
         {
-            enemy.RemoveFromLife(Damage);
-            Collided();
+            if(!Collided)
+            {
+                enemy.RemoveFromLife(Damage);
+                CollidedWith();
+            }
+        }
+        public void CollidedWith()
+        {
+            Collided = true;
+        }
+        public void CollidedWith(Obstacle obstacle)
+        {
+            CollidedWith();
+        }
+        public override Boolean CollidesWith(Vector3 bVertex, Vector3 uVertex)
+        {
+            return !Collided && base.CollidesWith(bVertex, uVertex);
         }
     }
 }

@@ -93,7 +93,6 @@ namespace TGC.MonoGame.InsaneGames.Maps
         }
         public override void Update(GameTime gameTime)
         {
-            //Logica de colision obstaculo - jugador
             foreach (var room in Rooms)
             {
                 room.Update(gameTime);
@@ -121,15 +120,18 @@ namespace TGC.MonoGame.InsaneGames.Maps
                     //Logica de colision con pared
                     var collidedObstacleEnemy = Array.Find(Obstacles, obs => obs.CollidesWith(enemy.BottomVertex, enemy.UpVertex));
                     //Logica de colision enemigo - obstaculo
-                    if(playerInRoom && Player.CollidesWith(enemy.BottomVertex, enemy.BottomVertex))
+                    if(playerInRoom && Player.CollidesWith(enemy.BottomVertex, enemy.UpVertex))
                     { 
                         enemy.CollidedWith(Player);
                     }
                     var collidedBullets = bullets.FindAll(bullets => bullets.CollidesWith(enemy.BottomVertex, enemy.UpVertex));
                     collidedBullets.ForEach(b => b.CollidedWith(enemy));
                 }
-                bullets.FindAll(b => room.CollidesWithWall(b.BottomVertex, b.UpVertex) != null).ForEach(b => b.Collided());
+                bullets.FindAll(b => room.CollidesWithWall(b.BottomVertex, b.UpVertex) != null).ForEach(b => b.CollidedWith());
             }
+            Bullets.FindAll(b => Array.Exists(Obstacles, obs => b.CollidesWith(obs.BottomVertex, obs.UpVertex))).ForEach(b => b.CollidedWith());
+            while(Bullets.RemoveAll(b => b.Remove) > 0)
+                break;
         }
         public void AddBullet(Bullet bullet)
         {

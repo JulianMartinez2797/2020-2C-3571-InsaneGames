@@ -211,7 +211,7 @@ namespace TGC.MonoGame.InsaneGames
         {
             List<Enemy> enemies = new List<Enemy>();
 
-            enemies.Add(new TGCito(Player, Matrix.CreateTranslation(0, 0, 0)));
+            enemies.Add(new TGCito(Player));
             enemies.Add(new TGCito(Player));
             enemies.Add(new TGCito(Player));
             enemies.Add(new TGCito(Player));

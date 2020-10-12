@@ -23,8 +23,8 @@ namespace TGC.MonoGame.InsaneGames.Entities.Obstacles
                         scaling *
                         spawnPoint;
             ModelName = modelName;
-            UpVertex = SpawnPoint.Translation + HitboxSize;
-            BottomVertex = SpawnPoint.Translation - HitboxSize;
+            UpVertex = SpawnPoint.Translation + new Vector3(HitboxSize.X / 2, HitboxSize.Y, HitboxSize.Z / 2);
+            BottomVertex = SpawnPoint.Translation - new Vector3(HitboxSize.X / 2, 0, HitboxSize.Z / 2);
         }
         public override void Load()
         {

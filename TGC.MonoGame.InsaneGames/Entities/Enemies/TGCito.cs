@@ -105,6 +105,11 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
             var world = Misalignment * position.Value; 
             Model.Draw(world, Game.Camera.View, Game.Camera.Projection);
         }
+        public override void CollidedWith(Player player)
+        {
+            if(!Death)
+                base.CollidedWith(player);
+        }
         public override void RemoveFromLife(float amount) 
         {
             base.RemoveFromLife(amount);
