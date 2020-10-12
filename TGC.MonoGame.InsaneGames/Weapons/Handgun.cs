@@ -8,6 +8,7 @@ namespace TGC.MonoGame.InsaneGames.Weapons
     {
         protected Matrix World;
         private bool Shooting = false;
+        static readonly float Damage = 20;
         static readonly Vector3 BulletSize = new Vector3(1, 1, 1);
         static protected Matrix RotationMatrix = Matrix.CreateScale(0.02f) *
                                                 /*Matrix.CreateTranslation(0, -0.5f, 0)* */
@@ -45,7 +46,7 @@ namespace TGC.MonoGame.InsaneGames.Weapons
             if(!Shooting && mouseState.LeftButton == ButtonState.Pressed)
             {
                 Shooting = true;
-                MapRepo.CurrentMap.AddBullet(new Entities.Bullet(150, direction * 5000, playerPosition, BulletSize));
+                MapRepo.CurrentMap.AddBullet(new Entities.Bullet(Damage, direction * 1000, playerPosition, BulletSize));
             }
             else if(mouseState.LeftButton == ButtonState.Released)
             {

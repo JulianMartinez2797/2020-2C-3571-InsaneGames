@@ -1,10 +1,15 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace TGC.MonoGame.InsaneGames.Weapons
 {
     class MachineGun : Weapon
     {
         protected Matrix World;
+        static readonly Vector3 BulletSize = new Vector3(1, 1, 1);
+        static readonly double ShootingSpeed = 0.5;
+        static readonly float Damage = 15;
+        protected double TimeSinceLastBullet = 0;
         static protected Matrix RotationMatrix = Matrix.CreateScale(0.02f) *
                                                 /*Matrix.CreateTranslation(0, -0.5f, 0)* */
                                                 Matrix.CreateRotationX(MathHelper.ToRadians(-3f)) * 
@@ -33,6 +38,24 @@ namespace TGC.MonoGame.InsaneGames.Weapons
         public override void Draw(GameTime gameTime)
         {
             Model.Draw(World, Game.Camera.View, Game.Camera.Projection);
+        }
+        public override void Update(GameTime gameTime, Vector3 direction, Vector3 playerPosition)
+        {
+            Update(gameTime);
+            var mouseState = Mouse.GetState();
+            if(mouseState.LeftButton == ButtonState.Released)
+            {
+                TimeSinceLastBullet = 0;
+                return;
+            }
+
+            var elapsedTime = gameTime.ElapsedGameTime.TotalSeconds;
+            TimeSinceLastBullet += elapsedTime;
+            if(TimeSinceLastBullet >= ShootingSpeed)
+            {
+                Maps.MapRepo.CurrentMap.AddBullet(new Entities.Bullet(Damage, direction * 1000, playerPosition, BulletSize));
+                TimeSinceLastBullet = 0;
+            }
         }
     }
 }
