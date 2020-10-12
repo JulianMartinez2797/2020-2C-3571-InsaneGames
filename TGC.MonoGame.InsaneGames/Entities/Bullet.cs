@@ -36,9 +36,6 @@ namespace TGC.MonoGame.InsaneGames.Entities
             LastPosition = CurrentPosition;
             var time = gameTime.ElapsedGameTime.TotalSeconds;
             CurrentPosition = Speed * (float) time + LastPosition;
-            Console.Write(LastPosition);
-            Console.Write(CurrentPosition);
-            Console.WriteLine("");
         }
 
         public void Collided()
