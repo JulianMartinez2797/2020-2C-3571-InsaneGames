@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace TGC.MonoGame.InsaneGames.Weapons
 {
@@ -9,6 +10,9 @@ namespace TGC.MonoGame.InsaneGames.Weapons
                                                 /*Matrix.CreateTranslation(0, -0.5f, 0)*/
                                                 Matrix.CreateRotationX(MathHelper.ToRadians(-3f)) * 
                                                 Matrix.CreateRotationY(MathHelper.ToRadians(0f));
+        static readonly protected float Damage = 100;
+        static readonly protected Vector3 BulletSize = new Vector3(20, 10, 20); 
+        protected bool Shooting = false;
 
         public Shotgun () : base("armas/shotgun/tactical-shotgun") {}
         public override void Initialize(TGCGame game) {
@@ -33,6 +37,21 @@ namespace TGC.MonoGame.InsaneGames.Weapons
         public override void Draw(GameTime gameTime)
         {
             Model.Draw(World, Game.Camera.View, Game.Camera.Projection);
+        }
+        public override void Update(GameTime gameTime, Vector3 direction, Vector3 playerPosition)
+        {
+            Update(gameTime);
+            var mouseState = Mouse.GetState();
+            if(!Shooting && mouseState.LeftButton == ButtonState.Pressed)
+            {
+                Shooting = true;
+                
+            Maps.MapRepo.CurrentMap.AddBullet(new Entities.Bullets.FragmentBullet(Damage, direction, playerPosition, BulletSize));
+            }
+            else if(mouseState.LeftButton == ButtonState.Released)
+            {
+                Shooting = false;
+            }
         }
     }
 }

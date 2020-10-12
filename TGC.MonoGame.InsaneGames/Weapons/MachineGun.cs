@@ -53,7 +53,7 @@ namespace TGC.MonoGame.InsaneGames.Weapons
             TimeSinceLastBullet += elapsedTime;
             if(TimeSinceLastBullet >= ShootingSpeed)
             {
-                Maps.MapRepo.CurrentMap.AddBullet(new Entities.Bullet(Damage, direction * 1000, playerPosition, BulletSize));
+                Maps.MapRepo.CurrentMap.AddBullet(new Entities.Bullets.BasicBullet(Damage, direction * 1000, playerPosition, BulletSize));
                 TimeSinceLastBullet = 0;
             }
         }

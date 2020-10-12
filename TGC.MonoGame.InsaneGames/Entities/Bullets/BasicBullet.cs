@@ -2,9 +2,9 @@ using System;
 using Microsoft.Xna.Framework;
 using TGC.MonoGame.InsaneGames.Entities.Enemies;
 using TGC.MonoGame.InsaneGames.Entities.Obstacles;
-namespace TGC.MonoGame.InsaneGames.Entities
+namespace TGC.MonoGame.InsaneGames.Entities.Bullets
 {
-    class Bullet : Entity
+    class BasicBullet : Bullet
     {
         protected Vector3 Speed, InitialPos;
         public Boolean Collided { get; protected set; } = false;
@@ -20,11 +20,11 @@ namespace TGC.MonoGame.InsaneGames.Entities
         { 
             get { return CurrentPosition + HitboxSize / 2; }
         }
-        public Boolean Remove 
+        override public bool Remove 
         {
             get { return Collided; }
         }
-        public Bullet(float damage, Vector3 speed, Vector3 initialPos, Vector3 hitboxSize)
+        public BasicBullet(float damage, Vector3 speed, Vector3 initialPos, Vector3 hitboxSize)
         {
             Damage = damage;
             Speed = speed;
@@ -40,7 +40,7 @@ namespace TGC.MonoGame.InsaneGames.Entities
             var time = gameTime.ElapsedGameTime.TotalSeconds;
             CurrentPosition = Speed * (float) time + LastPosition;
         }
-        public void CollidedWith(Enemy enemy)
+        public override void CollidedWith(Enemy enemy)
         {
             if(!Collided)
             {
@@ -48,13 +48,9 @@ namespace TGC.MonoGame.InsaneGames.Entities
                 CollidedWith();
             }
         }
-        public void CollidedWith()
+        public override void CollidedWith()
         {
             Collided = true;
-        }
-        public void CollidedWith(Obstacle obstacle)
-        {
-            CollidedWith();
         }
         public override Boolean CollidesWith(Vector3 bVertex, Vector3 uVertex)
         {

@@ -5,6 +5,7 @@ using TGC.MonoGame.InsaneGames.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TGC.MonoGame.InsaneGames.Entities.Obstacles;
+using TGC.MonoGame.InsaneGames.Entities.Bullets;
 using System.Diagnostics;
 
 namespace TGC.MonoGame.InsaneGames.Maps
@@ -110,7 +111,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
                     playerInRoom = true;
                 }
 
-                var bullets = Bullets.FindAll(bullet => room.IsInRoom(bullet.LastPosition) || room.IsInRoom(bullet.CurrentPosition));
+                var bullets = Bullets.FindAll(bullet => room.IsInRoom(bullet.BottomVertex) || room.IsInRoom(bullet.UpVertex));
                 var enemies = Array.FindAll(Enemies, enemy => room.IsInRoom(enemy.position.Value.Translation));
                 bullets.ForEach(b => b.Update(gameTime));
                 foreach(var enemy in enemies)
