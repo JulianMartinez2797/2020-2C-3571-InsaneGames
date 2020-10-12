@@ -67,9 +67,9 @@ namespace TGC.MonoGame.InsaneGames
             center_point.X = Graphics.GraphicsDevice.Viewport.Width / 2;
 
             Camera = new FreeCamera(GraphicsDevice.Viewport.AspectRatio, new Vector3(0, 20, 0), center_point);            
-            Player = new Player(this, Camera, Matrix.CreateTranslation(1, 0.01f, 60));
+            Player = new Player(this, Camera, Matrix.CreateTranslation(1, 5, 60));
             Map = CreateMap(Player);
-
+            MapRepo.CurrentMap = Map;
             Map.Initialize(this);
             // Weapon = new MachineGun();
             // Weapon = new Shotgun(); No funciona
@@ -192,7 +192,7 @@ namespace TGC.MonoGame.InsaneGames
             var life4 = new Life(Matrix.CreateRotationY(MathHelper.ToRadians(90f)) * Matrix.CreateTranslation(350, 0, 70));
             var armor4 = new Armor(Matrix.CreateRotationY(MathHelper.ToRadians(90f)) * Matrix.CreateTranslation(350, 5, 90));
 
-            rooms.Add(new Box(initialDict, new Vector3(250, 100, 250), new Vector3(0, 50, 0), new Collectible[] { }));
+            rooms.Add(new Box(initialDict, new Vector3(250, 100, 250), new Vector3(0, 50, 0), new Collectible[] { }, false));
             rooms.Add(new Box(dictCorridorInZ, new Vector3(250, 100, 250), new Vector3(0, 50, -250), new Collectible[] { }));
             rooms.Add(new Box(dictCorner1, new Vector3(250, 100, 250), new Vector3(0, 50, -500), new Collectible[] { life, armor }));
             rooms.Add(new Box(dictCorridorInX, new Vector3(250, 100, 250), new Vector3(250, 50, -500), new Collectible[] { }));
@@ -211,7 +211,7 @@ namespace TGC.MonoGame.InsaneGames
         {
             List<Enemy> enemies = new List<Enemy>();
 
-            enemies.Add(new TGCito(Player));
+            enemies.Add(new TGCito(Player, Matrix.CreateTranslation(0, 0, 0)));
             enemies.Add(new TGCito(Player));
             enemies.Add(new TGCito(Player));
             enemies.Add(new TGCito(Player));

@@ -73,9 +73,9 @@ namespace TGC.MonoGame.InsaneGames.Maps
         }
         public bool Collides(Vector3 lowerPoint, Vector3 higherPoint)
         {
-            if(higherPoint.X < BottomLeft.X || UpperRight.X < lowerPoint.X) return false;
-            if(higherPoint.Y < BottomLeft.Y || UpperRight.Y < lowerPoint.Y) return false;
-            if(higherPoint.Z < BottomLeft.Z || UpperRight.Z < lowerPoint.Z) return false;
+            if(higherPoint.X <= BottomLeft.X || UpperRight.X <= lowerPoint.X) return false;
+            if(higherPoint.Y <= BottomLeft.Y || UpperRight.Y <= lowerPoint.Y) return false;
+            if(higherPoint.Z <= BottomLeft.Z || UpperRight.Z <= lowerPoint.Z) return false;
             return true;
         }
 

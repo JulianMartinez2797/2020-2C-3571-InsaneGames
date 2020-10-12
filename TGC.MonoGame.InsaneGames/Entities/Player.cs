@@ -83,7 +83,7 @@ namespace TGC.MonoGame.InsaneGames.Entities
         {
             this.Camera = camera;
             CameraCorrection = Camera.Position;
-            NewPosition = Camera.Position - CameraCorrection + new Vector3(0, 0.01f, 0);
+            NewPosition = Camera.Position - CameraCorrection + new Vector3(0, spawnPoint.Translation.Y, 0);
             UpVertex = spawnPoint.Translation + HitboxSize;
             BottomVertex = spawnPoint.Translation - HitboxSize;
 
@@ -97,7 +97,7 @@ namespace TGC.MonoGame.InsaneGames.Entities
             Weapons.Add(machineGun);
             Weapons.Add(shotgun);
             Weapons.Add(rpg7);
-            CurrentWeapon = Weapons[1];
+            CurrentWeapon = Weapons[0];
         }
 
         private void CalculateView()
@@ -148,7 +148,7 @@ namespace TGC.MonoGame.InsaneGames.Entities
             }
             BottomVertex = NewPosition - HitboxSize;
             UpVertex = NewPosition + HitboxSize;
-            CurrentWeapon.Update(gameTime);
+            CurrentWeapon.Update(gameTime, Camera.FrontDirection, Camera.Position);
         }
 
         private void ChangeWeapon(int weaponIdx)

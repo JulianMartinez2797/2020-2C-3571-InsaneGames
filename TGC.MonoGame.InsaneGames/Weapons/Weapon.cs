@@ -13,6 +13,11 @@ namespace TGC.MonoGame.InsaneGames.Weapons
             ModelName = modelName;
         }
 
+        public virtual void Update(GameTime gameTime, Vector3 direction, Vector3 playerPosition)
+        {
+            this.Update(gameTime);
+        }
+
         public override void Load()
         {
             Model = ContentManager.Instance.LoadModel(ModelName);

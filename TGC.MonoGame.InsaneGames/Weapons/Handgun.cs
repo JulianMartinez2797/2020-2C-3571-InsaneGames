@@ -1,10 +1,14 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
+using TGC.MonoGame.InsaneGames.Maps;
 
 namespace TGC.MonoGame.InsaneGames.Weapons
 {
     class Handgun : Weapon
     {
         protected Matrix World;
+        private bool Shooting = false;
+        static readonly Vector3 BulletSize = new Vector3(1, 1, 1);
         static protected Matrix RotationMatrix = Matrix.CreateScale(0.02f) *
                                                 /*Matrix.CreateTranslation(0, -0.5f, 0)* */
                                                 Matrix.CreateRotationX(MathHelper.ToRadians(-3f)) * 
@@ -33,6 +37,20 @@ namespace TGC.MonoGame.InsaneGames.Weapons
         public override void Draw(GameTime gameTime)
         {
             Model.Draw(World, Game.Camera.View, Game.Camera.Projection);
+        }
+        public override void Update(GameTime gameTime, Vector3 direction, Vector3 playerPosition)
+        {
+            Update(gameTime);
+            var mouseState = Mouse.GetState();
+            if(!Shooting && mouseState.LeftButton == ButtonState.Pressed)
+            {
+                Shooting = true;
+                MapRepo.CurrentMap.AddBullet(new Entities.Bullet(150, direction * 5000, playerPosition, BulletSize));
+            }
+            else if(mouseState.LeftButton == ButtonState.Released)
+            {
+                Shooting = false;
+            }
         }
     }
 }
