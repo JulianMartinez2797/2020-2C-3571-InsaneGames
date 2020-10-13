@@ -9,7 +9,7 @@ using System;
 using TGC.MonoGame.InsaneGames.Weapons;
 namespace TGC.MonoGame.InsaneGames.Entities
 {
-    class Player : Entity
+    class Player : Entity, ObstacleCollisionable
     {
         public float Life { get; private set; } = 90;
         public float Armor { get; private set; } = 0;

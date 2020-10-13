@@ -110,6 +110,9 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
             if(!Death)
                 base.CollidedWith(player);
         }
+        public override void CollidedWith(Obstacles.Obstacle obstacle)
+        {
+        }
         public override void RemoveFromLife(float amount) 
         {
             base.RemoveFromLife(amount);

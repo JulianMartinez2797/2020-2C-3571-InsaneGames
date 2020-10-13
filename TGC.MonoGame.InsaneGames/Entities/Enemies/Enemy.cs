@@ -2,7 +2,7 @@ using System;
 
 namespace TGC.MonoGame.InsaneGames.Entities.Enemies
 {
-    abstract class Enemy : Entity 
+    abstract class Enemy : Entity, Entities.Obstacles.ObstacleCollisionable
     {
         public bool floorEnemy { get; protected set; }
         public float Life { get; protected set; }
@@ -17,5 +17,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         {
             player.BeAttacked(Damage);
         }
+
+        public abstract void CollidedWith(Entities.Obstacles.Obstacle obstacle);
     }
 }
