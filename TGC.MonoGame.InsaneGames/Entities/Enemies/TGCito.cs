@@ -103,7 +103,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
             if(!position.HasValue)
                 throw new System.Exception("The position of the TGCito was not set");
             var world = Misalignment * position.Value; 
-            Model.Draw(world, Game.Camera.View, Game.Camera.Projection);
+            Model.Draw(world, Maps.MapRepo.CurrentMap.Camera.View, Maps.MapRepo.CurrentMap.Camera.Projection);
         }
         public override void CollidedWith(Player player)
         {

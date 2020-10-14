@@ -33,7 +33,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
         public override void Draw(GameTime gameTime)
         {
             if(!Collected)
-                Model.Draw(SpawnPoint, Game.Camera.View, Game.Camera.Projection);
+                Model.Draw(SpawnPoint, Maps.MapRepo.CurrentMap.Camera.View, Maps.MapRepo.CurrentMap.Camera.Projection);
         }
         public override void CollidedWith(Player player)
         {

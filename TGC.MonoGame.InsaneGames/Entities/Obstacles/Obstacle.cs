@@ -33,7 +33,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Obstacles
         }
         public override void Draw(GameTime gameTime)
         {
-            Model.Draw(SpawnPoint, Game.Camera.View, Game.Camera.Projection);
+            Model.Draw(SpawnPoint, Maps.MapRepo.CurrentMap.Camera.View, Maps.MapRepo.CurrentMap.Camera.Projection);
         }
 
     }

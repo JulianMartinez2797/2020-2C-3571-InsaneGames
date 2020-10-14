@@ -4,9 +4,8 @@ using TGC.MonoGame.InsaneGames.Entities.Enemies;
 using TGC.MonoGame.InsaneGames.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using TGC.MonoGame.InsaneGames.Entities.Obstacles;
+using TGC.MonoGame.Samples.Cameras;
 using TGC.MonoGame.InsaneGames.Entities.Bullets;
-using System.Diagnostics;
 
 namespace TGC.MonoGame.InsaneGames.Maps
 {
@@ -18,6 +17,8 @@ namespace TGC.MonoGame.InsaneGames.Maps
         private Player Player;
         private List<Bullet> Bullets;
         private InfoUI UI;
+
+        public Camera Camera => Player.Camera;
 
         public Map(Room[] rooms, Enemy[] enemies, Player player) 
         {

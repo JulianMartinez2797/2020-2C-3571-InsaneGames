@@ -60,8 +60,8 @@ namespace TGC.MonoGame.InsaneGames.Maps
         public override void Draw(GameTime gameTime)
         {
             Effect.World = Matrix.Identity;
-            Effect.View = Game.Camera.View;
-            Effect.Projection = Game.Camera.Projection;
+            Effect.View = MapRepo.CurrentMap.Camera.View;
+            Effect.Projection = MapRepo.CurrentMap.Camera.Projection;
 
             Game.GraphicsDevice.SetVertexBuffer(VertexBuffer);
             Game.GraphicsDevice.Indices = IndexBuffer;
