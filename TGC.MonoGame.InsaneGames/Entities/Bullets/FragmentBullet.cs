@@ -33,9 +33,10 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
             if(base.CollidesWith(bVertex, uVertex)) return true;
             if(HalfExplosion)
             {
-                if(uVertex.X <= Position.X || FrontRadius.X <= bVertex.X) return false;
-                if(uVertex.Y <= Position.Y || FrontRadius.Y <= bVertex.Y) return false;
-                if(uVertex.Z <= Position.Z || FrontRadius.Z <= bVertex.Z) return false;
+                //Es feo pero va a mas o menos funcionar
+                var middle = uVertex - bVertex;
+                var distanciaHitbox = Vector3.Distance(FrontRadius, middle);
+                if(distanciaHitbox > Radius) return false;
             }
             // get box closest point to sphere center by clamping
             var x = Math.Max(bVertex.X, Math.Min(Position.X, uVertex.X));
