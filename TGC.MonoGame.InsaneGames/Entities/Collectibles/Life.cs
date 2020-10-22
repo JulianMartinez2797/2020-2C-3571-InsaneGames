@@ -10,7 +10,8 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
         static private Matrix Misalignment;
         private Matrix SpawnPoint;
         private float RecoveryAmount;
-        private readonly Vector3 HitboxSize = new Vector3(15, 2, 15);
+        private static readonly Vector3 HitboxSize = new Vector3(15, 2, 15);
+        override public Vector3 Position => SpawnPoint.Translation;
         public Life(Matrix spawnPoint, Matrix? scaling = null, float recoveryAmount = 10)
         {
             if (Model is null)
@@ -32,7 +33,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
         public override void Draw(GameTime gameTime)
         {
             if(!Collected)
-                Model.Draw(SpawnPoint, Game.Camera.View, Game.Camera.Projection);
+                Model.Draw(SpawnPoint, Maps.MapRepo.CurrentMap.Camera.View, Maps.MapRepo.CurrentMap.Camera.Projection);
         }
         public override void CollidedWith(Player player)
         {

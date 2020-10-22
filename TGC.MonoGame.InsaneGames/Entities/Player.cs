@@ -9,7 +9,7 @@ using System;
 using TGC.MonoGame.InsaneGames.Weapons;
 namespace TGC.MonoGame.InsaneGames.Entities
 {
-    class Player : Entity
+    class Player : Entity, ObstacleCollisionable
     {
         public float Life { get; private set; } = 90;
         public float Armor { get; private set; } = 0;
@@ -77,13 +77,12 @@ namespace TGC.MonoGame.InsaneGames.Entities
         public Vector3 LastBottomVertex { get; set;}
         public Vector3 LastUpVertex { get; set;}
         private readonly Vector3 HitboxSize = new Vector3(15, 4, 15);
-        public Player(TGCGame game, Camera camera, Matrix spawnPoint, Matrix? scaling = null)
+        public Player(TGCGame game, Camera camera, float yPosition = 0, Matrix? scaling = null)
         {
             this.Camera = camera;
-            CameraCorrection = Camera.Position;
-            NewPosition = Camera.Position - CameraCorrection + new Vector3(0, spawnPoint.Translation.Y, 0);
-            UpVertex = spawnPoint.Translation + HitboxSize;
-            BottomVertex = spawnPoint.Translation - HitboxSize;
+            NewPosition = Camera.Position + new Vector3(0, yPosition, 0);
+            UpVertex = NewPosition + HitboxSize;
+            BottomVertex = NewPosition - HitboxSize;
 
             // Remover
             Weapons = new List<Weapon>();

@@ -22,7 +22,7 @@ namespace TGC.MonoGame.InsaneGames.Weapons
         } 
         public override void Update(GameTime gameTime)
         {
-            Matrix cameraWorld = Matrix.Invert(Game.Camera.View);
+            Matrix cameraWorld = Matrix.Invert(MapRepo.CurrentMap.Camera.View);
             Matrix weaponWorld = cameraWorld;   //gives your weapon a matrix that is co-located and co-rotated with camera
 
             float distInFrontOfCam = 2f;
@@ -37,7 +37,7 @@ namespace TGC.MonoGame.InsaneGames.Weapons
         }
         public override void Draw(GameTime gameTime)
         {
-            Model.Draw(World, Game.Camera.View, Game.Camera.Projection);
+            Model.Draw(World, MapRepo.CurrentMap.Camera.View, MapRepo.CurrentMap.Camera.Projection);
         }
         public override void Update(GameTime gameTime, Vector3 direction, Vector3 playerPosition)
         {

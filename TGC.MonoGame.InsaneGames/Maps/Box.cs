@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TGC.MonoGame.InsaneGames.Entities;
 using TGC.MonoGame.InsaneGames.Entities.Collectibles;
+using TGC.MonoGame.InsaneGames.Entities.Obstacles;
 
 namespace TGC.MonoGame.InsaneGames.Maps
 {
@@ -12,8 +13,8 @@ namespace TGC.MonoGame.InsaneGames.Maps
         private Vector3 BottomVertex, UpVertex;
         private Dictionary<WallId, Wall> Walls = new Dictionary<WallId, Wall>();
         private SpawnableSpace SpawnSpace { get; set; }
-        private Collectible[] Collectibles { get; set;}
-        public Box(Dictionary<WallId, BasicEffect> effects, Vector3 size, Vector3 center, Collectible[] collectibles, bool spawnable = true, Dictionary<WallId, (float, float)> textureRepeats = null)
+        
+        public Box(Dictionary<WallId, (BasicEffect, (float, float))> effects, Vector3 size, Vector3 center, List<Collectible> collectibles, List<Obstacle> obstacles, bool spawnable = true)
         {
             Vector2 floorSize = new Vector2(size.X, size.Z),
                     sideWallSize = new Vector2(size.Y, size.Z),
@@ -21,8 +22,6 @@ namespace TGC.MonoGame.InsaneGames.Maps
             float xLength = size.X / 2,
                   yLength = size.Y / 2,
                   zLength = size.Z / 2;
-            
-            textureRepeats ??= new Dictionary<WallId, (float, float)>();
 
             var allWalls = new Wall[] { 
                 Wall.CreateFloor(floorSize, new Vector3(center.X, center.Y - yLength, center.Z)),
@@ -33,14 +32,11 @@ namespace TGC.MonoGame.InsaneGames.Maps
                 Wall.CreateFloor(floorSize, new Vector3(center.X, center.Y + yLength, center.Z), ceiling: true)
             };
             
-            (float, float) textureRepeat;
             foreach(var key in effects.Keys)
             {
-                allWalls[(int)key].Effect = effects[key];
-                if(textureRepeats.TryGetValue(key, out textureRepeat))
-                    allWalls[(int)key].TextureRepeat = textureRepeat;
-                Walls.Add(key, allWalls[(int)key]);
-                
+                allWalls[(int)key].Effect = effects[key].Item1;
+                allWalls[(int)key].TextureRepeat = (effects[key].Item2.Item1, effects[key].Item2.Item2);
+                Walls.Add(key, allWalls[(int)key]);               
             }
 
             var spawnableArea = !spawnable ? new (Vector3, Vector3)[0] : new (Vector3, Vector3)[] {(size, center)};
@@ -52,6 +48,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
             UpVertex = new Vector3(center.X + xLength, center.Y + yLength, center.Z + zLength);
 
             Collectibles = collectibles;
+            Obstacles = obstacles;
         }
 
         public override void Initialize(TGCGame game)
@@ -61,6 +58,9 @@ namespace TGC.MonoGame.InsaneGames.Maps
 
             foreach (var collectible in Collectibles)
                 collectible.Initialize(game);
+            
+            foreach (var obstacle in Obstacles)
+                obstacle.Initialize(game);
             
             base.Initialize(game);
         }
@@ -78,6 +78,10 @@ namespace TGC.MonoGame.InsaneGames.Maps
                 wall.Draw(gameTime);
             foreach (var collectible in Collectibles)
                 collectible.Draw(gameTime);
+            foreach (var obstacle in Obstacles)
+                obstacle.Draw(gameTime);
+            foreach (var obstacle in Obstacles)
+                obstacle.Load();
         }
 
         public override SpawnableSpace SpawnableSpace()
@@ -101,9 +105,24 @@ namespace TGC.MonoGame.InsaneGames.Maps
 
         public override void CheckCollectiblesCollision(Player player)
         {
-            var collided = Array.FindAll(Collectibles, coll => !coll.Collected && coll.CollidesWith(player.BottomVertex, player.UpVertex));
+            var collided = Collectibles.FindAll(coll => !coll.Collected && coll.CollidesWith(player.BottomVertex, player.UpVertex));
             //collided?.CollidedWith(player);
-            Array.ForEach(collided, c => c.CollidedWith(player));
+            collided.ForEach(c => c.CollidedWith(player));
+        }
+        public override void CheckObstacleCollision(Player player)
+        {
+            var collidedObstacle = Obstacles.Find(obs => player.CollidesWith(obs.BottomVertex, obs.UpVertex));
+            player.CollidedWith(collidedObstacle);
+        }
+        public override void CheckObstacleCollision(Entities.Enemies.Enemy enemy)
+        {
+            var collidedObstacle = Obstacles.Find(obs => enemy.CollidesWith(obs.BottomVertex, obs.UpVertex));
+            enemy.CollidedWith(collidedObstacle);
+        }
+        public override void CheckObstacleCollision(Entities.Bullets.Bullet bullet)
+        {
+            var collidedObstacle = Obstacles.Find(obs => bullet.CollidesWith(obs.BottomVertex, obs.UpVertex));
+            if(collidedObstacle != null) bullet.CollidedWith();
         }
     }
 }
