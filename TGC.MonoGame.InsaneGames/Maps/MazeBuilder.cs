@@ -12,9 +12,9 @@ namespace TGC.MonoGame.InsaneGames.Maps
     class MazeBuilder
     {
         protected Box[] Grid;
-        protected float SizeX, SizeZ;
+        protected int SizeX, SizeZ;
         protected Vector3 RoomSize;
-        protected float FloorLevel;
+        protected float HalfHeight;
         protected (float, float) ZeroPoint;
         protected Enemy[] Enemies;
         protected Player Player;
@@ -25,14 +25,14 @@ namespace TGC.MonoGame.InsaneGames.Maps
             SizeZ = sizeZ;
             RoomSize = roomSize;
             ZeroPoint = (roomSize.X / 2, roomSize.Z / 2);
-            FloorLevel = roomSize.Y / 2;
+            HalfHeight = roomSize.Y / 2;
         }
-        public MazeBuilder AddBox(int x, int z,  Dictionary<WallId, (BasicEffect, (float, float))> walls, bool spawnable = true)
+        public MazeBuilder AddBox(int z, int x,  Dictionary<WallId, (BasicEffect, (float, float))> walls, bool spawnable = true)
         {
             if(SizeX <= x || SizeZ <= z || x < 0 || z < 0)
                 throw new Exception("Room position out of bounds");
-            var center = new Vector3(ZeroPoint.Item1 + RoomSize.X * x, FloorLevel, ZeroPoint.Item2 + RoomSize.Z * z);
-            var index = (int) (x * SizeZ + z);
+            var center = new Vector3(ZeroPoint.Item1 + RoomSize.X * x, HalfHeight, ZeroPoint.Item2 + RoomSize.Z * z);
+            var index = x * SizeZ + z;
             Grid[index] = new Box(walls, RoomSize, center, new List<Collectible>(), new List<Obstacle>(), spawnable);
             return this;
         }

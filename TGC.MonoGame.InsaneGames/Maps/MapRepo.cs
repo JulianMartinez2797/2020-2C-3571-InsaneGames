@@ -32,7 +32,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
             var wallTexture = (wallsEffect, (1f, 1f));
             var leftFront = new Dictionary<WallId, (BasicEffect, (float, float))> { { WallId.Ceiling, ceilingTexture }, { WallId.Floor, floorTexture }, { WallId.Front, wallTexture }, { WallId.Left, wallTexture }};
             var frontBack = new Dictionary<WallId, (BasicEffect, (float, float))> { { WallId.Ceiling, ceilingTexture }, { WallId.Floor, floorTexture }, { WallId.Front, wallTexture }, { WallId.Back, wallTexture }};
-            var frontRightBack = new Dictionary<WallId, (BasicEffect, (float, float))> { { WallId.Ceiling, ceilingTexture }, { WallId.Floor, floorTexture }, { WallId.Front, wallTexture }, { WallId.Left, wallTexture }, { WallId.Right, wallTexture}};
+            var frontRightBack = new Dictionary<WallId, (BasicEffect, (float, float))> { { WallId.Ceiling, ceilingTexture }, { WallId.Floor, floorTexture }, { WallId.Front, wallTexture }, { WallId.Back, wallTexture }, { WallId.Right, wallTexture}};
             var left = new Dictionary<WallId, (BasicEffect, (float, float))> { { WallId.Ceiling, ceilingTexture }, { WallId.Floor, floorTexture }, { WallId.Left, wallTexture }};
             var front = new Dictionary<WallId, (BasicEffect, (float, float))> { { WallId.Ceiling, ceilingTexture }, { WallId.Floor, floorTexture }, { WallId.Front, wallTexture }};
             var frontRight = new Dictionary<WallId, (BasicEffect, (float, float))> { { WallId.Ceiling, ceilingTexture }, { WallId.Floor, floorTexture }, { WallId.Front, wallTexture }, { WallId.Right, wallTexture }};
@@ -61,7 +61,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
             center_point.X = graphicsDevice.Viewport.Width / 2;
 
             var camera = new FreeCamera(graphicsDevice.Viewport.AspectRatio, new Vector3(1125, 20, 125), center_point);            
-            var player = new Player(game, camera, Matrix.CreateTranslation(1125, -50, 125));
+            var player = new Player(game, camera, 0);
             builder.SetPlayer(player);
 
             var enemies = new Enemy[20];
