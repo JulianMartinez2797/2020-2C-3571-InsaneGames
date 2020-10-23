@@ -8,15 +8,22 @@ namespace TGC.MonoGame.InsaneGames
         private SpriteBatch SpriteBatch;
         private SpriteFont Font;
         private GraphicsDevice GraphicsDevice;
+        private Texture2D BackgroundTexture;
         public void Load(GraphicsDevice graphicsDevice)
         {
             GraphicsDevice = graphicsDevice;
             SpriteBatch = new SpriteBatch(graphicsDevice);
             Font = ContentManager.Instance.LoadSpriteFont("Basic");
+            BackgroundTexture = ContentManager.Instance.LoadTexture2D("Menu/background2");
         }
 
         public void Draw(GameTime gameTime)
         {
+
+            SpriteBatch.Begin();
+            SpriteBatch.Draw(BackgroundTexture, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+            SpriteBatch.End();
+
             DrawCenterTextY("TGC Shooter", 0, 1);
             DrawCenterTextY("W A S D -> Movement", 100, 1);
             DrawCenterTextY("Left click -> Shoot", 200, 1);
@@ -30,7 +37,7 @@ namespace TGC.MonoGame.InsaneGames
             var size = Font.MeasureString(msg) * escala;
             SpriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null,
                 Matrix.CreateScale(escala) * Matrix.CreateTranslation((W - size.X) / 2, Y, 0));
-            SpriteBatch.DrawString(Font, msg, new Vector2(0, 0), Color.YellowGreen);
+            SpriteBatch.DrawString(Font, msg, new Vector2(0, 0), Color.Black);
             SpriteBatch.End();
         }
 
