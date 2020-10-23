@@ -10,7 +10,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         private Player playerReference { set; get; }
         private const string ModelName = "tgcito/tgcito-classic";
         static private Model Model;
-        private readonly Vector3 HitboxSize = new Vector3(10, 40, 10);
+        private readonly Vector3 HitboxSize = new Vector3(10, 16, 10);
         private readonly float TimePerHit = 2;
         private Matrix Misalignment { get; }
         private Boolean Death = false, PosSet = false;
@@ -106,8 +106,8 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
                     float enemy_speed = 70f * Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
                     CurPosition = CurPosition * Matrix.CreateTranslation(vec_to_player * enemy_speed);
                 }
-                UpVertex = CurPosition.Translation + new Vector3(HitboxSize.X / 2, HitboxSize.Y, HitboxSize.Z / 2);
-                BottomVertex = CurPosition.Translation - new Vector3(HitboxSize.X / 2, 0, HitboxSize.Z / 2);
+                UpVertex = CurPosition.Translation + HitboxSize / 2;
+                BottomVertex = CurPosition.Translation - HitboxSize / 2;
             } 
             else 
             {
