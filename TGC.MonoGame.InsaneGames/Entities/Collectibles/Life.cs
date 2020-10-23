@@ -7,23 +7,15 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
     {
         private const string ModelName = "collectibles/life/heart/heart";
         static private Model Model;
-        static private Matrix Misalignment;
-        private Matrix SpawnPoint;
         private float RecoveryAmount;
-        private static readonly Vector3 HitboxSize = new Vector3(15, 2, 15);
+        private static readonly Vector3 hitboxSize = new Vector3(15, 5, 15);
+        override protected Vector3 HitboxSize { get { return hitboxSize; }}
+        private static readonly Matrix Scale = Matrix.CreateScale(30f);
         override public Vector3 Position => SpawnPoint.Translation;
-        public Life(Matrix spawnPoint, Matrix? scaling = null, float recoveryAmount = 10)
+        public Life(Matrix spawnPoint, float scaling = 1, float recoveryAmount = 10) : base(spawnPoint, scaling)
         {
-            if (Model is null)
-            {
-                Misalignment = Matrix.CreateTranslation(0, 0, 0);
-            }
-            SpawnPoint = Misalignment *
-                        scaling.GetValueOrDefault(Matrix.CreateScale(30.0f)) *
-                        spawnPoint;
+            SpawnPoint = Scale * SpawnPoint;
             RecoveryAmount = recoveryAmount;
-            UpVertex = SpawnPoint.Translation + HitboxSize;
-            BottomVertex = SpawnPoint.Translation - HitboxSize;
         }
         public override void Load()
         {
