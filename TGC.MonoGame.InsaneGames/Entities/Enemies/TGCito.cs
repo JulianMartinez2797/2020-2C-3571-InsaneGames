@@ -9,9 +9,11 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         private Player playerReference { set; get; }
         private const string ModelName = "tgcito/tgcito-classic";
         static private Model Model;
-        private readonly Vector3 HitboxSize = new Vector3(80, 120, 80);
+        private readonly Vector3 HitboxSize = new Vector3(10, 40, 10);
+        private readonly float TimePerHit = 2;
         private Matrix Misalignment { get; }
         private Boolean Death = false;
+        private float TimeSinceLastHit = 0;
         public TGCito(Player player, Matrix? spawnPoint = null, Matrix? scaling = null, float life = 100, float damage = 5)
         {
             playerReference = player;
@@ -59,7 +61,12 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         private bool _mirandoPlayer = false;
         public override void Update(GameTime gameTime)
         {
-            if (isPlayerNear() && !Death)
+            if(Death)
+            {
+                //Logica de respawn
+                return;
+            }
+            else if (isPlayerNear())
             {   //Detectado
                 Vector3 vec_to_player = playerReference.NewPosition - this.position.Value.Translation;
                 vec_to_player.Y = 0;
@@ -74,7 +81,9 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
                     _mirandoPlayer = true;
                 }
                 else
+                {
                     rot_speed *= angle / Math.Abs(angle);
+                }
                 float angle_in_degrees = MathHelper.ToDegrees(angle);
                 position = Matrix.CreateRotationY(rot_speed) * position.Value;
 
@@ -85,12 +94,14 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
                     float enemy_speed = 70f * Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
                     position = position * Matrix.CreateTranslation(vec_to_player * enemy_speed);
                 }
-            } else {
+                UpVertex = position.Value.Translation + new Vector3(HitboxSize.X / 2, HitboxSize.Y, HitboxSize.Z / 2);
+                BottomVertex = position.Value.Translation - new Vector3(HitboxSize.X / 2, 0, HitboxSize.Z / 2);
+            } 
+            else 
+            {
                 _mirandoPlayer = false;
             }
-            
-            UpVertex = position.Value.Translation + new Vector3(HitboxSize.X / 2, HitboxSize.Y, HitboxSize.Z / 2);
-            BottomVertex = position.Value.Translation - new Vector3(HitboxSize.X / 2, 0, HitboxSize.Z / 2);
+            TimeSinceLastHit += (float) gameTime.ElapsedGameTime.TotalSeconds;
         }
 
         public override void Load()
@@ -107,8 +118,14 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         }
         public override void CollidedWith(Player player)
         {
-            if(!Death)
+            if(Death) return;
+            
+            if(TimeSinceLastHit > TimePerHit)
+            {
                 base.CollidedWith(player);
+                TimeSinceLastHit = 0;
+            }
+
         }
         public override void CollidedWith(Obstacles.Obstacle obstacle)
         {
