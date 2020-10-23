@@ -3,8 +3,6 @@ namespace TGC.MonoGame.InsaneGames.Entities
 {
     public abstract class Entity : IDrawable 
     {
-        public Matrix? position { get; set; }
-
         virtual public Vector3 BottomVertex { get; protected set; } 
         virtual public Vector3 UpVertex { get; protected set; }
         virtual public bool CollidesWith(Vector3 bBottom, Vector3 bUp)

@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Xna.Framework;
 
 namespace TGC.MonoGame.InsaneGames.Entities.Enemies
 {
@@ -7,6 +8,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         public bool floorEnemy { get; protected set; }
         public float Life { get; protected set; }
         public float Damage { get; protected set; }
+        abstract public Vector3 Position { get; set;} 
 
         public virtual void RemoveFromLife(float amount) 
         {
@@ -19,5 +21,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         }
 
         public abstract void CollidedWith(Entities.Obstacles.Obstacle obstacle);
+
+        public abstract bool PositionSet();
     }
 }

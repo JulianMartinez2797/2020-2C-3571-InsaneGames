@@ -44,7 +44,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
                 enemy.Initialize(game);
                 while(true)
                 {
-                    if(!(enemy.position is null)) break;
+                    if(enemy.PositionSet()) break;
 
                     var room = Rooms[Random.Next(0, Rooms.Length)];
                     if(!room.Spawnable)
@@ -52,7 +52,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
                     var spawn = room.SpawnableSpace().GetSpawnPoint(enemy.floorEnemy);
                     
                     if(room.CollidesWithWall(enemy.BottomVertex + spawn, enemy.UpVertex + spawn) is null)
-                        enemy.position = Matrix.CreateTranslation(spawn);
+                        enemy.Position = spawn;
                     else
                         continue;
                     break;
@@ -104,7 +104,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
                 }
 
                 var bullets = Bullets.FindAll(bullet => room.IsInRoom(bullet.BottomVertex) || room.IsInRoom(bullet.UpVertex));
-                var enemies = Array.FindAll(Enemies, enemy => room.IsInRoom(enemy.position.Value.Translation));
+                var enemies = Array.FindAll(Enemies, enemy => room.IsInRoom(enemy.Position));
                 bullets.ForEach(b => b.Update(gameTime));
                 foreach(var enemy in enemies)
                 {

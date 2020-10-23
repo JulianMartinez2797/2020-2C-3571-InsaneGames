@@ -6,23 +6,33 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
 {
     class TGCito : Enemy
     {
+        private Matrix CurPosition, PrevPosition;
         private Player playerReference { set; get; }
         private const string ModelName = "tgcito/tgcito-classic";
         static private Model Model;
         private readonly Vector3 HitboxSize = new Vector3(10, 40, 10);
         private readonly float TimePerHit = 2;
         private Matrix Misalignment { get; }
-        private Boolean Death = false;
+        private Boolean Death = false, PosSet = false;
         private float TimeSinceLastHit = 0;
+        override public Vector3 Position 
+        {
+            get { return CurPosition.Translation; }
+            set { 
+                    CurPosition = Misalignment * Matrix.CreateTranslation(value); 
+                    PosSet = true;
+                }
+        }
         public TGCito(Player player, Matrix? spawnPoint = null, Matrix? scaling = null, float life = 100, float damage = 5)
         {
             playerReference = player;
             Misalignment = Matrix.CreateTranslation(0, 44.5f, 0) * scaling.GetValueOrDefault(Matrix.CreateScale(0.2f));
             if(spawnPoint.HasValue)
             {
-                position = spawnPoint.Value;
-                UpVertex = spawnPoint.Value.Translation + new Vector3(HitboxSize.X / 2, HitboxSize.Y, HitboxSize.Z / 2);
-                BottomVertex = spawnPoint.Value.Translation - new Vector3(HitboxSize.X / 2, 0, HitboxSize.Z / 2);
+                CurPosition = Misalignment * spawnPoint.Value;
+                UpVertex = spawnPoint.Value.Translation + HitboxSize / 2;
+                BottomVertex = spawnPoint.Value.Translation - HitboxSize / 2;
+                PosSet = true;
             }
             floorEnemy = true;
             Life = life;
@@ -33,7 +43,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         {
             float detection_distance = 100f;
             Vector3 playerPosition = playerReference.NewPosition;
-            Vector3 enemyPosition = this.position.Value.Translation;
+            Vector3 enemyPosition = this.CurPosition.Translation;
             return Vector3.Distance(playerPosition, enemyPosition) < detection_distance;
         }
 
@@ -67,12 +77,14 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
                 return;
             }
             else if (isPlayerNear())
-            {   //Detectado
-                Vector3 vec_to_player = playerReference.NewPosition - this.position.Value.Translation;
+            {   
+                PrevPosition = CurPosition;
+                //Detectado
+                Vector3 vec_to_player = playerReference.NewPosition - CurPosition.Translation;
                 vec_to_player.Y = 0;
                 // Rotar el tgcito
                 float rot_speed = MathHelper.ToRadians(200f * Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds));
-                float angle = getAngleBetweenVectorsInPlaneXZ(this.position.Value.Backward, playerReference.NewPosition - this.position.Value.Translation);
+                float angle = getAngleBetweenVectorsInPlaneXZ(CurPosition.Backward, playerReference.NewPosition - CurPosition.Translation);
                 if (float.IsNaN(angle))
                     angle = 0f;
                 if (Math.Abs(angle) < rot_speed)
@@ -85,17 +97,17 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
                     rot_speed *= angle / Math.Abs(angle);
                 }
                 float angle_in_degrees = MathHelper.ToDegrees(angle);
-                position = Matrix.CreateRotationY(rot_speed) * position.Value;
+                CurPosition = Matrix.CreateRotationY(rot_speed) * CurPosition;
 
                 // Empezar a mover el tgcito
                 if (_mirandoPlayer)
                 {
                     vec_to_player.Normalize();
                     float enemy_speed = 70f * Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
-                    position = position * Matrix.CreateTranslation(vec_to_player * enemy_speed);
+                    CurPosition = CurPosition * Matrix.CreateTranslation(vec_to_player * enemy_speed);
                 }
-                UpVertex = position.Value.Translation + new Vector3(HitboxSize.X / 2, HitboxSize.Y, HitboxSize.Z / 2);
-                BottomVertex = position.Value.Translation - new Vector3(HitboxSize.X / 2, 0, HitboxSize.Z / 2);
+                UpVertex = CurPosition.Translation + new Vector3(HitboxSize.X / 2, HitboxSize.Y, HitboxSize.Z / 2);
+                BottomVertex = CurPosition.Translation - new Vector3(HitboxSize.X / 2, 0, HitboxSize.Z / 2);
             } 
             else 
             {
@@ -111,9 +123,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         }
         public override void Draw(GameTime gameTime)
         {
-            if(!position.HasValue)
-                throw new System.Exception("The position of the TGCito was not set");
-            var world = Misalignment * position.Value; 
+            var world = CurPosition; 
             Model.Draw(world, Maps.MapRepo.CurrentMap.Camera.View, Maps.MapRepo.CurrentMap.Camera.Projection);
         }
         public override void CollidedWith(Player player)
@@ -134,6 +144,10 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         {
             base.RemoveFromLife(amount);
             Death = Life == 0;
+        }
+        public override bool PositionSet()
+        {
+            return PosSet;
         }
     }
 }
