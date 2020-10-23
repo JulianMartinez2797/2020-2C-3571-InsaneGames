@@ -14,14 +14,12 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         {
             Life = Math.Max(Life - amount, 0);
         }
-
         public virtual void CollidedWith(Player player)
         {
             player.BeAttacked(Damage);
         }
-
         public abstract void CollidedWith(Entities.Obstacles.Obstacle obstacle);
-
+        public abstract void CollidedWith(Maps.Wall wall);
         public abstract bool PositionSet();
     }
 }

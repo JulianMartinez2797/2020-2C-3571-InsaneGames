@@ -130,6 +130,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         {
             if(Death) return;
             
+            CurPosition = PrevPosition;
             if(TimeSinceLastHit > TimePerHit)
             {
                 base.CollidedWith(player);
@@ -139,6 +140,11 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         }
         public override void CollidedWith(Obstacles.Obstacle obstacle)
         {
+            CurPosition = PrevPosition;
+        }
+        public override void CollidedWith(Maps.Wall wall)
+        {
+            CurPosition = PrevPosition;
         }
         public override void RemoveFromLife(float amount) 
         {

@@ -117,7 +117,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
         public override void CheckObstacleCollision(Entities.Enemies.Enemy enemy)
         {
             var collidedObstacle = Obstacles.Find(obs => enemy.CollidesWith(obs.BottomVertex, obs.UpVertex));
-            enemy.CollidedWith(collidedObstacle);
+            if(!(collidedObstacle is null)) enemy.CollidedWith(collidedObstacle);
         }
         public override void CheckObstacleCollision(Entities.Bullets.Bullet bullet)
         {

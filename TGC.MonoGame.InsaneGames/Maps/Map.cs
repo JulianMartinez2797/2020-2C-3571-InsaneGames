@@ -110,7 +110,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
                 {
                     enemy.Update(gameTime);
                     var collidedWall = room.CollidesWithWall(enemy.BottomVertex, enemy.UpVertex);
-                    //Logica de colision con pared
+                    if(!(collidedWall is null)) enemy.CollidedWith(collidedWall);
                     room.CheckObstacleCollision(enemy);
                     if(playerInRoom && Player.CollidesWith(enemy.BottomVertex, enemy.UpVertex))
                     { 
