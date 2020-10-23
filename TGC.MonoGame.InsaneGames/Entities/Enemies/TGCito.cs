@@ -62,7 +62,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
             if (isPlayerNear() && !Death)
             {   //Detectado
                 Vector3 vec_to_player = playerReference.NewPosition - this.position.Value.Translation;
-                
+                vec_to_player.Y = 0;
                 // Rotar el tgcito
                 float rot_speed = MathHelper.ToRadians(200f * Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds));
                 float angle = getAngleBetweenVectorsInPlaneXZ(this.position.Value.Backward, playerReference.NewPosition - this.position.Value.Translation);
