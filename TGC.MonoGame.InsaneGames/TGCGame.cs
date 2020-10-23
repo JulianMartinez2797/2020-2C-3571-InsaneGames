@@ -35,6 +35,11 @@ namespace TGC.MonoGame.InsaneGames
         private GraphicsDeviceManager Graphics { get; }
         private Map Map { get; set; }
 
+        private MenuUI MenuUI { get; set; }
+
+        public const int ST_MENU = 0;
+        public const int ST_LEVEL_1 = 1;
+        public int status = ST_MENU;
 
         /// <summary>
         ///     Se llama una sola vez, al principio cuando se ejecuta el ejemplo.
@@ -55,6 +60,7 @@ namespace TGC.MonoGame.InsaneGames
             MapRepo.CurrentMap = MapRepo.Level1(this, GraphicsDevice);
             Map = MapRepo.CurrentMap;
             Map.Initialize(this);
+            MenuUI = new MenuUI();
             base.Initialize();
         }
 
@@ -66,7 +72,7 @@ namespace TGC.MonoGame.InsaneGames
         protected override void LoadContent()
         {
             Map.Load(GraphicsDevice);
-            
+            MenuUI.Load(GraphicsDevice);
             base.LoadContent();
         }
 
@@ -84,8 +90,17 @@ namespace TGC.MonoGame.InsaneGames
                 //Salgo del juego.
                 Exit();
 
-            Map.Update(gameTime);
-            //Weapon.Update(gameTime);
+            switch (status)
+            {
+                case ST_MENU:
+                    if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                        status = ST_LEVEL_1;
+                    break;
+
+                case ST_LEVEL_1:
+                    Map.Update(gameTime);
+                    break;
+            }
 
             base.Update(gameTime);
         }
@@ -102,10 +117,20 @@ namespace TGC.MonoGame.InsaneGames
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             GraphicsDevice.BlendState = BlendState.Opaque;
 
-            Map.Draw(gameTime);
+            switch (status)
+            {
+                case ST_MENU:
+                    MenuUI.Draw(gameTime);
+                    break;
+                case ST_LEVEL_1:
+                    Map.Draw(gameTime);
+                    break;
+            }
+
             //Weapon.Draw(gameTime);
             base.Draw(gameTime);
         }
+
 
         /// <summary>
         ///     Libero los recursos que se cargaron en el juego.
