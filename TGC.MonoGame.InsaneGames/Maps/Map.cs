@@ -4,9 +4,8 @@ using TGC.MonoGame.InsaneGames.Entities.Enemies;
 using TGC.MonoGame.InsaneGames.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using TGC.MonoGame.InsaneGames.Entities.Obstacles;
+using TGC.MonoGame.Samples.Cameras;
 using TGC.MonoGame.InsaneGames.Entities.Bullets;
-using System.Diagnostics;
 
 namespace TGC.MonoGame.InsaneGames.Maps
 {
@@ -15,17 +14,17 @@ namespace TGC.MonoGame.InsaneGames.Maps
         private Room[] Rooms;
         private Enemy[] Enemies;
         private Random Random;
-        private Obstacle[] Obstacles;
         private Player Player;
         private List<Bullet> Bullets;
         private InfoUI UI;
 
-        public Map(Room[] rooms, Enemy[] enemies, Obstacle[] obstacles, Player player) 
+        public Camera Camera => Player.Camera;
+
+        public Map(Room[] rooms, Enemy[] enemies, Player player) 
         {
             Rooms = rooms;
             Enemies = enemies;
             Random = new Random();
-            Obstacles = obstacles;
             Player = player;
             Bullets = new List<Bullet>();
             UI = new InfoUI();
@@ -58,8 +57,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
                     break;
                 }
             });
-            foreach (var obstacle in Obstacles)
-                obstacle.Initialize(game);
+
         }
 
         public override void Draw(GameTime gameTime)
@@ -71,9 +69,6 @@ namespace TGC.MonoGame.InsaneGames.Maps
 
             foreach (var enemy in Enemies)
                 enemy.Draw(gameTime);
-            
-            foreach (var obstacle in Obstacles)
-                obstacle.Draw(gameTime);
             
             UI.Draw(gameTime, Player);
         }
@@ -88,9 +83,6 @@ namespace TGC.MonoGame.InsaneGames.Maps
 
             foreach (var enemy in Enemies)
                 enemy.Load();
-
-            foreach (var obstacle in Obstacles)
-                obstacle.Load();
         }
         public override void Update(GameTime gameTime)
         {
@@ -106,8 +98,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
                     var collidedWall = room.CollidesWithWall(Player.BottomVertex, Player.UpVertex);
                     Player.CollidedWith(collidedWall);
                     room.CheckCollectiblesCollision(Player);
-                    var collidedObstacle = Array.Find(Obstacles, obs => obs.CollidesWith(Player.BottomVertex, Player.UpVertex));
-                    Player.CollidedWith(collidedObstacle);
+                    room.CheckObstacleCollision(Player);
                     playerInRoom = true;
                 }
 
@@ -119,8 +110,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
                     enemy.Update(gameTime);
                     var collidedWall = room.CollidesWithWall(enemy.BottomVertex, enemy.UpVertex);
                     //Logica de colision con pared
-                    var collidedObstacleEnemy = Array.Find(Obstacles, obs => obs.CollidesWith(enemy.BottomVertex, enemy.UpVertex));
-                    //Logica de colision enemigo - obstaculo
+                    room.CheckObstacleCollision(enemy);
                     if(playerInRoom && Player.CollidesWith(enemy.BottomVertex, enemy.UpVertex))
                     { 
                         enemy.CollidedWith(Player);
@@ -129,10 +119,8 @@ namespace TGC.MonoGame.InsaneGames.Maps
                     collidedBullets.ForEach(b => b.CollidedWith(enemy));
                 }
                 bullets.FindAll(b => room.CollidesWithWall(b.BottomVertex, b.UpVertex) != null).ForEach(b => b.CollidedWith());
+                bullets.ForEach(b => room.CheckObstacleCollision(b));
             }
-            Bullets.FindAll(b => Array.Exists(Obstacles, obs => b.CollidesWith(obs.BottomVertex, obs.UpVertex))).ForEach(b => b.CollidedWith());
-            while(Bullets.RemoveAll(b => b.Remove) > 0)
-                break;
         }
         public void AddBullet(Bullet bullet)
         {

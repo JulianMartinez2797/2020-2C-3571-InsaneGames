@@ -11,6 +11,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Obstacles
         private Matrix Misalignment;
         private Matrix SpawnPoint;
         private readonly Vector3 HitboxSize = new Vector3(5, 10, 5);
+        public Vector3 Position => SpawnPoint.Translation;
         public void PrintHitbox() 
         {
             Debug.WriteLine("UpVertex: "+UpVertex);
@@ -32,7 +33,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Obstacles
         }
         public override void Draw(GameTime gameTime)
         {
-            Model.Draw(SpawnPoint, Game.Camera.View, Game.Camera.Projection);
+            Model.Draw(SpawnPoint, Maps.MapRepo.CurrentMap.Camera.View, Maps.MapRepo.CurrentMap.Camera.Projection);
         }
 
     }
