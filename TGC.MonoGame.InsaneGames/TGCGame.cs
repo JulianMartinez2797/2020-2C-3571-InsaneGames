@@ -38,10 +38,12 @@ namespace TGC.MonoGame.InsaneGames
         private MenuUI MenuUI { get; set; }
 
         private DefeatUI DefeatUI { get; set; }
+        private WinUI WinUI { get; set; }
 
         public const int ST_MENU = 0;
         public const int ST_LEVEL_1 = 1;
         public const int ST_DEFEAT = 2;
+        public const int ST_WIN = 3;
         public int status = ST_MENU;
 
         /// <summary>
@@ -65,6 +67,8 @@ namespace TGC.MonoGame.InsaneGames
             Map.Initialize(this);
             MenuUI = new MenuUI();
             DefeatUI = new DefeatUI();
+            WinUI = new WinUI();
+
             base.Initialize();
         }
 
@@ -78,6 +82,8 @@ namespace TGC.MonoGame.InsaneGames
             Map.Load(GraphicsDevice);
             MenuUI.Load(GraphicsDevice);
             DefeatUI.Load(GraphicsDevice);
+            WinUI.Load(GraphicsDevice);
+
             base.LoadContent();
         }
 
@@ -108,6 +114,10 @@ namespace TGC.MonoGame.InsaneGames
                     {
                         status = ST_DEFEAT;
                     }
+                    if (Map.keyFound)
+                    {
+                        status = ST_WIN;
+                    }
                     break;
             }
 
@@ -136,6 +146,9 @@ namespace TGC.MonoGame.InsaneGames
                     break;
                 case ST_DEFEAT:
                     DefeatUI.Draw(gameTime);
+                    break;
+                case ST_WIN:
+                    WinUI.Draw(gameTime);
                     break;
             }
 

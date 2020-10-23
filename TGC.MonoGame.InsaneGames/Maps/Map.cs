@@ -17,6 +17,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
         private Player Player;
         private List<Bullet> Bullets;
         private InfoUI UI;
+        public bool keyFound = false;
 
         public Camera Camera => Player.Camera;
 
@@ -130,6 +131,10 @@ namespace TGC.MonoGame.InsaneGames.Maps
         public bool playerIsDead()
         {
             return Player.Life <= 0;
+        }
+        public void playerFoundKey()
+        {
+            keyFound = true;
         }
     }
 }
