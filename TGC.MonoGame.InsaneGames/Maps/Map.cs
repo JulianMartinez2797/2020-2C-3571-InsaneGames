@@ -126,5 +126,10 @@ namespace TGC.MonoGame.InsaneGames.Maps
         {
             Bullets.Add(bullet);
         }
+
+        public bool playerIsDead()
+        {
+            return Player.Life <= 0;
+        }
     }
 }
