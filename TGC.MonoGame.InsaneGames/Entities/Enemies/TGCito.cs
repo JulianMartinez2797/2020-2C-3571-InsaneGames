@@ -1,6 +1,7 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
+using TGC.MonoGame.InsaneGames.Maps;
 
 namespace TGC.MonoGame.InsaneGames.Entities.Enemies
 {
@@ -11,10 +12,10 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         private const string ModelName = "tgcito/tgcito-classic";
         static private Model Model;
         private readonly Vector3 HitboxSize = new Vector3(10, 16, 10);
-        private readonly float TimePerHit = 2;
+        private readonly float TimePerHit = 2, TimeToRespawn = 10;
         private Matrix Misalignment { get; }
         private Boolean Death = false, PosSet = false;
-        private float TimeSinceLastHit = 0;
+        private float TimeSinceLastHit = 0, TimeSinceDeath = 0;
         override public Vector3 Position 
         {
             get { return CurPosition.Translation; }
@@ -73,7 +74,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         {
             if(Death)
             {
-                //Logica de respawn
+                IfDeathUpdate(gameTime);
                 return;
             }
             else if (isPlayerNear())
@@ -154,6 +155,16 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         public override bool PositionSet()
         {
             return PosSet;
+        }
+        private void IfDeathUpdate(GameTime gameTime)
+        {
+            TimeSinceDeath += (float) gameTime.ElapsedGameTime.TotalSeconds;
+            if(TimeSinceDeath > TimeToRespawn)
+            {
+                MapRepo.CurrentMap.SetPositionOfEnemy(this);
+                TimeSinceDeath = 0;
+                Death = false;
+            }
         }
     }
 }

@@ -42,21 +42,8 @@ namespace TGC.MonoGame.InsaneGames.Maps
 
             Array.ForEach(Enemies, (enemy) => {
                 enemy.Initialize(game);
-                while(true)
-                {
-                    if(enemy.PositionSet()) break;
-
-                    var room = Rooms[Random.Next(0, Rooms.Length)];
-                    if(!room.Spawnable)
-                        continue;
-                    var spawn = room.SpawnableSpace().GetSpawnPoint(enemy.floorEnemy);
-                    
-                    if(room.CollidesWithWall(enemy.BottomVertex + spawn, enemy.UpVertex + spawn) is null)
-                        enemy.Position = spawn;
-                    else
-                        continue;
-                    break;
-                }
+                if(enemy.PositionSet()) return;
+                this.SetPositionOfEnemy(enemy);
             });
 
         }
@@ -135,6 +122,26 @@ namespace TGC.MonoGame.InsaneGames.Maps
         public void playerFoundKey()
         {
             keyFound = true;
+        }
+
+        public void SetPositionOfEnemy(Enemy enemy, int maxTries = 0)
+        {
+            var infiteTries = maxTries == 0; 
+            int i = 0;
+            for(; infiteTries || i < maxTries; i++)
+            {
+                var room = Rooms[Random.Next(0, Rooms.Length)];
+                if(!room.Spawnable)
+                    continue;
+                var spawn = room.SpawnableSpace().GetSpawnPoint(enemy.floorEnemy);
+                
+                if(room.CollidesWithWall(enemy.BottomVertex + spawn, enemy.UpVertex + spawn) is null)
+                    enemy.Position = spawn;
+                else
+                    continue;
+                break;
+            }
+            if(!infiteTries && i > maxTries) throw new Exception("Position of enemy could not be set in amount tries");
         }
     }
 }
