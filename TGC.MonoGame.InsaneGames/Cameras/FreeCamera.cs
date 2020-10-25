@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace TGC.MonoGame.Samples.Cameras
+namespace TGC.MonoGame.InsaneGames.Cameras
 {
     internal class FreeCamera : Camera
     {

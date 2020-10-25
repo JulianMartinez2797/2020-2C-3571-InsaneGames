@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace TGC.MonoGame.Samples.Cameras
+namespace TGC.MonoGame.InsaneGames.Cameras
 {
     /// <summary>
     ///     The minimum behavior that a camera should have.

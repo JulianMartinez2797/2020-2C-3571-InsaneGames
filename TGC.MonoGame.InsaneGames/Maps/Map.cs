@@ -4,7 +4,7 @@ using TGC.MonoGame.InsaneGames.Entities.Enemies;
 using TGC.MonoGame.InsaneGames.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using TGC.MonoGame.Samples.Cameras;
+using TGC.MonoGame.InsaneGames.Cameras;
 using TGC.MonoGame.InsaneGames.Entities.Bullets;
 
 namespace TGC.MonoGame.InsaneGames.Maps
