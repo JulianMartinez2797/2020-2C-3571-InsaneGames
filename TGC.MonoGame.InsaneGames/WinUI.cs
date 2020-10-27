@@ -19,21 +19,23 @@ namespace TGC.MonoGame.InsaneGames
 
         public void Draw(GameTime gameTime)
         {
-
+            // TODO: Add some texture
             //SpriteBatch.Begin();
             //SpriteBatch.Draw(BackgroundTexture, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
             //SpriteBatch.End();
 
-            DrawCenterTextY("YOU WIN!", 200, 2);
+            DrawCenterTextY("YOU WIN!", 200, 2, Color.Blue);
+            DrawCenterTextY("Press R to restart", 300, 0.7f, Color.White);
+
         }
-        private void DrawCenterTextY(string msg, float Y, float escala)
+        private void DrawCenterTextY(string msg, float Y, float escala, Color color)
         {
             var W = GraphicsDevice.Viewport.Width;
             var H = GraphicsDevice.Viewport.Height;
             var size = Font.MeasureString(msg) * escala;
             SpriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null,
                 Matrix.CreateScale(escala) * Matrix.CreateTranslation((W - size.X) / 2, Y, 0));
-            SpriteBatch.DrawString(Font, msg, new Vector2(0, 0), Color.Blue);
+            SpriteBatch.DrawString(Font, msg, new Vector2(0, 0), color);
             SpriteBatch.End();
         }
 
