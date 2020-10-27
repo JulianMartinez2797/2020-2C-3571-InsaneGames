@@ -102,6 +102,14 @@ namespace TGC.MonoGame.InsaneGames
 
             switch (status)
             {
+                case ST_DEFEAT:
+                case ST_WIN:
+                    if (Keyboard.GetState().IsKeyDown(Keys.R))
+                    {
+                        Map.Reset();
+                        status = ST_MENU;
+                    }
+                    break;
                 case ST_MENU:
                     if (Keyboard.GetState().IsKeyDown(Keys.Space))
                         status = ST_LEVEL_1;

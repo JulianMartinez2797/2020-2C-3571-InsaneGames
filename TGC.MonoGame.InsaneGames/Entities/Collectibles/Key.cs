@@ -29,7 +29,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
         public override void CollidedWith(Player player)
         {
             Maps.MapRepo.CurrentMap.playerFoundKey();
-            Collected = true;
+            // Collected = true;
         }
     }
 }

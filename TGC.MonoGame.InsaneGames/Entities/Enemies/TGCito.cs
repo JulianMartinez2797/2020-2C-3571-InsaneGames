@@ -36,7 +36,8 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
                 PosSet = true;
             }
             floorEnemy = true;
-            Life = life;
+            TotalLife = life;
+            CurrentLife = TotalLife;
             Damage = damage;
         }
 
@@ -150,7 +151,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         public override void RemoveFromLife(float amount) 
         {
             base.RemoveFromLife(amount);
-            Death = Life == 0;
+            Death = CurrentLife == 0;
         }
         public override bool PositionSet()
         {
@@ -163,6 +164,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
             {
                 MapRepo.CurrentMap.SetPositionOfEnemy(this);
                 TimeSinceDeath = 0;
+                CurrentLife = TotalLife;
                 Death = false;
             }
         }

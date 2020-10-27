@@ -143,5 +143,17 @@ namespace TGC.MonoGame.InsaneGames.Maps
             }
             if(!infiteTries && i > maxTries) throw new Exception("Position of enemy could not be set in amount tries");
         }
+
+        public void Reset()
+        {
+            keyFound = false;
+            Player.NewPosition = new Vector3(1125, 20, 125);
+            Player.LastPosition = new Vector3(1125, 20, 125);
+            Player.Reset();
+            Array.ForEach(Enemies, (enemy) => {
+                enemy.Reset();
+                this.SetPositionOfEnemy(enemy);
+            });
+        }
     }
 }

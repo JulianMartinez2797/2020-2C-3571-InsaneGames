@@ -254,5 +254,11 @@ namespace TGC.MonoGame.InsaneGames.Entities
             if(Armor != 0)
                 RemoveFromArmor(damage);
         }
+        public void Reset()
+        {
+            Life = 90;
+            UpVertex = NewPosition + HitboxSize;
+            BottomVertex = NewPosition - HitboxSize;
+        }
     }
 }
