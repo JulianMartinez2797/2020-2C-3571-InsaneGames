@@ -42,5 +42,10 @@ namespace TGC.MonoGame.InsaneGames
         {
             return Content.Load<SpriteFont>($"{ContentFolderSpriteFonts}{fontName}");
         }
+        public Effect LoadEffect(string effectName)
+        {
+            return Content.Load<Effect>($"{ContentFolderEffect}{effectName}");
+        }
+
     }
 }
