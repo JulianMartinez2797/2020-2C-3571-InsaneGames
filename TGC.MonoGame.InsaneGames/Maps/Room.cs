@@ -5,6 +5,7 @@ using TGC.MonoGame.InsaneGames.Entities.Collectibles;
 using TGC.MonoGame.InsaneGames.Entities.Obstacles;
 using TGC.MonoGame.InsaneGames.Entities.Enemies;
 using TGC.MonoGame.InsaneGames.Entities.Bullets;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace TGC.MonoGame.InsaneGames.Maps
 {
@@ -30,5 +31,20 @@ namespace TGC.MonoGame.InsaneGames.Maps
         {
             Obstacles.Add(obstacle);
         }
+        public override void Update(GameTime gameTime)
+        {
+            foreach (var collectible in Collectibles)
+            {
+                collectible.Update(gameTime);
+            }
+        }
+        public override void Load()
+        {
+            foreach (var collectible in Collectibles)
+            {
+                collectible.Load();
+            }
+        }
+
     }
 }
