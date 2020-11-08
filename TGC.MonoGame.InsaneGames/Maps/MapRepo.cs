@@ -70,11 +70,13 @@ namespace TGC.MonoGame.InsaneGames.Maps
                 enemies[i] = new TGCito(player);
             builder.SetEnemies(enemies);
 
-            var heartPositions = new (int, int)[] {(7, 0), (0, 2), (2, 3), (0, 7), (9, 5)};
-            Array.ForEach(heartPositions, pos => builder.AddCollectible(new Life(Matrix.CreateTranslation(pos.Item1 * 250 + 125, 5, pos.Item2 * 250 + 125))));
+            // TODO: Ver porque se rompen las vidas al usarlas con Effect
+
+            //var heartPositions = new (int, int)[] {(7, 0), (0, 2), (2, 3), (0, 7), (9, 5)};
+            //Array.ForEach(heartPositions, pos => builder.AddCollectible(new Life(Matrix.CreateTranslation(pos.Item1 * 250 + 125, 5, pos.Item2 * 250 + 125))));
             var armorPositions = new (int, int)[] {(3, 0), (4, 2), (4, 9), (7, 9)};
             Array.ForEach(armorPositions, pos => builder.AddCollectible(new Armor(Matrix.CreateTranslation(pos.Item1 * 250 + 125, 5, pos.Item2 * 250 + 125))));
-            builder.AddCollectible(new Life(Matrix.CreateTranslation(1370f, 5, 2125), 2f, 100));
+            //builder.AddCollectible(new Life(Matrix.CreateTranslation(1370f, 5, 2125), 2f, 100));
             builder.AddCollectible(new Armor(Matrix.CreateTranslation(1400f, 10, 2125), 1.75f, 100));
             builder.AddCollectible(new Key(Matrix.CreateTranslation(1400f, 12, 2370)));
             return builder.BuildMaze();

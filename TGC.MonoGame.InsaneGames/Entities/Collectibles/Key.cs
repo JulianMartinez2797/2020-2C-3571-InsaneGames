@@ -5,7 +5,6 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
 {
     class Key : Collectible
     {
-        private const string ModelName = "collectibles/key/Key_B_02"; 
         private static readonly Vector3 hitboxSize = new Vector3(15, 5, 15);
         override protected Vector3 HitboxSize { get { return hitboxSize; } }
 
@@ -15,10 +14,9 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
             Scale = Matrix.CreateScale(1f);
             initialRotation = Matrix.CreateRotationZ(MathHelper.ToRadians(90f));
         }
-        public override void Load()
+        public override string ModelName
         {
-            if (Model is null)
-                Model = ContentManager.Instance.LoadModel(ModelName);
+            get { return "collectibles/key/Key_B_02"; }
         }
         public override void CollidedWith(Player player)
         {

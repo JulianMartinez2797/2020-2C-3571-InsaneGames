@@ -5,7 +5,6 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
 {
     class Armor : Collectible
     {
-        private const string ModelName = "collectibles/armor/shield/Shield";
         private float RecoveryAmount;
         private static readonly Vector3 hitboxSize = new Vector3(15, 5, 15);
         override protected Vector3 HitboxSize { get { return hitboxSize; }}
@@ -15,10 +14,10 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
             Scale = Matrix.CreateScale(0.3f);
             RecoveryAmount = recoveryAmount;
         }
-        public override void Load()
+
+        public override string ModelName
         {
-            if (Model is null)
-                Model = ContentManager.Instance.LoadModel(ModelName);
+            get { return "collectibles/armor/shield/Shield"; }
         }
 
         public override void CollidedWith(Player player)
