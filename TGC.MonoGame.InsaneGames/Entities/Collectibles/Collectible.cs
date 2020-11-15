@@ -43,36 +43,55 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
 
             Effect = ContentManager.Instance.LoadEffect("Collectible");
 
+            // Seteo constantes y colores para iluminacion tipo BlinnPhong
+            Effect.Parameters["KAmbient"].SetValue(1f);
+            Effect.Parameters["KDiffuse"].SetValue(0.4f);
+            Effect.Parameters["KSpecular"].SetValue(0.5f);
+            Effect.Parameters["shininess"].SetValue(16.0f);
+
+            Effect.Parameters["ambientColor"].SetValue(new Vector3(1f, 1f, 1f));
+            Effect.Parameters["diffuseColor"].SetValue(new Vector3(1f, 1f, 1f));
+            Effect.Parameters["specularColor"].SetValue(new Vector3(1f, 1f, 1f));
         }
         public override void Update(GameTime gameTime)
         {
-           time = (float)gameTime.TotalGameTime.TotalSeconds;
-           Rotation = Matrix.CreateRotationY(time * 2);
-           World = Scale * initialRotation * Rotation * SpawnPoint;
+            time = (float)gameTime.TotalGameTime.TotalSeconds;
+            Rotation = Matrix.CreateRotationY(time * 2);
+            World = Scale * initialRotation * Rotation * SpawnPoint;
+
+            // TODO: Modificar la posicion para que sea Point o Spot light, por ahora es fija en el eje x
+            Effect.Parameters["lightPosition"].SetValue(new Vector3(1, 0, 0));
+            Effect.Parameters["eyePosition"].SetValue(Maps.MapRepo.CurrentMap.Camera.Position);
         }
         public override void Draw(GameTime gameTime)
         {
-            if (!Collected) {
-                var mesh = Model.Meshes.FirstOrDefault();
+
+            if (!Collected)
+            {
                 var view = Maps.MapRepo.CurrentMap.Camera.View;
                 var projection = Maps.MapRepo.CurrentMap.Camera.Projection;
 
-                if (mesh != null)
+                // We assign the effect to each one of the models
+                foreach (var modelMesh in Model.Meshes)
+                    foreach (var meshPart in modelMesh.MeshParts)
+                        meshPart.Effect = Effect;
+
+                foreach (var modelMesh in Model.Meshes)
                 {
-                    foreach (var part in mesh.MeshParts)
-                    {
-                        part.Effect = Effect;
-                        Effect.Parameters["World"].SetValue(World * mesh.ParentBone.Transform);
-                        Effect.Parameters["View"].SetValue(view);
-                        Effect.Parameters["Projection"].SetValue(projection);
-                        Effect.Parameters["ModelTexture"]?.SetValue(Texture);
-                        Effect.Parameters["Time"].SetValue(time);
-                    }
+                    // We set the main matrices for each mesh to draw
+                    var worldMatrix = World;
+                    // World is used to transform from model space to world space
+                    Effect.Parameters["World"].SetValue(worldMatrix);
+                    Effect.Parameters["View"].SetValue(view);
+                    Effect.Parameters["Projection"].SetValue(projection);
+                    // InverseTransposeWorld is used to rotate normals
+                    Effect.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(worldMatrix)));
+                    Effect.Parameters["ModelTexture"].SetValue(Texture);
+                    Effect.Parameters["Time"].SetValue(time);
 
-                    mesh.Draw();
-                }
+                    modelMesh.Draw();
+                }               
             }
-
         }
     }
 }

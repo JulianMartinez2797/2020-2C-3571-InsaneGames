@@ -23,5 +23,17 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
             player.AddToLife(RecoveryAmount);
             Collected = true;
         }
+
+
+        public override void Draw(GameTime gameTime)
+        {
+
+            if (!Collected)
+            {
+                var view = Maps.MapRepo.CurrentMap.Camera.View;
+                var projection = Maps.MapRepo.CurrentMap.Camera.Projection;
+                Model.Draw(World, view, projection);      
+                }
+            }
     }
 }

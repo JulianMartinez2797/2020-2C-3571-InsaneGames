@@ -1,29 +1,28 @@
 ﻿#if OPENGL
-#define SV_POSITION POSITION
-#define VS_SHADERMODEL vs_3_0
-#define PS_SHADERMODEL ps_3_0
+	#define SV_POSITION POSITION
+	#define VS_SHADERMODEL vs_3_0
+	#define PS_SHADERMODEL ps_3_0
 #else
-#define VS_SHADERMODEL vs_4_0_level_9_1
-#define PS_SHADERMODEL ps_4_0_level_9_1
+	#define VS_SHADERMODEL vs_4_0_level_9_1
+	#define PS_SHADERMODEL ps_4_0_level_9_1
 #endif
 
 float4x4 World;
 float4x4 View;
 float4x4 Projection;
+float4x4 InverseTransposeWorld;
 
-struct VertexShaderInput
-{
-    float4 Position : POSITION0;
-    float4 Color : COLOR0;
-    float2 TextureCoordinate : TEXCOORD0;
-};
+float Time = 0;
 
-struct VertexShaderOutput
-{
-    float4 Position : SV_POSITION;
-    float4 Color : COLOR0;
-    float2 TextureCoordinate : TEXCOORD1;
-};
+float3 ambientColor; // Light's Ambient Color
+float3 diffuseColor; // Light's Diffuse Color
+float3 specularColor; // Light's Specular Color
+float KAmbient;
+float KDiffuse;
+float KSpecular;
+float shininess;
+float3 lightPosition;
+float3 eyePosition; // Camera position
 
 texture ModelTexture;
 sampler2D textureSampler = sampler_state
@@ -35,48 +34,82 @@ sampler2D textureSampler = sampler_state
     AddressV = Clamp;
 };
 
-float Time = 0;
+struct VertexShaderInput
+{
+    float4 Position : POSITION0;
+    float4 Normal : NORMAL;
+    float2 TextureCoordinates : TEXCOORD0;
+};
+
+struct VertexShaderOutput
+{
+    float4 Position : SV_POSITION;
+    float2 TextureCoordinates : TEXCOORD0;
+    float4 WorldPosition : TEXCOORD1;
+    float4 Normal : TEXCOORD2;
+};
 
 VertexShaderOutput MainVS(in VertexShaderInput input)
 {
     VertexShaderOutput output = (VertexShaderOutput) 0;
-    
+
     float1 effect = abs(sin(Time * 1.5)) * 5;
     
     // Matriz a multiplicar que hara el efecto rebote
-    float4x4 effectMatrix = {
+    float4x4 effectMatrix =
+    {
         1, 0, 0, 0,
         0, 1, 0, 0,
         0, 0, 1, 0,
         0, effect, 0, 1
     };
-          
+
     float4 worldPosition = mul(input.Position, World);
-    
+    // agrego efecto rebote
     worldPosition = mul(worldPosition, effectMatrix);
+    output.WorldPosition = worldPosition;
+
+    output.Normal = mul(input.Normal, InverseTransposeWorld);
     
-    float4 viewPosition = mul(worldPosition, View); 
+    float4 viewPosition = mul(worldPosition, View);
 
 	// Project position
     output.Position = mul(viewPosition, Projection);
 
 	// Propagate texture coordinates
-    output.TextureCoordinate = input.TextureCoordinate;
-
-	// Propagate color by vertex
-    output.Color = input.Color;
+    output.TextureCoordinates = input.TextureCoordinates;
 
     return output;
 }
 
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
-    return tex2D(textureSampler, input.TextureCoordinate);
+    
+    // Base vectors
+    float3 lightDirection = normalize(lightPosition - input.WorldPosition.xyz);
+    float3 viewDirection = normalize(eyePosition - input.WorldPosition.xyz);
+    float3 halfVector = normalize(lightDirection + viewDirection);
+
+	// Get the texture texel
+    float4 texelColor = tex2D(textureSampler, input.TextureCoordinates);
+    
+	// Calculate the diffuse light
+    float NdotL = saturate(dot(input.Normal.xyz, lightDirection));
+    float3 diffuseLight = KDiffuse * diffuseColor * NdotL;
+
+	// Calculate the specular light
+    float NdotH = dot(input.Normal.xyz, halfVector);
+    float3 specularLight = sign(NdotL) * KSpecular * specularColor * pow(saturate(NdotH), shininess);
+    
+    // Final calculation
+    float4 finalColor = float4(saturate(ambientColor * KAmbient + diffuseLight) * texelColor.rgb + specularLight, texelColor.a);
+    return finalColor;
+
 }
 
-technique BasicColorDrawing
+technique Collectible
 {
-    pass P0
+    pass Pass0
     {
         VertexShader = compile VS_SHADERMODEL MainVS();
         PixelShader = compile PS_SHADERMODEL MainPS();
