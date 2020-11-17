@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 
 namespace TGC.MonoGame.InsaneGames.Weapons
 {
@@ -7,6 +8,7 @@ namespace TGC.MonoGame.InsaneGames.Weapons
     { 
         protected Model Model;
         protected string ModelName;
+        abstract public SoundEffect SoundEffect { get; }
 
         public Weapon(string modelName)
         {

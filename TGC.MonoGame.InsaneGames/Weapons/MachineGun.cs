@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.InsaneGames.Maps;
+using Microsoft.Xna.Framework.Audio;
 
 namespace TGC.MonoGame.InsaneGames.Weapons
 {
@@ -57,6 +58,10 @@ namespace TGC.MonoGame.InsaneGames.Weapons
                 Maps.MapRepo.CurrentMap.AddBullet(new Entities.Bullets.BasicBullet(Damage, direction * 1000, playerPosition, BulletSize));
                 TimeSinceLastBullet = 0;
             }
+        }
+        public override SoundEffect SoundEffect
+        {
+            get { return ContentManager.Instance.LoadSoundEffect("handgun-shot"); }
         }
     }
 }

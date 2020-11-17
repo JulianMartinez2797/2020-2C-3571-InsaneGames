@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.InsaneGames.Maps;
+using Microsoft.Xna.Framework.Audio;
 
 namespace TGC.MonoGame.InsaneGames.Weapons
 {
@@ -22,6 +23,7 @@ namespace TGC.MonoGame.InsaneGames.Weapons
         } 
         public override void Update(GameTime gameTime)
         {
+            
             Matrix cameraWorld = Matrix.Invert(MapRepo.CurrentMap.Camera.View);
             Matrix weaponWorld = cameraWorld;   //gives your weapon a matrix that is co-located and co-rotated with camera
 
@@ -53,6 +55,10 @@ namespace TGC.MonoGame.InsaneGames.Weapons
             {
                 Shooting = false;
             }
+        }
+        public override SoundEffect SoundEffect
+        {
+            get { return ContentManager.Instance.LoadSoundEffect("handgun-shot"); }
         }
     }
 }
