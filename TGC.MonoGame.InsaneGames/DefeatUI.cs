@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
 
 namespace TGC.MonoGame.InsaneGames
 {
@@ -10,6 +11,8 @@ namespace TGC.MonoGame.InsaneGames
         private GraphicsDevice GraphicsDevice;
         private Texture2D BackgroundTexture;
         private Effect Effect;
+        private Song Song;
+        private bool songPlayed = false;
 
         public void Load(GraphicsDevice graphicsDevice)
         {
@@ -18,6 +21,7 @@ namespace TGC.MonoGame.InsaneGames
             Font = ContentManager.Instance.LoadSpriteFont("Basic");
             BackgroundTexture = ContentManager.Instance.LoadTexture2D("Menu/background2");
             Effect = ContentManager.Instance.LoadEffect("DefeatAndWin");
+            Song = ContentManager.Instance.LoadSong("dark-souls-you-died");
         }
 
         public void Draw(GameTime gameTime)
@@ -26,11 +30,17 @@ namespace TGC.MonoGame.InsaneGames
             //SpriteBatch.Begin();
             //SpriteBatch.Draw(BackgroundTexture, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
             //SpriteBatch.End();
-            
+
             Effect.Parameters["Time"]?.SetValue((float)gameTime.TotalGameTime.TotalSeconds);
 
             DrawCenterTextY("YOU LOSE!", 200, 2, Color.Red);
             DrawCenterTextY("Press R to restart", 300, 0.7f, Color.White);
+
+            if (!songPlayed)
+            {
+                MediaPlayer.Play(Song);
+                songPlayed = true;
+            }
 
         }
         private void DrawCenterTextY(string msg, float Y, float escala, Color color)

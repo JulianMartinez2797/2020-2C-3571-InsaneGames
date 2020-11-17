@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
 
 namespace TGC.MonoGame.InsaneGames
 {
@@ -8,8 +9,7 @@ namespace TGC.MonoGame.InsaneGames
     {
         private const string ContentFolder3D = "Models/";
         private const string ContentFolderEffect = "Effects/";
-        private const string ContentFolderMusic = "Music/";
-        private const string ContentFolderSounds = "Sounds/";
+        private const string ContentFolderAudio = "Audio/";
         private const string ContentFolderSpriteFonts = "Fonts/";
         private const string ContentFolderTextures = "Textures/";
 
@@ -45,6 +45,10 @@ namespace TGC.MonoGame.InsaneGames
         public Effect LoadEffect(string effectName)
         {
             return Content.Load<Effect>($"{ContentFolderEffect}{effectName}");
+        }
+        public Song LoadSong(string songName)
+        {
+            return Content.Load<Song>($"{ContentFolderAudio}{songName}");
         }
 
     }
