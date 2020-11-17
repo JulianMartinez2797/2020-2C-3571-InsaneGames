@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
 
 namespace TGC.MonoGame.InsaneGames
 {
@@ -10,6 +11,7 @@ namespace TGC.MonoGame.InsaneGames
         private GraphicsDevice GraphicsDevice;
         private Texture2D BackgroundTexture;
         private Effect Effect;
+        public Song Song { get; set; }
 
         public void Load(GraphicsDevice graphicsDevice)
         {
@@ -18,6 +20,7 @@ namespace TGC.MonoGame.InsaneGames
             Font = ContentManager.Instance.LoadSpriteFont("Basic");
             BackgroundTexture = ContentManager.Instance.LoadTexture2D("Menu/background2");
             Effect = ContentManager.Instance.LoadEffect("DefeatAndWin");
+            Song = ContentManager.Instance.LoadSong("Level-complete-sound-effect");
         }
 
         public void Draw(GameTime gameTime)

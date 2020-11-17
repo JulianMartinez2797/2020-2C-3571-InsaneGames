@@ -6,6 +6,8 @@ using TGC.MonoGame.InsaneGames.Maps;
 using TGC.MonoGame.InsaneGames.Entities;
 using TGC.MonoGame.InsaneGames.Entities.Obstacles;
 using TGC.MonoGame.InsaneGames.Entities.Enemies;
+using Microsoft.Xna.Framework.Media;
+
 
 namespace TGC.MonoGame.InsaneGames
 {
@@ -120,10 +122,14 @@ namespace TGC.MonoGame.InsaneGames
                     if (Map.playerIsDead())
                     {
                         status = ST_DEFEAT;
+                        MediaPlayer.Volume = 1f;
+                        MediaPlayer.Play(DefeatUI.Song);
                     }
                     if (Map.keyFound)
                     {
                         status = ST_WIN;
+                        MediaPlayer.Volume = 0.3f;
+                        MediaPlayer.Play(WinUI.Song);
                     }
                     break;
             }

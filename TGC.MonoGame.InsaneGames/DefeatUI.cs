@@ -11,8 +11,7 @@ namespace TGC.MonoGame.InsaneGames
         private GraphicsDevice GraphicsDevice;
         private Texture2D BackgroundTexture;
         private Effect Effect;
-        private Song Song;
-        private bool songPlayed = false;
+        public Song Song { get; set; }
 
         public void Load(GraphicsDevice graphicsDevice)
         {
@@ -35,12 +34,6 @@ namespace TGC.MonoGame.InsaneGames
 
             DrawCenterTextY("YOU LOSE!", 200, 2, Color.Red);
             DrawCenterTextY("Press R to restart", 300, 0.7f, Color.White);
-
-            if (!songPlayed)
-            {
-                MediaPlayer.Play(Song);
-                songPlayed = true;
-            }
 
         }
         private void DrawCenterTextY(string msg, float Y, float escala, Color color)
