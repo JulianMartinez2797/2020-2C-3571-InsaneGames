@@ -31,7 +31,7 @@ Szlajen, Matias David  |  Martinez, Julian | Vigilante, Ian | Sakkal, Juan Manue
 ------------ | ------------- | ------------- | -------------  
 
 ## Capturas
-![screenshot1](https://github.com/tgc-utn/tgc-monogame-tp/blob/master/TGC.MonoGame.TP/Icon.bmp)
+![screenshot1](https://github.com/JulianMartinez2797/2020-2C-3571-InsaneGames/blob/master/TGC.MonoGame.InsaneGames/screenshot1.png)
 ![screenshot2](https://github.com/tgc-utn/tgc-monogame-tp/blob/master/TGC.MonoGame.TP/Icon.bmp)
 ![screenshot3](https://github.com/tgc-utn/tgc-monogame-tp/blob/master/TGC.MonoGame.TP/Icon.bmp)
 ![screenshot4](https://github.com/tgc-utn/tgc-monogame-tp/blob/master/TGC.MonoGame.TP/Icon.bmp)
