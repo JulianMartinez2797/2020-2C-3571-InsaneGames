@@ -36,4 +36,4 @@ Szlajen, Matias David  |  Martinez, Julian | Vigilante, Ian | Sakkal, Juan Manue
 ![screenshot3](https://github.com/JulianMartinez2797/2020-2C-3571-InsaneGames/blob/master/TGC.MonoGame.InsaneGames/screenshot3.png)
 
 ## Game Play
-[![Watch the video](https://img.youtube.com/vi/pgEwUC0jvH4/0.jpg)](https://youtu.be/o1BV1rktrXI)
+[![Watch the video](https://github.com/JulianMartinez2797/2020-2C-3571-InsaneGames/blob/master/TGC.MonoGame.InsaneGames/screenshot1.png)](https://youtu.be/o1BV1rktrXI)
