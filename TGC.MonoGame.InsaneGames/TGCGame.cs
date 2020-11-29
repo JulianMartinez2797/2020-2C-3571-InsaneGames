@@ -38,6 +38,7 @@ namespace TGC.MonoGame.InsaneGames
 
         private MenuUI MenuUI { get; set; }
 
+        public bool godMode = false;
         private DefeatUI DefeatUI { get; set; }
         private WinUI WinUI { get; set; }
 
@@ -119,6 +120,8 @@ namespace TGC.MonoGame.InsaneGames
 
                 case ST_LEVEL_1:
                     Map.Update(gameTime);
+                    if (Keyboard.GetState().IsKeyDown(Keys.G))
+                        godMode = !godMode;
                     if (Map.playerIsDead())
                     {
                         status = ST_DEFEAT;

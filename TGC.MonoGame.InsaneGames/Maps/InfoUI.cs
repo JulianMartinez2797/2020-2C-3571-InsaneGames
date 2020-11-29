@@ -4,7 +4,7 @@ using TGC.MonoGame.InsaneGames.Entities;
 
 namespace TGC.MonoGame.InsaneGames.Maps
 {
-    class InfoUI 
+    class InfoUI : IDrawable
     {
         private SpriteBatch SpriteBatch;
         private SpriteFont Font;
@@ -39,6 +39,8 @@ namespace TGC.MonoGame.InsaneGames.Maps
             SpriteBatch.DrawString(Font, $"{player.Life}", lifeStringPosition, Color.Red);
             SpriteBatch.Draw(Armor, armorTexturePosition, armorSourceRectangle, Color.White, 0f, origin, armorScale, SpriteEffects.None, 0f);
             SpriteBatch.DrawString(Font, $"{player.Armor}", armorStringPosition, Color.DarkBlue);
+            if(Game.godMode)
+                SpriteBatch.DrawString(Font, "GOD_MODE", new Vector2(GraphicsDevice.Viewport.Width - 200, 10), Color.Green);
             SpriteBatch.End();
 
         }

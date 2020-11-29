@@ -26,8 +26,9 @@ namespace TGC.MonoGame.InsaneGames
 
             DrawCenterTextY("TGC Shooter", 0, 1);
             DrawCenterTextY("W A S D -> Movement", 100, 1);
-            DrawCenterTextY("Left click -> Shoot", 200, 1);
-            DrawCenterTextY("SpaceBar -> Start game", 300, 1);
+            DrawCenterTextY("Left click -> Shoot", 175, 1);
+            DrawCenterTextY("SpaceBar -> Start game", 250, 1);
+            DrawCenterTextY("G -> God mode (you don't lose life and you can cross walls)", 325, 0.8f);
             DrawCenterTextY("Esc -> Exit game", 400, 1);
         }
         private void DrawCenterTextY(string msg, float Y, float escala)

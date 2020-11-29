@@ -46,6 +46,8 @@ namespace TGC.MonoGame.InsaneGames.Maps
                 this.SetPositionOfEnemy(enemy);
             });
 
+            UI.Initialize(game);
+
         }
 
         public override void Draw(GameTime gameTime)
@@ -84,7 +86,10 @@ namespace TGC.MonoGame.InsaneGames.Maps
                     Player.Update(gameTime);
                     
                     var collidedWall = room.CollidesWithWall(Player.BottomVertex, Player.UpVertex);
-                    Player.CollidedWith(collidedWall);
+                    if (!Game.godMode)
+                    {
+                        Player.CollidedWith(collidedWall);
+                    }
                     room.CheckCollectiblesCollision(Player);
                     room.CheckObstacleCollision(Player);
                     playerInRoom = true;
@@ -99,7 +104,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
                     var collidedWall = room.CollidesWithWall(enemy.BottomVertex, enemy.UpVertex);
                     if(!(collidedWall is null)) enemy.CollidedWith(collidedWall);
                     room.CheckObstacleCollision(enemy);
-                    if(playerInRoom && Player.CollidesWith(enemy.BottomVertex, enemy.UpVertex))
+                    if(playerInRoom && Player.CollidesWith(enemy.BottomVertex, enemy.UpVertex) && !Game.godMode)
                     { 
                         enemy.CollidedWith(Player);
                     }
