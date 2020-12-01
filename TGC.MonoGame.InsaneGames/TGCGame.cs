@@ -26,7 +26,7 @@ namespace TGC.MonoGame.InsaneGames
             // Maneja la configuracion y la administracion del dispositivo grafico.
             Graphics = new GraphicsDeviceManager(this);
             // Descomentar para que el juego sea pantalla completa.
-            //Graphics.IsFullScreen = true;
+            Graphics.IsFullScreen = true;
             // Carpeta raiz donde va a estar toda la Media.
             Content.RootDirectory = "Content";
 
