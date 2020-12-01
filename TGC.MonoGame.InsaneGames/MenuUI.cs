@@ -34,7 +34,7 @@ namespace TGC.MonoGame.InsaneGames
             DrawCenterTextY("To Win -> Find the Key!", stringHeight * 3, 1);
             DrawCenterTextY("SpaceBar -> Start game", stringHeight * 4, 1);
             DrawCenterTextY("G -> God mode (you don't lose life and you can cross walls)", stringHeight * 5, 0.8f);
-            DrawCenterTextY("Esc -> Exit game", stringHeight * 1, 1);
+            DrawCenterTextY("Esc -> Exit game", stringHeight * 6, 1);
         }
         private void DrawCenterTextY(string msg, float Y, float escala)
         {

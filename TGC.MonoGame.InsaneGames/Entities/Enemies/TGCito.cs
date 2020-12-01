@@ -43,7 +43,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
 
         public bool isPlayerNear()
         {
-            float detection_distance = 100f;
+            float detection_distance = 150f;
             Vector3 playerPosition = playerReference.NewPosition;
             Vector3 enemyPosition = this.CurPosition.Translation;
             return Vector3.Distance(playerPosition, enemyPosition) < detection_distance;
