@@ -9,12 +9,14 @@ namespace TGC.MonoGame.InsaneGames
         private SpriteFont Font;
         private GraphicsDevice GraphicsDevice;
         private Texture2D BackgroundTexture;
+        private float Height;
         public void Load(GraphicsDevice graphicsDevice)
         {
             GraphicsDevice = graphicsDevice;
             SpriteBatch = new SpriteBatch(graphicsDevice);
             Font = ContentManager.Instance.LoadSpriteFont("Basic");
             BackgroundTexture = ContentManager.Instance.LoadTexture2D("Menu/background2");
+            Height = graphicsDevice.Viewport.Height;
         }
 
         public void Draw(GameTime gameTime)
@@ -24,12 +26,15 @@ namespace TGC.MonoGame.InsaneGames
             SpriteBatch.Draw(BackgroundTexture, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
             SpriteBatch.End();
 
-            DrawCenterTextY("TGC Shooter", 0, 1);
-            DrawCenterTextY("W A S D -> Movement", 100, 1);
-            DrawCenterTextY("Left click -> Shoot", 175, 1);
-            DrawCenterTextY("SpaceBar -> Start game", 250, 1);
-            DrawCenterTextY("G -> God mode (you don't lose life and you can cross walls)", 325, 0.8f);
-            DrawCenterTextY("Esc -> Exit game", 400, 1);
+            var stringHeight = Height / 7;
+
+            DrawCenterTextY("TGC Shooter", stringHeight * 0, 1);
+            DrawCenterTextY("W A S D -> Movement", stringHeight * 1, 1);
+            DrawCenterTextY("Left click -> Shoot", stringHeight * 2, 1);
+            DrawCenterTextY("To Win -> Find the Key!", stringHeight * 3, 1);
+            DrawCenterTextY("SpaceBar -> Start game", stringHeight * 4, 1);
+            DrawCenterTextY("G -> God mode (you don't lose life and you can cross walls)", stringHeight * 5, 0.8f);
+            DrawCenterTextY("Esc -> Exit game", stringHeight * 1, 1);
         }
         private void DrawCenterTextY(string msg, float Y, float escala)
         {
