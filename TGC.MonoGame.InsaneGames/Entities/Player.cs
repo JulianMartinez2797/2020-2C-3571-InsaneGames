@@ -11,7 +11,7 @@ namespace TGC.MonoGame.InsaneGames.Entities
 {
     class Player : Entity, ObstacleCollisionable
     {
-        public float Life { get; private set; } = 90;
+        public float Life { get; private set; } = 50;
         public float Armor { get; private set; } = 0;
         public Camera Camera { get; set; }
         /// <summary>
@@ -256,7 +256,7 @@ namespace TGC.MonoGame.InsaneGames.Entities
         }
         public void Reset()
         {
-            Life = 90;
+            Life = 50;
             UpVertex = NewPosition + HitboxSize;
             BottomVertex = NewPosition - HitboxSize;
         }
