@@ -42,6 +42,7 @@ namespace TGC.MonoGame.InsaneGames
         private DefeatUI DefeatUI { get; set; }
         private WinUI WinUI { get; set; }
 
+        private bool is_fullscreen = true;
         public const int ST_MENU = 0;
         public const int ST_LEVEL_1 = 1;
         public const int ST_DEFEAT = 2;
@@ -102,6 +103,8 @@ namespace TGC.MonoGame.InsaneGames
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 //Salgo del juego.
                 Exit();
+            if (Keyboard.GetState().IsKeyDown(Keys.F))
+                Graphics.ToggleFullScreen();
 
             switch (status)
             {
