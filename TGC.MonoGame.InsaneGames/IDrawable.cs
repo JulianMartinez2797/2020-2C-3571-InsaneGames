@@ -1,4 +1,6 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
 
 namespace TGC.MonoGame.InsaneGames
 {
@@ -12,5 +14,8 @@ namespace TGC.MonoGame.InsaneGames
         virtual public void Draw(GameTime gameTime) {}
         virtual public void Update(GameTime gameTime) {}
         virtual public void Load() {}
+
+        virtual public void Load(GraphicsDevice gd) { }
+
     }
 }

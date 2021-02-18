@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TGC.MonoGame.InsaneGames.Maps;
+using System.Linq;
 
 namespace TGC.MonoGame.InsaneGames.Entities.Enemies
 {
@@ -16,6 +17,11 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         private Matrix Misalignment { get; }
         private Boolean Death = false, PosSet = false;
         private float TimeSinceLastHit = 0, TimeSinceDeath = 0;
+        private Effect Effect { get; set; }
+        private Texture2D Texture { get; set; }
+
+        private float time = 0;
+
         override public Vector3 Position 
         {
             get { return CurPosition.Translation; }
@@ -116,17 +122,64 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
                 _mirandoPlayer = false;
             }
             TimeSinceLastHit += (float) gameTime.ElapsedGameTime.TotalSeconds;
+
+            var cameraPosition = MapRepo.CurrentMap.Camera.Position;
+            var lightPosition = new Vector3(cameraPosition.X, 0, cameraPosition.Z);
+            Effect.Parameters["lightPosition"]?.SetValue(lightPosition);
+            Effect.Parameters["eyePosition"]?.SetValue(cameraPosition);
         }
 
-        public override void Load()
+        public override void Load(GraphicsDevice gd)
         {
             if(Model is null)
                 Model = ContentManager.Instance.LoadModel(ModelName);
+
+            Texture = ((BasicEffect)Model.Meshes.FirstOrDefault()?.MeshParts.FirstOrDefault()?.Effect)?.Texture;
+
+            Effect = ContentManager.Instance.LoadEffect("Ilumination");
+
+            MapRepo.CurrentMap.AddIluminationParametersToEffect(Effect);
+
+            // Seteo constantes y colores para iluminacion tipo BlinnPhong
+            Effect.Parameters["KAmbient"].SetValue(0.3f);
+            Effect.Parameters["KDiffuse"].SetValue(0.6f);
+            Effect.Parameters["KSpecular"].SetValue(0.1f);
+            Effect.Parameters["shininess"].SetValue(8.0f);
+
         }
         public override void Draw(GameTime gameTime)
         {
-            var world = CurPosition; 
-            Model.Draw(world, Maps.MapRepo.CurrentMap.Camera.View, Maps.MapRepo.CurrentMap.Camera.Projection);
+
+            var world = CurPosition;
+            var view = MapRepo.CurrentMap.Camera.View;
+            var projection = MapRepo.CurrentMap.Camera.Projection;
+            //Model.Draw(world, view, projection);
+
+            
+            
+            // We assign the effect to each one of the models
+            foreach (var modelMesh in Model.Meshes)
+                foreach (var meshPart in modelMesh.MeshParts)
+                    meshPart.Effect = Effect;
+
+            foreach (var modelMesh in Model.Meshes)
+            {
+                // We set the main matrices for each mesh to draw
+                var worldMatrix = world;
+                // World is used to transform from model space to world space
+                Effect.Parameters["World"].SetValue(worldMatrix);
+                Effect.Parameters["View"].SetValue(view);
+                Effect.Parameters["Projection"].SetValue(projection);
+                // InverseTransposeWorld is used to rotate normals
+                Effect.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(worldMatrix)));
+                Effect.Parameters["ModelTexture"]?.SetValue(Texture);
+                Effect.Parameters["Time"]?.SetValue(time);
+
+                modelMesh.Draw();
+            }
+
+            base.Draw(gameTime);
+
         }
         public override void CollidedWith(Player player)
         {

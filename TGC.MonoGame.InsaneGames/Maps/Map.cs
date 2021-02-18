@@ -18,7 +18,6 @@ namespace TGC.MonoGame.InsaneGames.Maps
         private List<Bullet> Bullets;
         private InfoUI UI;
         public bool keyFound = false;
-
         public Camera Camera => Player.Camera;
 
         public Map(Room[] rooms, Enemy[] enemies, Player player) 
@@ -62,8 +61,9 @@ namespace TGC.MonoGame.InsaneGames.Maps
             
             UI.Draw(gameTime, Player);
         }
-        public void Load(GraphicsDevice gd) 
+        public override void Load(GraphicsDevice gd) 
         {
+
             UI.Load(gd);
 
             Player.Load();
@@ -72,7 +72,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
                 room.Load();
 
             foreach (var enemy in Enemies)
-                enemy.Load();
+                enemy.Load(gd);
         }
         public override void Update(GameTime gameTime)
         {
@@ -159,6 +159,19 @@ namespace TGC.MonoGame.InsaneGames.Maps
                 enemy.Reset();
                 this.SetPositionOfEnemy(enemy);
             });
+        }
+
+        public Effect AddIluminationParametersToEffect(Effect effect)
+        {
+            effect.Parameters["ambientColor"].SetValue(new Vector3(1f, 1f, 1f));
+            effect.Parameters["diffuseColor"].SetValue(new Vector3(1f, 1f, 1f));
+            effect.Parameters["specularColor"].SetValue(new Vector3(1f, 1f, 1f));
+
+            effect.Parameters["constant"]?.SetValue(1.0f);
+            effect.Parameters["linearTerm"]?.SetValue(0.0014f);
+            effect.Parameters["quadratic"]?.SetValue(0.000007f);
+
+            return effect;
         }
     }
 }

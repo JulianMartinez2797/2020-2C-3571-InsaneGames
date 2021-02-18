@@ -49,6 +49,12 @@
 /processorParam:DebugMode=Auto
 /build:Effects/DefeatAndWin.fx
 
+#begin Effects/Ilumination.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/Ilumination.fx
+
 #begin Fonts/Basic.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor

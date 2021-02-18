@@ -18,7 +18,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Obstacles
         }
         static public Obstacle WoodenCrate(Matrix spawnPoint)
         {
-            return new Obstacle("obstacles/box/Wooden Crate", spawnPoint, Matrix.CreateScale(0.05f));
+            return new Obstacle("obstacles/box/Wooden Crate", spawnPoint, Matrix.CreateScale(10f));
         }
         static public Obstacle Sawhorse(Matrix spawnPoint)
         {

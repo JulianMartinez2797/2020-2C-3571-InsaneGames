@@ -37,12 +37,22 @@ namespace TGC.MonoGame.InsaneGames.Maps
             {
                 collectible.Update(gameTime);
             }
+
+            foreach (var obstacle in Obstacles)
+            {
+                obstacle.Update(gameTime);
+            }
         }
         public override void Load()
         {
             foreach (var collectible in Collectibles)
             {
                 collectible.Load();
+            }
+
+            foreach (var obstacle in Obstacles)
+            {
+                obstacle.Load();
             }
         }
 
