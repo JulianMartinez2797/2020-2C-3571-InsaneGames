@@ -2,20 +2,23 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TGC.MonoGame.InsaneGames.Maps;
+using System.Linq;
 
 namespace TGC.MonoGame.InsaneGames.Entities.Enemies
 {
     class TGCito : Enemy
     {
+        private Effect DeathEffect { get; set; }
+        private Texture2D Texture { get; set; }
         private Matrix CurPosition, PrevPosition;
         private Player playerReference { set; get; }
         private const string ModelName = "tgcito/tgcito-classic";
-        static private Model Model;
+        protected Model Model {get; set;}
         private readonly Vector3 HitboxSize = new Vector3(10, 16, 10);
         private readonly float TimePerHit = 2, TimeToRespawn = 10;
         private Matrix Misalignment { get; }
         private Boolean Death = false, PosSet = false;
-        private float TimeSinceLastHit = 0, TimeSinceDeath = 0;
+        private float TimeSinceLastHit = 0, TimeSinceDeath = 0, AnimationTime = 0;
         override public Vector3 Position 
         {
             get { return CurPosition.Translation; }
@@ -120,13 +123,84 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
 
         public override void Load()
         {
-            if(Model is null)
+            if (Model is null)
                 Model = ContentManager.Instance.LoadModel(ModelName);
+            Texture = ((BasicEffect)Model.Meshes.FirstOrDefault()?.MeshParts.FirstOrDefault()?.Effect)?.Texture;
+            DeathEffect = ContentManager.Instance.LoadEffect("DeathDissolve");
         }
+        float time = 0;
         public override void Draw(GameTime gameTime)
         {
+            float minY = float.MaxValue;
+            float maxY = float.MinValue;
             var world = CurPosition; 
-            Model.Draw(world, Maps.MapRepo.CurrentMap.Camera.View, Maps.MapRepo.CurrentMap.Camera.Projection);
+            var view = Maps.MapRepo.CurrentMap.Camera.View;
+                var projection = Maps.MapRepo.CurrentMap.Camera.Projection;
+                // time += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
+                // We assign the effect to each one of the models
+                // foreach (var modelMesh in Model.Meshes)
+                    // foreach (var meshPart in modelMesh.MeshParts)
+                        // meshPart.Effect = DeathEffect;
+                var mesh = Model.Meshes.FirstOrDefault();
+                if (mesh != null)
+                {
+                    foreach (var part in mesh.MeshParts)
+                    {
+                        int count = part.NumVertices;
+                        VertexPositionNormalTexture[] positions = new VertexPositionNormalTexture[count];
+                        part.VertexBuffer.GetData(positions);
+                        foreach (var position in positions)
+                        {
+                            if (position.Position.Z < minY)
+                                minY = position.Position.Z;
+                            if (position.Position.Z > maxY)
+                                maxY = position.Position.Z;
+                        }
+                        part.Effect = DeathEffect;
+                        var worldMatrix = world;
+                        DeathEffect.Parameters["World"].SetValue(worldMatrix);
+                        DeathEffect.Parameters["View"].SetValue(view);
+                        DeathEffect.Parameters["Projection"].SetValue(projection);
+                        DeathEffect.Parameters["ModelTexture"].SetValue(Texture);
+                        DeathEffect.Parameters["Time"]?.SetValue(AnimationTime);
+                        DeathEffect.Parameters["minY"]?.SetValue(minY);
+                        DeathEffect.Parameters["maxY"]?.SetValue(maxY);
+                    }
+                    mesh.Draw();
+                }
+            // if(Death)
+            // {
+            //     var view = Maps.MapRepo.CurrentMap.Camera.View;
+            //     var projection = Maps.MapRepo.CurrentMap.Camera.Projection;
+            //     time += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
+            //     // We assign the effect to each one of the models
+            //     // foreach (var modelMesh in Model.Meshes)
+            //         // foreach (var meshPart in modelMesh.MeshParts)
+            //             // meshPart.Effect = DeathEffect;
+            //     var mesh = Model.Meshes.FirstOrDefault();
+            //     if (mesh != null)
+            //     {
+            //         foreach (var part in mesh.MeshParts)
+            //         {
+            //             part.Effect = DeathEffect;
+            //             // We set the main matrices for each mesh to draw
+            //             var worldMatrix = world;
+            //             // World is used to transform from model space to world space
+            //             DeathEffect.Parameters["World"].SetValue(worldMatrix);
+            //             DeathEffect.Parameters["View"].SetValue(view);
+            //             DeathEffect.Parameters["Projection"].SetValue(projection);
+            //             // InverseTransposeWorld is used to rotate normals
+            //             // Effect.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(worldMatrix)));
+            //             DeathEffect.Parameters["ModelTexture"].SetValue(Texture);
+            //             // DeathEffect.Parameters["Time"].SetValue(time);
+
+            //             // modelMesh.Draw();
+            //         }
+            //         mesh.Draw();
+            //     }
+            // } else {
+            //     Model.Draw(world, Maps.MapRepo.CurrentMap.Camera.View, Maps.MapRepo.CurrentMap.Camera.Projection);
+            // }
         }
         public override void CollidedWith(Player player)
         {
@@ -160,6 +234,17 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         private void IfDeathUpdate(GameTime gameTime)
         {
             TimeSinceDeath += (float) gameTime.ElapsedGameTime.TotalSeconds;
+            //Rotate TGCito
+            if (TimeSinceDeath < 0.85f)
+            {
+                CurPosition = Matrix.CreateRotationX(-0.03f) * CurPosition;
+                CurPosition = CurPosition * Matrix.CreateTranslation(0, -0.1f, 0);
+            }
+            //Start timer for Shader: DeathDissolve
+            if (TimeSinceDeath > 1.3f)
+            {  
+                AnimationTime += (float) gameTime.ElapsedGameTime.TotalSeconds;    
+            }
             if(TimeSinceDeath > TimeToRespawn)
             {
                 MapRepo.CurrentMap.SetPositionOfEnemy(this);

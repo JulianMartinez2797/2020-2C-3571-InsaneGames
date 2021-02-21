@@ -43,6 +43,12 @@
 /processorParam:DebugMode=Auto
 /build:Effects/Collectible.fx
 
+#begin Effects/DeathDissolve.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/DeathDissolve.fx
+
 #begin Effects/DefeatAndWin.fx
 /importer:EffectImporter
 /processor:EffectProcessor
