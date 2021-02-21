@@ -123,8 +123,8 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
 
             var cameraPosition = MapRepo.CurrentMap.Camera.Position;
             var lightPosition = new Vector3(cameraPosition.X, 0, cameraPosition.Z);
-            // Effect.Parameters["lightPosition"]?.SetValue(lightPosition);
-            // Effect.Parameters["eyePosition"]?.SetValue(cameraPosition);
+            DeathEffect.Parameters["lightPosition"]?.SetValue(lightPosition);
+            DeathEffect.Parameters["eyePosition"]?.SetValue(cameraPosition);
         }
 
         public override void Load(GraphicsDevice gd)
@@ -135,14 +135,12 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
             Texture = ((BasicEffect)Model.Meshes.FirstOrDefault()?.MeshParts.FirstOrDefault()?.Effect)?.Texture;
             DeathEffect = ContentManager.Instance.LoadEffect("DeathDissolve");
 
-            //Effect = ContentManager.Instance.LoadEffect("Ilumination");
-            //MapRepo.CurrentMap.AddIluminationParametersToEffect(Effect);
-            /* Constantes y colores para iluminacion tipo BlinnPhong
-            Effect.Parameters["KAmbient"].SetValue(0.3f);
-            Effect.Parameters["KDiffuse"].SetValue(0.6f);
-            Effect.Parameters["KSpecular"].SetValue(0.1f);
-            Effect.Parameters["shininess"].SetValue(8.0f);
-            */
+            MapRepo.CurrentMap.AddIluminationParametersToEffect(DeathEffect);
+            DeathEffect.Parameters["KAmbient"].SetValue(0.3f);
+            DeathEffect.Parameters["KDiffuse"].SetValue(0.6f);
+            DeathEffect.Parameters["KSpecular"].SetValue(0.1f);
+            DeathEffect.Parameters["shininess"].SetValue(8.0f);
+            
 
         }
         float time = 0;
@@ -177,8 +175,9 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
                         DeathEffect.Parameters["Time"]?.SetValue(AnimationTime);
                         DeathEffect.Parameters["minY"]?.SetValue(minY);
                         DeathEffect.Parameters["maxY"]?.SetValue(maxY);
-                    }
-                    mesh.Draw();
+                        DeathEffect.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(worldMatrix)));
+                }
+                mesh.Draw();
                 }
 
             // var world = CurPosition;
