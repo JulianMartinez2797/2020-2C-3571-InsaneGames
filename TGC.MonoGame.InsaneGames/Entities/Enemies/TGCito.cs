@@ -136,11 +136,6 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
             var world = CurPosition; 
             var view = Maps.MapRepo.CurrentMap.Camera.View;
                 var projection = Maps.MapRepo.CurrentMap.Camera.Projection;
-                // time += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
-                // We assign the effect to each one of the models
-                // foreach (var modelMesh in Model.Meshes)
-                    // foreach (var meshPart in modelMesh.MeshParts)
-                        // meshPart.Effect = DeathEffect;
                 var mesh = Model.Meshes.FirstOrDefault();
                 if (mesh != null)
                 {
@@ -168,39 +163,6 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
                     }
                     mesh.Draw();
                 }
-            // if(Death)
-            // {
-            //     var view = Maps.MapRepo.CurrentMap.Camera.View;
-            //     var projection = Maps.MapRepo.CurrentMap.Camera.Projection;
-            //     time += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
-            //     // We assign the effect to each one of the models
-            //     // foreach (var modelMesh in Model.Meshes)
-            //         // foreach (var meshPart in modelMesh.MeshParts)
-            //             // meshPart.Effect = DeathEffect;
-            //     var mesh = Model.Meshes.FirstOrDefault();
-            //     if (mesh != null)
-            //     {
-            //         foreach (var part in mesh.MeshParts)
-            //         {
-            //             part.Effect = DeathEffect;
-            //             // We set the main matrices for each mesh to draw
-            //             var worldMatrix = world;
-            //             // World is used to transform from model space to world space
-            //             DeathEffect.Parameters["World"].SetValue(worldMatrix);
-            //             DeathEffect.Parameters["View"].SetValue(view);
-            //             DeathEffect.Parameters["Projection"].SetValue(projection);
-            //             // InverseTransposeWorld is used to rotate normals
-            //             // Effect.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(worldMatrix)));
-            //             DeathEffect.Parameters["ModelTexture"].SetValue(Texture);
-            //             // DeathEffect.Parameters["Time"].SetValue(time);
-
-            //             // modelMesh.Draw();
-            //         }
-            //         mesh.Draw();
-            //     }
-            // } else {
-            //     Model.Draw(world, Maps.MapRepo.CurrentMap.Camera.View, Maps.MapRepo.CurrentMap.Camera.Projection);
-            // }
         }
         public override void CollidedWith(Player player)
         {
