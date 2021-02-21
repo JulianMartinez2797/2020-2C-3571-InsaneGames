@@ -6,6 +6,7 @@ using TGC.MonoGame.InsaneGames.Entities;
 using TGC.MonoGame.InsaneGames.Entities.Enemies;
 using TGC.MonoGame.InsaneGames.Entities.Collectibles;
 using TGC.MonoGame.InsaneGames.Cameras;
+using TGC.MonoGame.InsaneGames.Entities.Obstacles;
 
 namespace TGC.MonoGame.InsaneGames.Maps
 {
@@ -19,6 +20,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
         static public Map Level1(TGCGame game, GraphicsDevice graphicsDevice)
         {
             var builder = new MazeBuilder(10, 10, new Vector3(250, 100, 250));
+
             var wallsEffect = new BasicEffect(graphicsDevice);
             wallsEffect.TextureEnabled = true;
             wallsEffect.Texture = ContentManager.Instance.LoadTexture2D("Wall/Wall2");
@@ -83,6 +85,10 @@ namespace TGC.MonoGame.InsaneGames.Maps
             //builder.AddCollectible(new Armor(Matrix.CreateTranslation(1325, 5, 150), 1.75f, 100));
             builder.AddCollectible(new Armor(Matrix.CreateTranslation(1400f, 5, 2125), 1.75f, 100));
             builder.AddCollectible(new Key(Matrix.CreateTranslation(1400f, 12, 2370)));
+            builder.AddObstacle(ObstaclesFactory.Cone(Matrix.CreateTranslation(1200, 0, 100)));
+            builder.AddObstacle(ObstaclesFactory.Barrier(Matrix.CreateTranslation(1200, 0, 200)));
+            builder.AddObstacle(ObstaclesFactory.Sawhorse(Matrix.CreateTranslation(1400, 0, 250)));
+
             return builder.BuildMaze();
         }
     }

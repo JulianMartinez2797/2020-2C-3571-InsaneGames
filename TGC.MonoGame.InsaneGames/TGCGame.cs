@@ -6,6 +6,7 @@ using TGC.MonoGame.InsaneGames.Maps;
 using TGC.MonoGame.InsaneGames.Entities;
 using TGC.MonoGame.InsaneGames.Entities.Obstacles;
 using TGC.MonoGame.InsaneGames.Entities.Enemies;
+using TGC.MonoGame.InsaneGames.Entities.Other;
 using Microsoft.Xna.Framework.Media;
 
 
@@ -26,7 +27,7 @@ namespace TGC.MonoGame.InsaneGames
             // Maneja la configuracion y la administracion del dispositivo grafico.
             Graphics = new GraphicsDeviceManager(this);
             // Descomentar para que el juego sea pantalla completa.
-            Graphics.IsFullScreen = true;
+            //Graphics.IsFullScreen = true;
             // Carpeta raiz donde va a estar toda la Media.
             Content.RootDirectory = "Content";
 
@@ -36,6 +37,7 @@ namespace TGC.MonoGame.InsaneGames
         private GraphicsDeviceManager Graphics { get; }
         private Map Map { get; set; }
 
+        private Lamp Lamp { get; set; }
         private MenuUI MenuUI { get; set; }
 
         public bool godMode = false;
@@ -71,6 +73,7 @@ namespace TGC.MonoGame.InsaneGames
             MenuUI = new MenuUI();
             DefeatUI = new DefeatUI();
             WinUI = new WinUI();
+            Lamp = new Lamp(Matrix.CreateTranslation(1250, -35, 125));
 
             base.Initialize();
         }
@@ -86,7 +89,7 @@ namespace TGC.MonoGame.InsaneGames
             MenuUI.Load(GraphicsDevice);
             DefeatUI.Load(GraphicsDevice);
             WinUI.Load(GraphicsDevice);
-
+            Lamp.Load();
             base.LoadContent();
         }
 
@@ -161,6 +164,7 @@ namespace TGC.MonoGame.InsaneGames
                     MenuUI.Draw(gameTime);
                     break;
                 case ST_LEVEL_1:
+                    Lamp.Draw(gameTime);
                     Map.Draw(gameTime);
                     break;
                 case ST_DEFEAT:

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Linq;
+using TGC.MonoGame.InsaneGames.Maps;
 
 namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
 {
@@ -49,9 +50,8 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
             Effect.Parameters["KSpecular"].SetValue(0.5f);
             Effect.Parameters["shininess"].SetValue(16.0f);
 
-            Effect.Parameters["ambientColor"].SetValue(new Vector3(1f, 1f, 1f));
-            Effect.Parameters["diffuseColor"].SetValue(new Vector3(1f, 1f, 1f));
-            Effect.Parameters["specularColor"].SetValue(new Vector3(1f, 1f, 1f));
+            MapRepo.CurrentMap.AddIluminationParametersToEffect(Effect);
+
         }
         public override void Update(GameTime gameTime)
         {
@@ -59,9 +59,10 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
             Rotation = Matrix.CreateRotationY(time * 2);
             World = Scale * initialRotation * Rotation * SpawnPoint;
 
-            // TODO: Modificar la posicion para que sea Point o Spot light, por ahora es fija en el eje x
-            Effect.Parameters["lightPosition"].SetValue(new Vector3(1, 0, 0));
-            Effect.Parameters["eyePosition"].SetValue(Maps.MapRepo.CurrentMap.Camera.Position);
+            var cameraPosition = MapRepo.CurrentMap.Camera.Position;
+            var lightPosition = new Vector3(cameraPosition.X, 0, cameraPosition.Z);
+            Effect.Parameters["lightPosition"]?.SetValue(lightPosition);
+            Effect.Parameters["eyePosition"]?.SetValue(cameraPosition);
         }
         public override void Draw(GameTime gameTime)
         {

@@ -35,10 +35,43 @@ namespace TGC.MonoGame.InsaneGames.Weapons
                                (cameraWorld.Right * leftOrRightOffset);
 
             World = RotationMatrix * weaponWorld;
+
+            var cameraPosition = MapRepo.CurrentMap.Camera.Position;
+            var lightPosition = new Vector3(cameraPosition.X, 0, cameraPosition.Z);
+            Effect.Parameters["lightPosition"]?.SetValue(lightPosition);
+            Effect.Parameters["eyePosition"]?.SetValue(cameraPosition);
         }
         public override void Draw(GameTime gameTime)
         {
-            Model.Draw(World, MapRepo.CurrentMap.Camera.View, MapRepo.CurrentMap.Camera.Projection);
+
+            var world = World;
+            var view = MapRepo.CurrentMap.Camera.View;
+            var projection = MapRepo.CurrentMap.Camera.Projection;
+
+            //Model.Draw(world, view, projection);
+
+            
+            // We assign the effect to each one of the models
+            foreach (var modelMesh in Model.Meshes)
+                foreach (var meshPart in modelMesh.MeshParts)
+                    meshPart.Effect = Effect;
+
+            foreach (var modelMesh in Model.Meshes)
+            {
+                // We set the main matrices for each mesh to draw
+                var worldMatrix = world;
+                // World is used to transform from model space to world space
+                Effect.Parameters["World"].SetValue(worldMatrix);
+                Effect.Parameters["View"].SetValue(view);
+                Effect.Parameters["Projection"].SetValue(projection);
+                // InverseTransposeWorld is used to rotate normals
+                Effect.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(worldMatrix)));
+                Effect.Parameters["ModelTexture"]?.SetValue(Texture);
+                //Effect.Parameters["Time"]?.SetValue(time);
+
+                modelMesh.Draw();
+            }
+            
         }
         public override void Update(GameTime gameTime, Vector3 direction, Vector3 playerPosition)
         {
@@ -54,6 +87,11 @@ namespace TGC.MonoGame.InsaneGames.Weapons
             {
                 Shooting = false;
             }
+
+            var cameraPosition = MapRepo.CurrentMap.Camera.Position;
+            var lightPosition = new Vector3(cameraPosition.X, 0, cameraPosition.Z);
+            Effect.Parameters["lightPosition"]?.SetValue(lightPosition);
+            Effect.Parameters["eyePosition"]?.SetValue(cameraPosition);
         }
 
         public override SoundEffect SoundEffect

@@ -80,8 +80,6 @@ namespace TGC.MonoGame.InsaneGames.Maps
                 collectible.Draw(gameTime);
             foreach (var obstacle in Obstacles)
                 obstacle.Draw(gameTime);
-            foreach (var obstacle in Obstacles)
-                obstacle.Load();
         }
 
         public override SpawnableSpace SpawnableSpace()

@@ -1,10 +1,10 @@
 ﻿#if OPENGL
-	#define SV_POSITION POSITION
-	#define VS_SHADERMODEL vs_3_0
-	#define PS_SHADERMODEL ps_3_0
+    #define SV_POSITION POSITION
+    #define VS_SHADERMODEL vs_3_0
+    #define PS_SHADERMODEL ps_3_0
 #else
-	#define VS_SHADERMODEL vs_4_0_level_9_1
-	#define PS_SHADERMODEL ps_4_0_level_9_1
+    #define VS_SHADERMODEL vs_4_0_level_9_1
+    #define PS_SHADERMODEL ps_4_0_level_9_1
 #endif
 
 float4x4 World;
@@ -58,20 +58,8 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 {
     VertexShaderOutput output = (VertexShaderOutput) 0;
 
-    float1 effect = abs(sin(Time * 1.5)) * 5;
-    
-    // Matriz a multiplicar que hara el efecto rebote
-    float4x4 effectMatrix =
-    {
-        1, 0, 0, 0,
-        0, 1, 0, 0,
-        0, 0, 1, 0,
-        0, effect, 0, 1
-    };
-
     float4 worldPosition = mul(input.Position, World);
-    // agrego efecto rebote
-    worldPosition = mul(worldPosition, effectMatrix);
+    
     output.WorldPosition = worldPosition;
 
     output.Normal = mul(input.Normal, InverseTransposeWorld);
@@ -96,8 +84,8 @@ float4 MainPS(VertexShaderOutput input) : COLOR
     float3 halfVector = normalize(lightDirection + viewDirection);
     
     float distance = length(lightPosition - input.WorldPosition.xyz);
-    float attenuation = 1.0 / (constant + linearTerm * distance + quadratic * (distance * distance));
-
+    float attenuation = 1.0 / (constant + linearTerm * distance + quadratic * (distance * distance));    
+    
 	// Get the texture texel
     float4 texelColor = tex2D(textureSampler, input.TextureCoordinates);
     
@@ -107,7 +95,7 @@ float4 MainPS(VertexShaderOutput input) : COLOR
 	// Calculate the diffuse light
     float NdotL = saturate(dot(input.Normal.xyz, lightDirection));
     float3 diffuseLight = KDiffuse * diffuseColor * NdotL;
-
+    
 	// Calculate the specular light
     float NdotH = dot(input.Normal.xyz, halfVector);
     float3 specularLight = sign(NdotL) * KSpecular * specularColor * pow(saturate(NdotH), shininess);
@@ -119,11 +107,12 @@ float4 MainPS(VertexShaderOutput input) : COLOR
     
     // Final calculation
     float4 finalColor = float4(saturate(ambientLight + diffuseLight) * texelColor.rgb + specularLight, texelColor.a);
+       
     return finalColor;
-
+    //return float4(1, 0, 0, 1);;
 }
 
-technique Collectible
+technique Ilumination
 {
     pass Pass0
     {
