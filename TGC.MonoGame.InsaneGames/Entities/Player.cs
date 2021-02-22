@@ -142,7 +142,7 @@ namespace TGC.MonoGame.InsaneGames.Entities
 
             Camera.Position = NewPosition + CameraCorrection;
             if (explosion_happening) {
-                explosionEffect(Camera, gameTime);
+                explosionEffect(Camera, gameTime, RightDirection);
             }
             //UpdatePlayerVectors();
 
@@ -204,20 +204,20 @@ namespace TGC.MonoGame.InsaneGames.Entities
 
         Vector3 cameraOffset = new Vector3(0,0,0);
         float explosionTime = 0f;
-        public void explosionEffect(Camera cam, GameTime time)
+        public void explosionEffect(Camera cam, GameTime time, Vector3 rDirection)
         {  
             float timeSeconds = (float)time.ElapsedGameTime.TotalSeconds;
             explosionTime += timeSeconds;
             float bounceSpeed = 35f;
-            float bounceForce = 2.5f;
+            float bounceForce = 2.8f;
             float explosionDuration = 0.6f;
             
             if (MathF.Floor(explosionTime*bounceSpeed) % 2 == 0)
             {
-                cameraOffset += new Vector3(0,0,bounceForce);
+                cameraOffset += bounceForce * rDirection;
             } 
             else {
-                cameraOffset -= new Vector3(0,0,bounceForce);
+                cameraOffset -= bounceForce * rDirection;
             }
             cam.Position += cameraOffset; 
             if (explosionTime > explosionDuration) {
