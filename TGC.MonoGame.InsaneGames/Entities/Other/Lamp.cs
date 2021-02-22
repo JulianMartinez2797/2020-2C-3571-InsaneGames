@@ -19,7 +19,8 @@ namespace TGC.MonoGame.InsaneGames.Entities.Other
         public Lamp(Matrix spawnPoint)
         {
             Translation = spawnPoint;
-            Scale = Matrix.CreateScale(0.05f);
+            Scale = Matrix.CreateScale(0.1f);
+            Rotation = Matrix.CreateRotationX(MathHelper.ToRadians(-90f));
         }
 
         public override void Load()
@@ -37,7 +38,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Other
         {
 
             Effect.CurrentTechnique = Effect.Techniques["BloomPass"];
-            Effect.Parameters["baseTexture"].SetValue(BasicEffect.Texture);
+            Effect.Parameters["baseTexture"]?.SetValue(BasicEffect.Texture);
 
             /*
             foreach (var modelMesh in Model.Meshes)

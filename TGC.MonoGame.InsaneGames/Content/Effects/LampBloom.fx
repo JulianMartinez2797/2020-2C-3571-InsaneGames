@@ -58,11 +58,11 @@ float4 BloomPS(VertexShaderOutput input) : COLOR
     
     float distanceToTargetColor = distance(color.rgb, float3(0.933, 0.933, 0.768));
     
-    //float filter = step(distanceToTargetColor, 0.80);
-    float filter = 1;
+    //float filter = step(distanceToTargetColor, 0.15);
+    //float filter = 1;
     
-    return float4(color.rgb * filter, 1);
-    //return float4(0, 0, 0, 1);
+    //return float4(color.rgb * filter, 1);
+    return float4(1, 1, 1, 1);
 }
 
 VertexShaderOutput PostProcessVS(in VertexShaderInput input)

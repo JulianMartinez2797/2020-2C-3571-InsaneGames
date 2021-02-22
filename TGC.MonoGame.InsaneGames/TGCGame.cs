@@ -80,7 +80,7 @@ namespace TGC.MonoGame.InsaneGames
             MenuUI = new MenuUI();
             DefeatUI = new DefeatUI();
             WinUI = new WinUI();
-            Lamp = new Lamp(Matrix.CreateTranslation(1250, -35, 125));
+            Lamp = new Lamp(Matrix.CreateTranslation(1250, 0, 125));
 
             base.Initialize();
         }
