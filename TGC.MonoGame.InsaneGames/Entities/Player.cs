@@ -118,6 +118,8 @@ namespace TGC.MonoGame.InsaneGames.Entities
             }
             base.Initialize(game);
         }
+
+        bool explosion_happening = false;
         public override void Update(GameTime gameTime)
         {
 
@@ -127,7 +129,8 @@ namespace TGC.MonoGame.InsaneGames.Entities
             
             var elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             ProcessKeyboard(elapsedTime);
-           
+
+            
             this.Camera.Update(gameTime);
 
             //Les saco el componente Y para que no se mueva verticalmente
@@ -138,6 +141,9 @@ namespace TGC.MonoGame.InsaneGames.Entities
             CalculateView();
 
             Camera.Position = NewPosition + CameraCorrection;
+            if (explosion_happening) {
+                explosionEffect(Camera, gameTime, RightDirection);
+            }
             //UpdatePlayerVectors();
 
             BottomVertex = NewPosition - HitboxSize;
@@ -145,6 +151,10 @@ namespace TGC.MonoGame.InsaneGames.Entities
             CurrentWeapon.Update(gameTime, Camera.FrontDirection, Camera.Position);
         }
 
+        public void generateExplosionEffect()
+        {
+            explosion_happening = true;
+        }
         private void ChangeWeapon(int weaponIdx)
         {
             CurrentWeapon = Weapons[weaponIdx];
@@ -189,6 +199,30 @@ namespace TGC.MonoGame.InsaneGames.Entities
             else if (keyboardState.IsKeyDown(Keys.D4))
             {
                 ChangeWeapon(3); // RPG
+            }
+        }
+
+        Vector3 cameraOffset = new Vector3(0,0,0);
+        float explosionTime = 0f;
+        public void explosionEffect(Camera cam, GameTime time, Vector3 rDirection)
+        {  
+            float timeSeconds = (float)time.ElapsedGameTime.TotalSeconds;
+            explosionTime += timeSeconds;
+            float bounceSpeed = 35f;
+            float bounceForce = 2.8f;
+            float explosionDuration = 0.6f;
+            
+            if (MathF.Floor(explosionTime*bounceSpeed) % 2 == 0)
+            {
+                cameraOffset += bounceForce * rDirection;
+            } 
+            else {
+                cameraOffset -= bounceForce * rDirection;
+            }
+            cam.Position += cameraOffset; 
+            if (explosionTime > explosionDuration) {
+                explosion_happening = false;
+                explosionTime = 0f;
             }
         }
 

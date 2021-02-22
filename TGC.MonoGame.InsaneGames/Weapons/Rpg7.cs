@@ -46,6 +46,8 @@ namespace TGC.MonoGame.InsaneGames.Weapons
             var mouseState = Mouse.GetState();
             if(!Shooting && mouseState.LeftButton == ButtonState.Pressed)
             {
+                SoundEffect.CreateInstance().Play();
+                Maps.MapRepo.CurrentMap.Player.generateExplosionEffect();
                 Shooting = true;
                 Maps.MapRepo.CurrentMap.AddBullet(new Entities.Bullets.Missile(Damage, direction, playerPosition, BulletSize, ExplosionSize));
             }
@@ -56,7 +58,7 @@ namespace TGC.MonoGame.InsaneGames.Weapons
         }
         public override SoundEffect SoundEffect
         {
-            get { return ContentManager.Instance.LoadSoundEffect("handgun-shot"); }
+            get { return ContentManager.Instance.LoadSoundEffect("bom"); }
         }
     }
 }
