@@ -58,7 +58,7 @@ namespace TGC.MonoGame.InsaneGames.Weapons
         }
         public override SoundEffect SoundEffect
         {
-            get { return ContentManager.Instance.LoadSoundEffect("handgun-shot"); }
+            get { return ContentManager.Instance.LoadSoundEffect("bom"); }
         }
     }
 }
