@@ -14,7 +14,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
         private Room[] Rooms;
         private Enemy[] Enemies;
         private Random Random;
-        private Player Player;
+        public Player Player;
         private List<Bullet> Bullets;
         private InfoUI UI;
         public bool keyFound = false;
