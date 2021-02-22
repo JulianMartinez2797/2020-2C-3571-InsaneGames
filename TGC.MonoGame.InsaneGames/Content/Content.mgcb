@@ -37,6 +37,18 @@
 /processorParam:DebugMode=Auto
 /build:Effects/BasicShader.fx
 
+#begin Effects/BlackShader.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/BlackShader.fx
+
+#begin Effects/LampBloom.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/LampBloom.fx
+
 #begin Effects/Collectible.fx
 /importer:EffectImporter
 /processor:EffectProcessor

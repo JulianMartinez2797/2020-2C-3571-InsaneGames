@@ -42,15 +42,15 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
 
             Texture = ((BasicEffect)Model.Meshes.FirstOrDefault()?.MeshParts.FirstOrDefault()?.Effect)?.Texture;
 
-            Effect = ContentManager.Instance.LoadEffect("Collectible");
+            Effect = ContentManager.Instance.LoadEffect("BlackShader");
 
             // Seteo constantes y colores para iluminacion tipo BlinnPhong
-            Effect.Parameters["KAmbient"].SetValue(1f);
-            Effect.Parameters["KDiffuse"].SetValue(0.4f);
-            Effect.Parameters["KSpecular"].SetValue(0.5f);
-            Effect.Parameters["shininess"].SetValue(16.0f);
+            //Effect.Parameters["KAmbient"].SetValue(1f);
+            //Effect.Parameters["KDiffuse"].SetValue(0.4f);
+            //Effect.Parameters["KSpecular"].SetValue(0.5f);
+            //Effect.Parameters["shininess"].SetValue(16.0f);
 
-            MapRepo.CurrentMap.AddIluminationParametersToEffect(Effect);
+            //MapRepo.CurrentMap.AddIluminationParametersToEffect(Effect);
 
         }
         public override void Update(GameTime gameTime)
@@ -61,8 +61,8 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
 
             var cameraPosition = MapRepo.CurrentMap.Camera.Position;
             var lightPosition = new Vector3(cameraPosition.X, 0, cameraPosition.Z);
-            Effect.Parameters["lightPosition"]?.SetValue(lightPosition);
-            Effect.Parameters["eyePosition"]?.SetValue(cameraPosition);
+            //Effect.Parameters["lightPosition"]?.SetValue(lightPosition);
+            //Effect.Parameters["eyePosition"]?.SetValue(cameraPosition);
         }
         public override void Draw(GameTime gameTime)
         {
@@ -86,9 +86,9 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
                     Effect.Parameters["View"].SetValue(view);
                     Effect.Parameters["Projection"].SetValue(projection);
                     // InverseTransposeWorld is used to rotate normals
-                    Effect.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(worldMatrix)));
-                    Effect.Parameters["ModelTexture"].SetValue(Texture);
-                    Effect.Parameters["Time"].SetValue(time);
+                    //Effect.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(worldMatrix)));
+                    //Effect.Parameters["ModelTexture"].SetValue(Texture);
+                    //Effect.Parameters["Time"].SetValue(time);
 
                     modelMesh.Draw();
                 }               

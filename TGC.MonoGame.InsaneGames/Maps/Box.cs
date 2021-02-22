@@ -69,6 +69,9 @@ namespace TGC.MonoGame.InsaneGames.Maps
         {
             foreach (var collectible in Collectibles)
                 collectible.Load();
+            foreach (var wall in Walls.Values)
+                wall.Load();
+
             base.Load();
         }
 
