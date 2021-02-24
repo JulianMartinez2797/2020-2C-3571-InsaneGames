@@ -85,6 +85,16 @@ namespace TGC.MonoGame.InsaneGames.Maps
                 obstacle.Draw(gameTime);
         }
 
+        public override void DrawBlack(GameTime gameTime)
+        {
+            foreach (var wall in Walls.Values)
+                wall.DrawBlack(gameTime);
+            foreach (var collectible in Collectibles)
+                collectible.DrawBlack(gameTime);
+            foreach (var obstacle in Obstacles)
+                obstacle.DrawBlack(gameTime);
+        }
+
         public override SpawnableSpace SpawnableSpace()
         {
             return SpawnSpace;           

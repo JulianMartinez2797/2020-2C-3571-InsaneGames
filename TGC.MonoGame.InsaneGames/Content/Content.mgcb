@@ -43,12 +43,6 @@
 /processorParam:DebugMode=Auto
 /build:Effects/BlackShader.fx
 
-#begin Effects/LampBloom.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Effects/LampBloom.fx
-
 #begin Effects/Collectible.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -67,11 +61,23 @@
 /processorParam:DebugMode=Auto
 /build:Effects/DefeatAndWin.fx
 
+#begin Effects/GaussianBlur.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/GaussianBlur.fx
+
 #begin Effects/Ilumination.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Effects/Ilumination.fx
+
+#begin Effects/LampBloom.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/LampBloom.fx
 
 #begin Fonts/Basic.spritefont
 /importer:FontDescriptionImporter

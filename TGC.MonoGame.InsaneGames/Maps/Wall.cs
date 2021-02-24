@@ -23,8 +23,8 @@ namespace TGC.MonoGame.InsaneGames.Maps
         protected Vector3 BottomRight, BottomLeft, UpperRight, UpperLeft; 
         public (float, float) TextureRepeat { protected get; set; }
         protected bool Reverse;
-        //public BasicEffect Effect { protected get; set; }
-        public Effect Effect { protected get; set; }
+        public BasicEffect Effect { protected get; set; }
+        public Effect BlackEffect { protected get; set; }
         protected Wall(Vector2 size, Vector3 center, Func<Vector3, Vector3> trans = null, bool reserve = false, (float, float)? textureRepeat = null)
         {
             Reverse = reserve;
@@ -61,18 +61,33 @@ namespace TGC.MonoGame.InsaneGames.Maps
 
         public override void Load()
         {
-            Effect = ContentManager.Instance.LoadEffect("BlackShader");
+            BlackEffect = ContentManager.Instance.LoadEffect("BlackShader");
         }
 
         public override void Draw(GameTime gameTime)
         {
-            Effect.Parameters["World"].SetValue(Matrix.Identity);
-            Effect.Parameters["View"].SetValue(MapRepo.CurrentMap.Camera.View);
-            Effect.Parameters["Projection"].SetValue(MapRepo.CurrentMap.Camera.Projection);
+            Effect.World = Matrix.Identity;
+            Effect.View = MapRepo.CurrentMap.Camera.View;
+            Effect.Projection = MapRepo.CurrentMap.Camera.Projection;
 
             Game.GraphicsDevice.SetVertexBuffer(VertexBuffer);
             Game.GraphicsDevice.Indices = IndexBuffer;
             foreach (var pass in Effect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+                Game.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 6 / 3);
+            }
+        }
+
+        public void DrawBlack(GameTime gameTime)
+        {
+            BlackEffect.Parameters["World"].SetValue(Matrix.Identity);
+            BlackEffect.Parameters["View"].SetValue(MapRepo.CurrentMap.Camera.View);
+            BlackEffect.Parameters["Projection"].SetValue(MapRepo.CurrentMap.Camera.Projection);
+
+            Game.GraphicsDevice.SetVertexBuffer(VertexBuffer);
+            Game.GraphicsDevice.Indices = IndexBuffer;
+            foreach (var pass in BlackEffect.CurrentTechnique.Passes)
             {
                 pass.Apply();
                 Game.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 6 / 3);

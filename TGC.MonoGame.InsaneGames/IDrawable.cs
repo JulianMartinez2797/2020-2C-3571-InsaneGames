@@ -16,6 +16,8 @@ namespace TGC.MonoGame.InsaneGames
         virtual public void Load() {}
 
         virtual public void Load(GraphicsDevice gd) { }
+        virtual public void DrawBlack(GameTime gameTime) { }
+
 
     }
 }

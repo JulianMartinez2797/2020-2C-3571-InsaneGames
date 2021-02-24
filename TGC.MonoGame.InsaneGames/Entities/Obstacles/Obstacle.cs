@@ -14,6 +14,8 @@ namespace TGC.MonoGame.InsaneGames.Entities.Obstacles
         private Matrix SpawnPoint;
         private readonly Vector3 HitboxSize = new Vector3(5, 10, 5);
         private Effect Effect { get; set; }
+        private Effect BlackEffect;
+
         private Texture2D Texture { get; set; }
         public Vector3 Position => SpawnPoint.Translation;
         public void PrintHitbox() 
@@ -39,6 +41,8 @@ namespace TGC.MonoGame.InsaneGames.Entities.Obstacles
             Texture = ((BasicEffect)Model.Meshes.FirstOrDefault()?.MeshParts.FirstOrDefault()?.Effect)?.Texture;
 
             Effect = ContentManager.Instance.LoadEffect("Ilumination");
+
+            BlackEffect = ContentManager.Instance.LoadEffect("BlackShader");
 
             // Seteo constantes y colores para iluminacion tipo BlinnPhong
             Effect.Parameters["KAmbient"]?.SetValue(1f);
@@ -86,6 +90,30 @@ namespace TGC.MonoGame.InsaneGames.Entities.Obstacles
                 modelMesh.Draw();
             }
             
+        }
+
+        public void DrawBlack(GameTime gameTime)
+        {
+            var world = SpawnPoint;
+            var view = Maps.MapRepo.CurrentMap.Camera.View;
+            var projection = Maps.MapRepo.CurrentMap.Camera.Projection;
+
+            // We assign the effect to each one of the models
+            foreach (var modelMesh in Model.Meshes)
+                foreach (var meshPart in modelMesh.MeshParts)
+                    meshPart.Effect = BlackEffect;
+
+            foreach (var modelMesh in Model.Meshes)
+            {
+                // We set the main matrices for each mesh to draw
+                var worldMatrix = world;
+                // World is used to transform from model space to world space
+                BlackEffect.Parameters["World"].SetValue(worldMatrix);
+                BlackEffect.Parameters["View"].SetValue(view);
+                BlackEffect.Parameters["Projection"].SetValue(projection);
+                modelMesh.Draw();
+            }
+
         }
 
     }

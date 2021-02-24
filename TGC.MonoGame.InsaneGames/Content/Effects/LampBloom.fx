@@ -56,13 +56,13 @@ float4 BloomPS(VertexShaderOutput input) : COLOR
 {
     float4 color = tex2D(textureSampler, input.TextureCoordinates);
     
-    float distanceToTargetColor = distance(color.rgb, float3(0.933, 0.933, 0.768));
+    float distanceToTargetColor = distance(color.rgb, float3(1, 0.50, 0));
     
-    //float filter = step(distanceToTargetColor, 0.15);
+    float filter = step(distanceToTargetColor, 0.15);
     //float filter = 1;
     
-    //return float4(color.rgb * filter, 1);
-    return float4(1, 1, 1, 1);
+    return float4(color.rgb * filter, 1);
+    //return float4(1, 1, 1, 1);
 }
 
 VertexShaderOutput PostProcessVS(in VertexShaderInput input)
@@ -79,6 +79,7 @@ float4 BloomIntegratePS(in VertexShaderOutput input) : COLOR
     float4 sceneColor = tex2D(textureSampler, input.TextureCoordinates);
     
     return sceneColor * 0.5 + bloomColor;
+    //return sceneColor;
 }
 
 technique BloomPass

@@ -194,7 +194,7 @@ namespace TGC.MonoGame.InsaneGames
                     MenuUI.Draw(gameTime);
                     break;
                 case ST_LEVEL_1:
-                    Lamp.Draw(gameTime);
+                    //Lamp.Draw(gameTime);
                     Map.Draw(gameTime);
                     break;
                 case ST_DEFEAT:
