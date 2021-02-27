@@ -28,19 +28,20 @@ sampler2D bloomTextureSampler = sampler_state
     AddressU = Clamp;
     AddressV = Clamp;
 };
-    
+
 struct VertexShaderInput
 {
     float4 Position : POSITION0;
+    float4 Color : COLOR0;
     float2 TextureCoordinates : TEXCOORD0;
 };
 
 struct VertexShaderOutput
 {
     float4 Position : SV_POSITION;
-    float2 TextureCoordinates : TEXCOORD0;
+    float4 Color : COLOR0;
+    float2 TextureCoordinates : TEXCOORD1;
 };
-
 
 VertexShaderOutput MainVS(in VertexShaderInput input)
 {
@@ -48,21 +49,21 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 
     output.Position = mul(input.Position, WorldViewProjection);
     output.TextureCoordinates = input.TextureCoordinates;
+   
+    output.Color = input.Color;
 	
     return output;
 }
 
 float4 BloomPS(VertexShaderOutput input) : COLOR
-{
-    float4 color = tex2D(textureSampler, input.TextureCoordinates);
+{   
+    float3 bloomColor = float3(1, 1, 1);
     
-    float distanceToTargetColor = distance(color.rgb, float3(1, 0.50, 0));
-    
+    float distanceToTargetColor = distance(input.Color.rgb, bloomColor);
+
     float filter = step(distanceToTargetColor, 0.15);
-    //float filter = 1;
     
-    return float4(color.rgb * filter, 1);
-    //return float4(1, 1, 1, 1);
+    return float4(input.Color.rgb * filter, 1);
 }
 
 VertexShaderOutput PostProcessVS(in VertexShaderInput input)
@@ -70,6 +71,7 @@ VertexShaderOutput PostProcessVS(in VertexShaderInput input)
     VertexShaderOutput output;
     output.Position = input.Position;
     output.TextureCoordinates = input.TextureCoordinates;
+    output.Color = input.Color;
     return output;
 }
 
@@ -79,7 +81,6 @@ float4 BloomIntegratePS(in VertexShaderOutput input) : COLOR
     float4 sceneColor = tex2D(textureSampler, input.TextureCoordinates);
     
     return sceneColor * 0.5 + bloomColor;
-    //return sceneColor;
 }
 
 technique BloomPass

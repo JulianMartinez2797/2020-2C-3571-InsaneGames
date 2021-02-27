@@ -41,7 +41,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
             Player = player;
             Bullets = new List<Bullet>();
             UI = new InfoUI();
-            Lamp = new Lamp(Matrix.CreateTranslation(1250, 0, 125));
+            Lamp = new Lamp(Matrix.CreateTranslation(1250, -30, 125));
         }
 
         public override void Initialize(TGCGame game)
@@ -79,10 +79,10 @@ namespace TGC.MonoGame.InsaneGames.Maps
 
             foreach (var room in Rooms)
                 room.Draw(gameTime);
-
+            /*
             foreach (var enemy in Enemies)
                 enemy.Draw(gameTime);
-
+            */
             Lamp.Draw(gameTime);
             
             UI.Draw(gameTime, Player);
@@ -99,10 +99,10 @@ namespace TGC.MonoGame.InsaneGames.Maps
 
             foreach (var room in Rooms)
                 room.DrawBlack(gameTime);
-
+            /*
             foreach (var enemy in Enemies)
                 enemy.DrawBlack(gameTime);
-
+            */
             Lamp.DrawBloom(gameTime);
 
             UI.Draw(gameTime, Player);
@@ -192,7 +192,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
 
             UI.Load(gd);
 
-            Lamp.Load(gd);
+            Lamp.Load();
 
             Player.Load();
 

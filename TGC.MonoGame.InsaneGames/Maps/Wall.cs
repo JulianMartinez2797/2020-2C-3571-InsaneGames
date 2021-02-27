@@ -25,6 +25,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
         protected bool Reverse;
         public BasicEffect Effect { protected get; set; }
         public Effect BlackEffect { protected get; set; }
+        public Effect IluminationEffect { protected get; set; }
         protected Wall(Vector2 size, Vector3 center, Func<Vector3, Vector3> trans = null, bool reserve = false, (float, float)? textureRepeat = null)
         {
             Reverse = reserve;
@@ -62,24 +63,41 @@ namespace TGC.MonoGame.InsaneGames.Maps
         public override void Load()
         {
             BlackEffect = ContentManager.Instance.LoadEffect("BlackShader");
+            IluminationEffect = ContentManager.Instance.LoadEffect("Ilumination");
+
+            // Seteo constantes y colores para iluminacion tipo BlinnPhong
+            IluminationEffect.Parameters["KAmbient"].SetValue(1f);
+            IluminationEffect.Parameters["KDiffuse"].SetValue(0.4f);
+            IluminationEffect.Parameters["KSpecular"].SetValue(0.5f);
+            IluminationEffect.Parameters["shininess"].SetValue(16.0f);
+
+            MapRepo.CurrentMap.AddIluminationParametersToEffect(IluminationEffect);
         }
 
         public override void Draw(GameTime gameTime)
         {
-            Effect.World = Matrix.Identity;
-            Effect.View = MapRepo.CurrentMap.Camera.View;
-            Effect.Projection = MapRepo.CurrentMap.Camera.Projection;
+            var world = Matrix.Identity;
+            var view = MapRepo.CurrentMap.Camera.View;
+            var projection = MapRepo.CurrentMap.Camera.Projection;
+            var texture = Effect.Texture;
+
+            IluminationEffect.Parameters["World"].SetValue(world);
+            IluminationEffect.Parameters["View"].SetValue(view);
+            IluminationEffect.Parameters["Projection"].SetValue(projection);
+            // InverseTransposeWorld is used to rotate normals
+            IluminationEffect.Parameters["InverseTransposeWorld"]?.SetValue(Matrix.Transpose(Matrix.Invert(world)));
+            IluminationEffect.Parameters["ModelTexture"]?.SetValue(texture);
 
             Game.GraphicsDevice.SetVertexBuffer(VertexBuffer);
             Game.GraphicsDevice.Indices = IndexBuffer;
-            foreach (var pass in Effect.CurrentTechnique.Passes)
+            foreach (var pass in IluminationEffect.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                Game.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 6 / 3);
+                Game.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 2);
             }
         }
 
-        public void DrawBlack(GameTime gameTime)
+        public override void DrawBlack(GameTime gameTime)
         {
             BlackEffect.Parameters["World"].SetValue(Matrix.Identity);
             BlackEffect.Parameters["View"].SetValue(MapRepo.CurrentMap.Camera.View);
@@ -93,6 +111,15 @@ namespace TGC.MonoGame.InsaneGames.Maps
                 Game.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 6 / 3);
             }
         }
+
+        public override void Update(GameTime gameTime)
+        {
+            var cameraPosition = MapRepo.CurrentMap.Camera.Position;
+            var lightPosition = new Vector3(cameraPosition.X, 0, cameraPosition.Z);
+            Effect.Parameters["lightPosition"]?.SetValue(lightPosition);
+            Effect.Parameters["eyePosition"]?.SetValue(cameraPosition);
+        }
+
         public bool Collides(Vector3 lowerPoint, Vector3 higherPoint)
         {
             if(higherPoint.X <= BottomLeft.X || UpperRight.X <= lowerPoint.X) return false;
