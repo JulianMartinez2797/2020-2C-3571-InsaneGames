@@ -124,10 +124,8 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
             }
             TimeSinceLastHit += (float) gameTime.ElapsedGameTime.TotalSeconds;
 
-            var cameraPosition = MapRepo.CurrentMap.Camera.Position;
-            var lightPosition = new Vector3(cameraPosition.X, 0, cameraPosition.Z);
-            DeathEffect.Parameters["lightPosition"]?.SetValue(lightPosition);
-            DeathEffect.Parameters["eyePosition"]?.SetValue(cameraPosition);
+            MapRepo.CurrentMap.UpdateIluminationParametersInEffect(DeathEffect);
+
         }
 
         public override void Load(GraphicsDevice gd)

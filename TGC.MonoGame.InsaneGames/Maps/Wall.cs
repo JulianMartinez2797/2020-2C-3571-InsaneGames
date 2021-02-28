@@ -114,10 +114,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
 
         public override void Update(GameTime gameTime)
         {
-            var cameraPosition = MapRepo.CurrentMap.Camera.Position;
-            var lightPosition = new Vector3(cameraPosition.X, 0, cameraPosition.Z);
-            Effect.Parameters["lightPosition"]?.SetValue(lightPosition);
-            Effect.Parameters["eyePosition"]?.SetValue(cameraPosition);
+            MapRepo.CurrentMap.UpdateIluminationParametersInEffect(Effect);
         }
 
         public bool Collides(Vector3 lowerPoint, Vector3 higherPoint)

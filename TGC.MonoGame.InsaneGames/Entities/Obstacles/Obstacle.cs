@@ -55,10 +55,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Obstacles
         }
         public override void Update(GameTime gameTime)
         {
-            var cameraPosition = MapRepo.CurrentMap.Camera.Position;
-            var lightPosition = new Vector3(cameraPosition.X, 0, cameraPosition.Z);
-            Effect.Parameters["lightPosition"]?.SetValue(lightPosition);
-            Effect.Parameters["eyePosition"]?.SetValue(cameraPosition);
+            MapRepo.CurrentMap.UpdateIluminationParametersInEffect(Effect);
         }
         public override void Draw(GameTime gameTime)
         {

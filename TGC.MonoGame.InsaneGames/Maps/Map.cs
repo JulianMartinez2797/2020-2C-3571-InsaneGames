@@ -32,6 +32,8 @@ namespace TGC.MonoGame.InsaneGames.Maps
         private const int PassCount = 2;
 
         private Lamp Lamp { get; set; }
+        private Lamp Lamp2 { get; set; }
+
 
         public Map(Room[] rooms, Enemy[] enemies, Player player) 
         {
@@ -41,7 +43,8 @@ namespace TGC.MonoGame.InsaneGames.Maps
             Player = player;
             Bullets = new List<Bullet>();
             UI = new InfoUI();
-            Lamp = new Lamp(Matrix.CreateTranslation(1250, -30, 125));
+            Lamp = new Lamp(Matrix.CreateTranslation(1200, -30, 50));
+            Lamp2 = new Lamp(Matrix.CreateTranslation(1380, -30, 180));
         }
 
         public override void Initialize(TGCGame game)
@@ -84,7 +87,9 @@ namespace TGC.MonoGame.InsaneGames.Maps
                 enemy.Draw(gameTime);
             */
             Lamp.Draw(gameTime);
-            
+
+            Lamp2.Draw(gameTime);
+
             UI.Draw(gameTime, Player);
 
             #endregion
@@ -104,6 +109,8 @@ namespace TGC.MonoGame.InsaneGames.Maps
                 enemy.DrawBlack(gameTime);
             */
             Lamp.DrawBloom(gameTime);
+
+            Lamp2.DrawBloom(gameTime);
 
             UI.Draw(gameTime, Player);
 
@@ -194,6 +201,8 @@ namespace TGC.MonoGame.InsaneGames.Maps
 
             Lamp.Load();
 
+            Lamp2.Load();
+
             Player.Load();
 
             foreach (var room in Rooms)
@@ -243,6 +252,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
                 bullets.ForEach(b => room.CheckObstacleCollision(b));
             }
             Lamp.Update(gameTime);
+            Lamp2.Update(gameTime);
         }
         public void AddBullet(Bullet bullet)
         {
@@ -297,9 +307,24 @@ namespace TGC.MonoGame.InsaneGames.Maps
             effect.Parameters["specularColor"].SetValue(new Vector3(1f, 1f, 1f));
 
             effect.Parameters["constant"]?.SetValue(1.0f);
-            effect.Parameters["linearTerm"]?.SetValue(0.0014f);
-            effect.Parameters["quadratic"]?.SetValue(0.000007f);
+            effect.Parameters["linearTerm"]?.SetValue(0.007f);
+            effect.Parameters["quadratic"]?.SetValue(0.0002f);
 
+            return effect;
+        }
+
+        public Effect UpdateIluminationParametersInEffect(Effect effect)
+        {
+            var pointsLightsPosition = new Vector3[3];
+            var cameraPosition = MapRepo.CurrentMap.Camera.Position;
+            var lightPlayerPosition = new Vector3(cameraPosition.X, 0, cameraPosition.Z);
+            var lightLampPosition = new Vector3(1200, -20, 50);
+            var lightLampPosition2 = new Vector3(1380, -20, 180);
+            pointsLightsPosition[0] = lightPlayerPosition;
+            pointsLightsPosition[1] = lightLampPosition;
+            pointsLightsPosition[2] = lightLampPosition2;
+            effect.Parameters["lightsPositions"]?.SetValue(pointsLightsPosition);
+            effect.Parameters["eyePosition"]?.SetValue(cameraPosition);
             return effect;
         }
     }
