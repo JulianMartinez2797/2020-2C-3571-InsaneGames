@@ -50,6 +50,13 @@ namespace TGC.MonoGame.InsaneGames
         public const int ST_DEFEAT = 2;
         public const int ST_WIN = 3;
         public int status = ST_MENU;
+        private Effect Effect { get; set; }
+
+        private RenderTarget2D FirstPassBloomRenderTarget;
+
+        private FullScreenQuad FullScreenQuad;
+
+        private RenderTarget2D MainSceneRenderTarget;
 
         /// <summary>
         ///     Se llama una sola vez, al principio cuando se ejecuta el ejemplo.
@@ -73,7 +80,7 @@ namespace TGC.MonoGame.InsaneGames
             MenuUI = new MenuUI();
             DefeatUI = new DefeatUI();
             WinUI = new WinUI();
-            Lamp = new Lamp(Matrix.CreateTranslation(1250, -35, 125));
+            Lamp = new Lamp(Matrix.CreateTranslation(1250, 0, 125));
 
             base.Initialize();
         }
@@ -85,6 +92,24 @@ namespace TGC.MonoGame.InsaneGames
         /// </summary>
         protected override void LoadContent()
         {
+            // Load the base bloom pass effect
+            //Effect = ContentManager.Instance.LoadEffect("Bloom");
+
+            // Create a full screen quad to post-process
+            //FullScreenQuad = new FullScreenQuad(GraphicsDevice);
+
+            // Create render targets. 
+            // MainRenderTarget is used to store the scene color
+            // BloomRenderTarget is used to store the bloom color and switches with MultipassBloomRenderTarget
+            // depending on the pass count, to blur the bloom color
+            /*
+            MainSceneRenderTarget = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width,
+                GraphicsDevice.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0,
+                RenderTargetUsage.DiscardContents);
+            FirstPassBloomRenderTarget = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width,
+                GraphicsDevice.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0,
+                RenderTargetUsage.DiscardContents);
+            */
             Map.Load(GraphicsDevice);
             MenuUI.Load(GraphicsDevice);
             DefeatUI.Load(GraphicsDevice);
@@ -152,11 +177,16 @@ namespace TGC.MonoGame.InsaneGames
         /// </summary>
         protected override void Draw(GameTime gameTime)
         {
-            // Aca deberiamos poner toda la logia de renderizado del juego.
-            GraphicsDevice.Clear(Color.Black);
+            // Aca deberiaos poner toda la logia de renderizado del juego.
+            //GraphicsDevice.Clear(Color.Black);
 
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             GraphicsDevice.BlendState = BlendState.Opaque;
+
+            GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.Black, 1f, 0);
+
+            // Set the main render target, here we'll draw the base scene
+            //GraphicsDevice.SetRenderTarget(MainSceneRenderTarget);
 
             switch (status)
             {
@@ -164,7 +194,7 @@ namespace TGC.MonoGame.InsaneGames
                     MenuUI.Draw(gameTime);
                     break;
                 case ST_LEVEL_1:
-                    Lamp.Draw(gameTime);
+                    //Lamp.Draw(gameTime);
                     Map.Draw(gameTime);
                     break;
                 case ST_DEFEAT:
@@ -176,6 +206,11 @@ namespace TGC.MonoGame.InsaneGames
             }
 
             //Weapon.Draw(gameTime);
+
+            // Set the render target as null, we are drawing into the screen now!
+            //GraphicsDevice.SetRenderTarget(null);
+            //GraphicsDevice.Clear(Color.Black);
+
             base.Draw(gameTime);
         }
 

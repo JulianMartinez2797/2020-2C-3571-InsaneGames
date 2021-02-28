@@ -24,6 +24,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
         protected Matrix Scale;
 
         private Effect Effect { get; set; }
+        private Effect BlackEffect;
         private Texture2D Texture { get; set; }
 
 
@@ -42,7 +43,9 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
 
             Texture = ((BasicEffect)Model.Meshes.FirstOrDefault()?.MeshParts.FirstOrDefault()?.Effect)?.Texture;
 
-            Effect = ContentManager.Instance.LoadEffect("Collectible");
+            Effect = ContentManager.Instance.LoadEffect("Ilumination");
+
+            BlackEffect = ContentManager.Instance.LoadEffect("BlackShader");
 
             // Seteo constantes y colores para iluminacion tipo BlinnPhong
             Effect.Parameters["KAmbient"].SetValue(1f);
@@ -59,10 +62,8 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
             Rotation = Matrix.CreateRotationY(time * 2);
             World = Scale * initialRotation * Rotation * SpawnPoint;
 
-            var cameraPosition = MapRepo.CurrentMap.Camera.Position;
-            var lightPosition = new Vector3(cameraPosition.X, 0, cameraPosition.Z);
-            Effect.Parameters["lightPosition"]?.SetValue(lightPosition);
-            Effect.Parameters["eyePosition"]?.SetValue(cameraPosition);
+            MapRepo.CurrentMap.UpdateIluminationParametersInEffect(Effect);
+
         }
         public override void Draw(GameTime gameTime)
         {
@@ -86,13 +87,40 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
                     Effect.Parameters["View"].SetValue(view);
                     Effect.Parameters["Projection"].SetValue(projection);
                     // InverseTransposeWorld is used to rotate normals
-                    Effect.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(worldMatrix)));
-                    Effect.Parameters["ModelTexture"].SetValue(Texture);
-                    Effect.Parameters["Time"].SetValue(time);
+                    Effect.Parameters["InverseTransposeWorld"]?.SetValue(Matrix.Transpose(Matrix.Invert(worldMatrix)));
+                    Effect.Parameters["ModelTexture"]?.SetValue(Texture);
+                    Effect.Parameters["Time"]?.SetValue(time);
 
                     modelMesh.Draw();
                 }               
             }
         }
+
+        public override void DrawBlack(GameTime gameTime)
+        {
+
+            if (!Collected)
+            {
+                var view = Maps.MapRepo.CurrentMap.Camera.View;
+                var projection = Maps.MapRepo.CurrentMap.Camera.Projection;
+
+                // We assign the effect to each one of the models
+                foreach (var modelMesh in Model.Meshes)
+                    foreach (var meshPart in modelMesh.MeshParts)
+                        meshPart.Effect = BlackEffect;
+
+                foreach (var modelMesh in Model.Meshes)
+                {
+                    // We set the main matrices for each mesh to draw
+                    var worldMatrix = World;
+                    // World is used to transform from model space to world space
+                    BlackEffect.Parameters["World"].SetValue(worldMatrix);
+                    BlackEffect.Parameters["View"].SetValue(view);
+                    BlackEffect.Parameters["Projection"].SetValue(projection);
+                    modelMesh.Draw();
+                }
+            }
+        }
+
     }
 }

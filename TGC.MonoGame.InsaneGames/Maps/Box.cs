@@ -69,6 +69,9 @@ namespace TGC.MonoGame.InsaneGames.Maps
         {
             foreach (var collectible in Collectibles)
                 collectible.Load();
+            foreach (var wall in Walls.Values)
+                wall.Load();
+
             base.Load();
         }
 
@@ -80,6 +83,26 @@ namespace TGC.MonoGame.InsaneGames.Maps
                 collectible.Draw(gameTime);
             foreach (var obstacle in Obstacles)
                 obstacle.Draw(gameTime);
+        }
+
+        public override void DrawBlack(GameTime gameTime)
+        {
+            foreach (var wall in Walls.Values)
+                wall.DrawBlack(gameTime);
+            foreach (var collectible in Collectibles)
+                collectible.DrawBlack(gameTime);
+            foreach (var obstacle in Obstacles)
+                obstacle.DrawBlack(gameTime);
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            foreach (var wall in Walls.Values)
+                wall.Update(gameTime);
+            foreach (var collectible in Collectibles)
+                collectible.Update(gameTime);
+            foreach (var obstacle in Obstacles)
+                obstacle.Update(gameTime);
         }
 
         public override SpawnableSpace SpawnableSpace()

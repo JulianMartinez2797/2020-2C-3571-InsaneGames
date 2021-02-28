@@ -9,6 +9,9 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
     class TGCito : Enemy
     {
         private Effect DeathEffect { get; set; }
+
+        private Effect BlackEffect;
+
         private Texture2D Texture { get; set; }
         private Matrix CurPosition, PrevPosition;
         private Player playerReference { set; get; }
@@ -121,10 +124,8 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
             }
             TimeSinceLastHit += (float) gameTime.ElapsedGameTime.TotalSeconds;
 
-            var cameraPosition = MapRepo.CurrentMap.Camera.Position;
-            var lightPosition = new Vector3(cameraPosition.X, 0, cameraPosition.Z);
-            DeathEffect.Parameters["lightPosition"]?.SetValue(lightPosition);
-            DeathEffect.Parameters["eyePosition"]?.SetValue(cameraPosition);
+            MapRepo.CurrentMap.UpdateIluminationParametersInEffect(DeathEffect);
+
         }
 
         public override void Load(GraphicsDevice gd)
@@ -134,6 +135,8 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
 
             Texture = ((BasicEffect)Model.Meshes.FirstOrDefault()?.MeshParts.FirstOrDefault()?.Effect)?.Texture;
             DeathEffect = ContentManager.Instance.LoadEffect("DeathDissolve");
+
+            BlackEffect = ContentManager.Instance.LoadEffect("BlackShader");
 
             MapRepo.CurrentMap.AddIluminationParametersToEffect(DeathEffect);
             DeathEffect.Parameters["KAmbient"].SetValue(0.3f);
@@ -179,37 +182,38 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
                 }
                 mesh.Draw();
                 }
+        }
 
-            // var world = CurPosition;
-            // var view = MapRepo.CurrentMap.Camera.View;
-            // var projection = MapRepo.CurrentMap.Camera.Projection;
-            // //Model.Draw(world, view, projection);
-
-            
-            
-            // // We assign the effect to each one of the models
-            // foreach (var modelMesh in Model.Meshes)
-            //     foreach (var meshPart in modelMesh.MeshParts)
-            //         meshPart.Effect = Effect;
-
-            // foreach (var modelMesh in Model.Meshes)
-            // {
-            //     // We set the main matrices for each mesh to draw
-            //     var worldMatrix = world;
-            //     // World is used to transform from model space to world space
-            //     Effect.Parameters["World"].SetValue(worldMatrix);
-            //     Effect.Parameters["View"].SetValue(view);
-            //     Effect.Parameters["Projection"].SetValue(projection);
-            //     // InverseTransposeWorld is used to rotate normals
-            //     Effect.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(worldMatrix)));
-            //     Effect.Parameters["ModelTexture"]?.SetValue(Texture);
-            //     Effect.Parameters["Time"]?.SetValue(time);
-
-            //     modelMesh.Draw();
-            // }
-
-            // base.Draw(gameTime);
-
+        public override void DrawBlack(GameTime gameTime)
+        {
+            float minY = float.MaxValue;
+            float maxY = float.MinValue;
+            var world = CurPosition;
+            var view = Maps.MapRepo.CurrentMap.Camera.View;
+            var projection = Maps.MapRepo.CurrentMap.Camera.Projection;
+            var mesh = Model.Meshes.FirstOrDefault();
+            if (mesh != null)
+            {
+                foreach (var part in mesh.MeshParts)
+                {
+                    int count = part.NumVertices;
+                    VertexPositionNormalTexture[] positions = new VertexPositionNormalTexture[count];
+                    part.VertexBuffer.GetData(positions);
+                    foreach (var position in positions)
+                    {
+                        if (position.Position.Z < minY)
+                            minY = position.Position.Z;
+                        if (position.Position.Z > maxY)
+                            maxY = position.Position.Z;
+                    }
+                    part.Effect = BlackEffect;
+                    var worldMatrix = world;
+                    BlackEffect.Parameters["World"].SetValue(worldMatrix);
+                    BlackEffect.Parameters["View"].SetValue(view);
+                    BlackEffect.Parameters["Projection"].SetValue(projection);
+                }
+                mesh.Draw();
+            }
         }
         public override void CollidedWith(Player player)
         {

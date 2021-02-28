@@ -36,10 +36,8 @@ namespace TGC.MonoGame.InsaneGames.Weapons
 
             World = RotationMatrix * weaponWorld;
 
-            var cameraPosition = MapRepo.CurrentMap.Camera.Position;
-            var lightPosition = new Vector3(cameraPosition.X, 0, cameraPosition.Z);
-            Effect.Parameters["lightPosition"]?.SetValue(lightPosition);
-            Effect.Parameters["eyePosition"]?.SetValue(cameraPosition);
+            MapRepo.CurrentMap.UpdateIluminationParametersInEffect(Effect);
+
         }
         public override void Draw(GameTime gameTime)
         {
@@ -87,11 +85,6 @@ namespace TGC.MonoGame.InsaneGames.Weapons
             {
                 Shooting = false;
             }
-
-            var cameraPosition = MapRepo.CurrentMap.Camera.Position;
-            var lightPosition = new Vector3(cameraPosition.X, 0, cameraPosition.Z);
-            Effect.Parameters["lightPosition"]?.SetValue(lightPosition);
-            Effect.Parameters["eyePosition"]?.SetValue(cameraPosition);
         }
 
         public override SoundEffect SoundEffect
