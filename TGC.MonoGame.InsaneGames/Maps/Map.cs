@@ -43,8 +43,8 @@ namespace TGC.MonoGame.InsaneGames.Maps
             Player = player;
             Bullets = new List<Bullet>();
             UI = new InfoUI();
-            Lamp = new Lamp(Matrix.CreateTranslation(1200, -30, 50));
-            Lamp2 = new Lamp(Matrix.CreateTranslation(1380, -30, 180));
+            Lamp = new Lamp(Matrix.CreateTranslation(1200, 0, 50));
+            Lamp2 = new Lamp(Matrix.CreateTranslation(1380, -10, 180));
         }
 
         public override void Initialize(TGCGame game)
@@ -172,7 +172,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
         {
             GraphicsDevice = gd;
 
-            IntegrateEffect = ContentManager.Instance.LoadEffect("LampBloom");
+            IntegrateEffect = ContentManager.Instance.LoadEffect("Bloom");
 
             // Create a full screen quad to post-process
             FullScreenQuad = new FullScreenQuad(GraphicsDevice);

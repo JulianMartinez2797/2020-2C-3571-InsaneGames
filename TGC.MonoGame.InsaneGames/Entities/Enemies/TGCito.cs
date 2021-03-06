@@ -136,7 +136,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
             Texture = ((BasicEffect)Model.Meshes.FirstOrDefault()?.MeshParts.FirstOrDefault()?.Effect)?.Texture;
             DeathEffect = ContentManager.Instance.LoadEffect("DeathDissolve");
 
-            BlackEffect = ContentManager.Instance.LoadEffect("BlackShader");
+            BlackEffect = ContentManager.Instance.LoadEffect("ColorShader");
 
             MapRepo.CurrentMap.AddIluminationParametersToEffect(DeathEffect);
             DeathEffect.Parameters["KAmbient"].SetValue(0.3f);
@@ -186,6 +186,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
 
         public override void DrawBlack(GameTime gameTime)
         {
+            BlackEffect.Parameters["colorTarget"].SetValue(Color.Black.ToVector4());
             float minY = float.MaxValue;
             float maxY = float.MinValue;
             var world = CurPosition;

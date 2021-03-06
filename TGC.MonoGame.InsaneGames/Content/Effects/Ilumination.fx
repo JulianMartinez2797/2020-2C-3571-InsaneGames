@@ -13,6 +13,7 @@ float4x4 Projection;
 float4x4 InverseTransposeWorld;
 
 float Time = 0;
+float4 modelColor;
 
 float3 ambientColor; // Light's Ambient Color
 float3 diffuseColor; // Light's Diffuse Color
@@ -74,7 +75,7 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 
 	// Propagate texture coordinates
     output.TextureCoordinates = input.TextureCoordinates;
-
+    
     return output;
 }
 
@@ -113,6 +114,38 @@ float4 calculatePointLight(float3 lightPosition, float3 worldPosition, float2 te
     return finalColor;
 }
 
+float4 calculatePointLightWithOutTexture(float3 lightPosition, float3 worldPosition, float4 color, float3 normal)
+{
+    // Base vectors
+    float3 lightDirection = normalize(lightPosition - worldPosition);
+    float3 viewDirection = normalize(eyePosition - worldPosition);
+    float3 halfVector = normalize(lightDirection + viewDirection);
+    
+    float distance = length(lightPosition - worldPosition);
+    float attenuation = 1.0 / (constant + linearTerm * distance + quadratic * (distance * distance));
+    
+    // Calculate the ambient light
+    float3 ambientLight = ambientColor * KAmbient;
+    
+	// Calculate the diffuse light
+    float NdotL = saturate(dot(normal, lightDirection));
+    float3 diffuseLight = KDiffuse * diffuseColor * NdotL;
+    
+	// Calculate the specular light
+    float NdotH = dot(normal, halfVector);
+    float3 specularLight = sign(NdotL) * KSpecular * specularColor * pow(saturate(NdotH), shininess);
+    
+    // add attenuation to lights
+    ambientLight *= attenuation;
+    diffuseLight *= attenuation;
+    specularLight *= attenuation;
+    
+    // Final calculation
+    float4 finalColor = float4(saturate(ambientLight + diffuseLight) * color.rgb + specularLight, color.a);
+    
+    return finalColor;
+}
+
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
     float4 result = float4(0, 0, 0, 0);
@@ -127,11 +160,34 @@ float4 MainPS(VertexShaderOutput input) : COLOR
     return result;
 }
 
+float4 MainPSWithOutTexture(VertexShaderOutput input) : COLOR
+{
+    float4 result = float4(0, 0, 0, 0);
+    for (int i = 0; i < NUM_LIGHTS; i++)
+    {
+        result += calculatePointLightWithOutTexture(lightsPositions[i],
+                                    input.WorldPosition.xyz,
+                                    modelColor,
+                                    input.Normal.xyz);
+    }
+
+    return result;
+}
+
 technique Ilumination
 {
     pass Pass0
     {
         VertexShader = compile VS_SHADERMODEL MainVS();
         PixelShader = compile PS_SHADERMODEL MainPS();
+    }
+};
+
+technique IluminationWithoutTexture
+{
+    pass Pass0
+    {
+        VertexShader = compile VS_SHADERMODEL MainVS();
+        PixelShader = compile PS_SHADERMODEL MainPSWithOutTexture();
     }
 };

@@ -42,7 +42,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Obstacles
 
             Effect = ContentManager.Instance.LoadEffect("Ilumination");
 
-            BlackEffect = ContentManager.Instance.LoadEffect("BlackShader");
+            BlackEffect = ContentManager.Instance.LoadEffect("ColorShader");
 
             // Seteo constantes y colores para iluminacion tipo BlinnPhong
             Effect.Parameters["KAmbient"]?.SetValue(1f);
@@ -76,6 +76,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Obstacles
                 // We set the main matrices for each mesh to draw
                 var worldMatrix = world;
                 // World is used to transform from model space to world space
+                Effect.CurrentTechnique = Effect.Techniques["Ilumination"];
                 Effect.Parameters["World"].SetValue(worldMatrix);
                 Effect.Parameters["View"].SetValue(view);
                 Effect.Parameters["Projection"].SetValue(projection);
@@ -89,11 +90,13 @@ namespace TGC.MonoGame.InsaneGames.Entities.Obstacles
             
         }
 
-        public void DrawBlack(GameTime gameTime)
+        public override void DrawBlack(GameTime gameTime)
         {
             var world = SpawnPoint;
             var view = Maps.MapRepo.CurrentMap.Camera.View;
             var projection = Maps.MapRepo.CurrentMap.Camera.Projection;
+
+            BlackEffect.Parameters["colorTarget"].SetValue(Color.Black.ToVector4());
 
             // We assign the effect to each one of the models
             foreach (var modelMesh in Model.Meshes)

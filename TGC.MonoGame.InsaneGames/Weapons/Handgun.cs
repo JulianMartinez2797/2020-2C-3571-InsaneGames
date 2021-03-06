@@ -59,6 +59,7 @@ namespace TGC.MonoGame.InsaneGames.Weapons
                 // We set the main matrices for each mesh to draw
                 var worldMatrix = world;
                 // World is used to transform from model space to world space
+                Effect.CurrentTechnique = Effect.Techniques["Ilumination"];
                 Effect.Parameters["World"].SetValue(worldMatrix);
                 Effect.Parameters["View"].SetValue(view);
                 Effect.Parameters["Projection"].SetValue(projection);
