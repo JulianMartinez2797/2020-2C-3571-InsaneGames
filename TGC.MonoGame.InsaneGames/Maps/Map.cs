@@ -82,10 +82,10 @@ namespace TGC.MonoGame.InsaneGames.Maps
 
             foreach (var room in Rooms)
                 room.Draw(gameTime);
-            /*
+            
             foreach (var enemy in Enemies)
                 enemy.Draw(gameTime);
-            */
+            
             Lamp.Draw(gameTime);
 
             Lamp2.Draw(gameTime);
@@ -104,10 +104,10 @@ namespace TGC.MonoGame.InsaneGames.Maps
 
             foreach (var room in Rooms)
                 room.DrawBlack(gameTime);
-            /*
+            
             foreach (var enemy in Enemies)
                 enemy.DrawBlack(gameTime);
-            */
+            
             Lamp.DrawBloom(gameTime);
 
             Lamp2.DrawBloom(gameTime);

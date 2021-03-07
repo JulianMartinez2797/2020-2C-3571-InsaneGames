@@ -27,6 +27,10 @@ float constant;
 float linearTerm;
 float quadratic;
 
+static const int NUM_LIGHTS = 3;
+
+float3 lightsPositions[NUM_LIGHTS];
+
 struct VertexShaderInput
 {
 	float4 Position : POSITION0;
@@ -63,6 +67,42 @@ sampler2D textureSampler = sampler_state
 float Time = 0;
 float minY = 0;
 float maxY = 0;
+
+float4 calculatePointLight(float3 lightPosition, float3 worldPosition, float2 textureCoordinates, float3 normal)
+{
+    // Base vectors
+    float3 lightDirection = normalize(lightPosition - worldPosition);
+    float3 viewDirection = normalize(eyePosition - worldPosition);
+    float3 halfVector = normalize(lightDirection + viewDirection);
+    
+    float distance = length(lightPosition - worldPosition);
+    float attenuation = 1.0 / (constant + linearTerm * distance + quadratic * (distance * distance));
+    
+	// Get the texture texel
+    float4 texelColor = tex2D(textureSampler, textureCoordinates);
+    
+    // Calculate the ambient light
+    float3 ambientLight = ambientColor * KAmbient;
+    
+	// Calculate the diffuse light
+    float NdotL = saturate(dot(normal, lightDirection));
+    float3 diffuseLight = KDiffuse * diffuseColor * NdotL;
+    
+	// Calculate the specular light
+    float NdotH = dot(normal, halfVector);
+    float3 specularLight = sign(NdotL) * KSpecular * specularColor * pow(saturate(NdotH), shininess);
+    
+    // add attenuation to lights
+    ambientLight *= attenuation;
+    diffuseLight *= attenuation;
+    specularLight *= attenuation;
+    
+    // Final calculation
+    float4 finalColor = float4(saturate(ambientLight + diffuseLight) * texelColor.rgb + specularLight, texelColor.a);
+    
+    return finalColor;
+}
+
 
 VertexShaderOutput MainVS(in VertexShaderInput input)
 {
@@ -107,36 +147,14 @@ float4 MainPS(VertexShaderOutput input) : COLOR
     if (step(range,y) && Time != 0)
         discard;
    
-    // Base vectors
-    float3 lightDirection = normalize(lightPosition - input.WorldPosition.xyz);
-    float3 viewDirection = normalize(eyePosition - input.WorldPosition.xyz);
-    float3 halfVector = normalize(lightDirection + viewDirection);
-    
-    float distance = length(lightPosition - input.WorldPosition.xyz);
-    float attenuation = 1.0 / (constant + linearTerm * distance + quadratic * (distance * distance));
-    
-	// Get the texture texel
-    float4 texelColor = tex2D(textureSampler, input.TextureCoordinate);
-    
-    // Calculate the ambient light
-    float3 ambientLight = ambientColor * KAmbient;
-    
-	// Calculate the diffuse light
-    float NdotL = saturate(dot(input.Normal.xyz, lightDirection));
-    float3 diffuseLight = KDiffuse * diffuseColor * NdotL;
-    
-	// Calculate the specular light
-    float NdotH = dot(input.Normal.xyz, halfVector);
-    float3 specularLight = sign(NdotL) * KSpecular * specularColor * pow(saturate(NdotH), shininess);
-    
-    // add attenuation to lights
-    ambientLight *= attenuation;
-    diffuseLight *= attenuation;
-    specularLight *= attenuation;
-    
-    // Final calculation
-    float4 finalColor = float4(saturate(ambientLight + diffuseLight) * textureColor.rgb + specularLight, textureColor.a);
-
+    float4 finalColor = float4(0, 0, 0, 0);
+    for (int i = 0; i < NUM_LIGHTS; i++)
+    {
+        finalColor += calculatePointLight(lightsPositions[i],
+                                    input.WorldPosition.xyz,
+                                    input.TextureCoordinate,
+                                    input.Normal.xyz);
+    }
     return lerp(finalColor, float4(0.8, 0, 0, 1), cyan);
 }
 

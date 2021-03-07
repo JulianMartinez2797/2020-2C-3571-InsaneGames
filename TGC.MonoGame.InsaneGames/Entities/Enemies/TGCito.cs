@@ -16,26 +16,27 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         private Matrix CurPosition, PrevPosition;
         private Player playerReference { set; get; }
         private const string ModelName = "tgcito/tgcito-classic";
-        protected Model Model {get; set;}
+        protected Model Model { get; set; }
         private readonly Vector3 HitboxSize = new Vector3(10, 16, 10);
         private readonly float TimePerHit = 2, TimeToRespawn = 10;
         private Matrix Misalignment { get; }
         private Boolean Death = false, PosSet = false;
         private float TimeSinceLastHit = 0, TimeSinceDeath = 0, AnimationTime = 0;
 
-        override public Vector3 Position 
+        override public Vector3 Position
         {
             get { return CurPosition.Translation; }
-            set { 
-                    CurPosition = Misalignment * Matrix.CreateTranslation(value); 
-                    PosSet = true;
-                }
+            set
+            {
+                CurPosition = Misalignment * Matrix.CreateTranslation(value);
+                PosSet = true;
+            }
         }
         public TGCito(Player player, Matrix? spawnPoint = null, Matrix? scaling = null, float life = 100, float damage = 5)
         {
             playerReference = player;
             Misalignment = Matrix.CreateTranslation(0, 44.5f, 0) * scaling.GetValueOrDefault(Matrix.CreateScale(0.2f));
-            if(spawnPoint.HasValue)
+            if (spawnPoint.HasValue)
             {
                 CurPosition = Misalignment * spawnPoint.Value;
                 UpVertex = spawnPoint.Value.Translation + HitboxSize / 2;
@@ -55,13 +56,20 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
             Vector3 enemyPosition = this.CurPosition.Translation;
             return Vector3.Distance(playerPosition, enemyPosition) < detection_distance;
         }
+        public bool isPlayerEnoughNearToDraw()
+        {
+            float detection_distance = 700f;
+            Vector3 playerPosition = playerReference.NewPosition;
+            Vector3 enemyPosition = this.CurPosition.Translation;
+            return Vector3.Distance(playerPosition, enemyPosition) < detection_distance;
+        }
 
 
         // Esto se tiene que cambiar por CreateLookAt
         private float getAngleBetweenVectorsInPlaneXZ(Vector3 vecA, Vector3 vecB)
         {
-            Vector2 vecA2 = new Vector2(vecA.X,vecA.Z);
-            Vector2 vecB2 = new Vector2(vecB.X,vecB.Z);
+            Vector2 vecA2 = new Vector2(vecA.X, vecA.Z);
+            Vector2 vecB2 = new Vector2(vecB.X, vecB.Z);
 
             float dotResult = Vector2.Dot(vecA2, vecB2);
             float vecA2Length = vecA2.Length();
@@ -71,8 +79,8 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
             double angle = Math.Acos(dotResult / (vecA2Length * vecB2Length));
             if (angle == double.NaN)
                 return 0f;
-            Vector3 cross = Vector3.Cross(vecA,vecB);
-            if(cross.Y < 0)
+            Vector3 cross = Vector3.Cross(vecA, vecB);
+            if (cross.Y < 0)
                 angle *= -1;
             float angleF = Convert.ToSingle(angle);
             return angleF;
@@ -80,13 +88,13 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         private bool _mirandoPlayer = false;
         public override void Update(GameTime gameTime)
         {
-            if(Death)
+            if (Death)
             {
                 IfDeathUpdate(gameTime);
                 return;
             }
             else if (isPlayerNear())
-            {   
+            {
                 PrevPosition = CurPosition;
                 //Detectado
                 Vector3 vec_to_player = playerReference.NewPosition - CurPosition.Translation;
@@ -117,12 +125,12 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
                 }
                 UpVertex = CurPosition.Translation + HitboxSize / 2;
                 BottomVertex = CurPosition.Translation - HitboxSize / 2;
-            } 
-            else 
+            }
+            else
             {
                 _mirandoPlayer = false;
             }
-            TimeSinceLastHit += (float) gameTime.ElapsedGameTime.TotalSeconds;
+            TimeSinceLastHit += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             MapRepo.CurrentMap.UpdateIluminationParametersInEffect(DeathEffect);
 
@@ -143,18 +151,20 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
             DeathEffect.Parameters["KDiffuse"].SetValue(0.6f);
             DeathEffect.Parameters["KSpecular"].SetValue(0.1f);
             DeathEffect.Parameters["shininess"].SetValue(8.0f);
-            
+
 
         }
         float time = 0;
         public override void Draw(GameTime gameTime)
         {
-            float minY = float.MaxValue;
-            float maxY = float.MinValue;
-            var world = CurPosition; 
-            var view = Maps.MapRepo.CurrentMap.Camera.View;
-            var projection = Maps.MapRepo.CurrentMap.Camera.Projection;
-            var mesh = Model.Meshes.FirstOrDefault();
+            if (isPlayerEnoughNearToDraw())
+            {
+                float minY = float.MaxValue;
+                float maxY = float.MinValue;
+                var world = CurPosition;
+                var view = Maps.MapRepo.CurrentMap.Camera.View;
+                var projection = Maps.MapRepo.CurrentMap.Camera.Projection;
+                var mesh = Model.Meshes.FirstOrDefault();
                 if (mesh != null)
                 {
                     foreach (var part in mesh.MeshParts)
@@ -179,49 +189,53 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
                         DeathEffect.Parameters["minY"]?.SetValue(minY);
                         DeathEffect.Parameters["maxY"]?.SetValue(maxY);
                         DeathEffect.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(worldMatrix)));
+                    }
+                    mesh.Draw();
                 }
-                mesh.Draw();
-                }
+            }
         }
 
         public override void DrawBlack(GameTime gameTime)
         {
-            BlackEffect.Parameters["colorTarget"].SetValue(Color.Black.ToVector4());
-            float minY = float.MaxValue;
-            float maxY = float.MinValue;
-            var world = CurPosition;
-            var view = Maps.MapRepo.CurrentMap.Camera.View;
-            var projection = Maps.MapRepo.CurrentMap.Camera.Projection;
-            var mesh = Model.Meshes.FirstOrDefault();
-            if (mesh != null)
+            if (isPlayerEnoughNearToDraw())
             {
-                foreach (var part in mesh.MeshParts)
+                BlackEffect.Parameters["colorTarget"].SetValue(Color.Black.ToVector4());
+                float minY = float.MaxValue;
+                float maxY = float.MinValue;
+                var world = CurPosition;
+                var view = Maps.MapRepo.CurrentMap.Camera.View;
+                var projection = Maps.MapRepo.CurrentMap.Camera.Projection;
+                var mesh = Model.Meshes.FirstOrDefault();
+                if (mesh != null)
                 {
-                    int count = part.NumVertices;
-                    VertexPositionNormalTexture[] positions = new VertexPositionNormalTexture[count];
-                    part.VertexBuffer.GetData(positions);
-                    foreach (var position in positions)
+                    foreach (var part in mesh.MeshParts)
                     {
-                        if (position.Position.Z < minY)
-                            minY = position.Position.Z;
-                        if (position.Position.Z > maxY)
-                            maxY = position.Position.Z;
+                        int count = part.NumVertices;
+                        VertexPositionNormalTexture[] positions = new VertexPositionNormalTexture[count];
+                        part.VertexBuffer.GetData(positions);
+                        foreach (var position in positions)
+                        {
+                            if (position.Position.Z < minY)
+                                minY = position.Position.Z;
+                            if (position.Position.Z > maxY)
+                                maxY = position.Position.Z;
+                        }
+                        part.Effect = BlackEffect;
+                        var worldMatrix = world;
+                        BlackEffect.Parameters["World"].SetValue(worldMatrix);
+                        BlackEffect.Parameters["View"].SetValue(view);
+                        BlackEffect.Parameters["Projection"].SetValue(projection);
                     }
-                    part.Effect = BlackEffect;
-                    var worldMatrix = world;
-                    BlackEffect.Parameters["World"].SetValue(worldMatrix);
-                    BlackEffect.Parameters["View"].SetValue(view);
-                    BlackEffect.Parameters["Projection"].SetValue(projection);
+                    mesh.Draw();
                 }
-                mesh.Draw();
             }
         }
         public override void CollidedWith(Player player)
         {
-            if(Death) return;
-            
+            if (Death) return;
+
             CurPosition = PrevPosition;
-            if(TimeSinceLastHit > TimePerHit)
+            if (TimeSinceLastHit > TimePerHit)
             {
                 base.CollidedWith(player);
                 TimeSinceLastHit = 0;
@@ -236,7 +250,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         {
             CurPosition = PrevPosition;
         }
-        public override void RemoveFromLife(float amount) 
+        public override void RemoveFromLife(float amount)
         {
             base.RemoveFromLife(amount);
             Death = CurrentLife == 0;
@@ -247,7 +261,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         }
         private void IfDeathUpdate(GameTime gameTime)
         {
-            TimeSinceDeath += (float) gameTime.ElapsedGameTime.TotalSeconds;
+            TimeSinceDeath += (float)gameTime.ElapsedGameTime.TotalSeconds;
             //Rotate TGCito
             if (TimeSinceDeath < 0.85f)
             {
@@ -256,10 +270,10 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
             }
             //Start timer for Shader: DeathDissolve
             if (TimeSinceDeath > 1.3f)
-            {  
-                AnimationTime += (float) gameTime.ElapsedGameTime.TotalSeconds;    
+            {
+                AnimationTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
-            if(TimeSinceDeath > TimeToRespawn)
+            if (TimeSinceDeath > TimeToRespawn)
             {
                 MapRepo.CurrentMap.SetPositionOfEnemy(this);
                 TimeSinceDeath = 0;
