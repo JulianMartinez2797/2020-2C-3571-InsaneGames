@@ -43,7 +43,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
 
             Texture = ((BasicEffect)Model.Meshes.FirstOrDefault()?.MeshParts.FirstOrDefault()?.Effect)?.Texture;
 
-            Effect = ContentManager.Instance.LoadEffect("Ilumination");
+            Effect = ContentManager.Instance.LoadEffect("Collectible");
 
             BlackEffect = ContentManager.Instance.LoadEffect("ColorShader");
 
@@ -83,7 +83,6 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
                     // We set the main matrices for each mesh to draw
                     var worldMatrix = World;
                     // World is used to transform from model space to world space
-                    Effect.CurrentTechnique = Effect.Techniques["Ilumination"];
                     Effect.Parameters["World"].SetValue(worldMatrix);
                     Effect.Parameters["View"].SetValue(view);
                     Effect.Parameters["Projection"].SetValue(projection);
