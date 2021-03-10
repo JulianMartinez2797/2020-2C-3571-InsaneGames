@@ -48,8 +48,10 @@ namespace TGC.MonoGame.InsaneGames.Weapons
             {
                 SoundEffect.CreateInstance().Play();
                 Maps.MapRepo.CurrentMap.Player.generateExplosionEffect();
+                
                 Shooting = true;
-                Maps.MapRepo.CurrentMap.AddBullet(new Entities.Bullets.Missile(Damage, direction, playerPosition, BulletSize, ExplosionSize));
+                Matrix cameraWorld = Matrix.Invert(MapRepo.CurrentMap.Camera.View);
+                Maps.MapRepo.CurrentMap.AddBullet(new Entities.Bullets.Missile(Damage, direction, cameraWorld.Translation, BulletSize, ExplosionSize));
             }
             else if(mouseState.LeftButton == ButtonState.Released)
             {

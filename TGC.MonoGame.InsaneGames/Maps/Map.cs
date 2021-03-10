@@ -33,7 +33,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
 
         private Lamp Lamp { get; set; }
         private Lamp Lamp2 { get; set; }
-
+        private TGCGame _game;
 
         public Map(Room[] rooms, Enemy[] enemies, Player player) 
         {
@@ -49,6 +49,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
 
         public override void Initialize(TGCGame game)
         {
+            _game = game;
             base.Initialize(game);
 
             Player.Initialize(game);
@@ -82,6 +83,13 @@ namespace TGC.MonoGame.InsaneGames.Maps
 
             foreach (var room in Rooms)
                 room.Draw(gameTime);
+            foreach (var bullet in Bullets)
+                if (bullet.isInitialized())
+                    bullet.Draw(gameTime);
+                else {
+                    bullet.Initialize(_game);
+                    bullet.Load();
+                }
             /*
             foreach (var enemy in Enemies)
                 enemy.Draw(gameTime);
