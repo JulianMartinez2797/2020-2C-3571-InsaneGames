@@ -7,7 +7,7 @@ using System;
 
 namespace TGC.MonoGame.InsaneGames.Entities.Bullets
 {
-    class Missile : BasicBullet
+    class MissileExplosion : BasicBullet
     {
         protected Vector3 ExplosionSize;
         protected Model Model;
@@ -20,7 +20,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
         public override void Initialize(TGCGame game)
         {
             is_initialized = true;
-            Scale = Matrix.CreateScale(-0.05f);
+            Scale = Matrix.CreateScale(1f);
 
             float distInFrontOfCam = 0f;
             float upOrDownOffset = 5f;
@@ -28,8 +28,9 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
            
             Matrix cameraWorld = Matrix.Invert(MapRepo.CurrentMap.Camera.View);
             cameraWorld.Translation += (cameraWorld.Forward * distInFrontOfCam) + (cameraWorld.Up * upOrDownOffset) + (cameraWorld.Right * leftOrRightOffset);
-            
+            cameraWorld = Matrix.CreateTranslation(SpawnPoint);
             World = Scale * cameraWorld;
+            // World = Matrix.CreateTranslation(SpawnPoint)
             base.Initialize(game);
         }
         public override bool isInitialized()
@@ -40,24 +41,24 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
         {
             if (!Collided)
             {
-                LastPosition = CurrentPosition;
-                var time = gameTime.ElapsedGameTime.TotalSeconds;
-                Vector3 movement = Speed * (float) time;
-                CurrentPosition = movement + LastPosition;
-                World *= Matrix.CreateTranslation(movement);
+                // LastPosition = CurrentPosition;
+                // var time = gameTime.ElapsedGameTime.TotalSeconds;
+                // Vector3 movement = Speed * (float) time;
+                // CurrentPosition = movement + LastPosition;
+                // World *= Matrix.CreateTranslation(movement);
             }
         }
         public override void Load()
         {
-            Console.WriteLine("Loaded Missile model");
-            Model = ContentManager.Instance.LoadModel("armas/missile/Aim-54_Phoenix");
+            Console.WriteLine("Loaded Explosion model");
+            Model = ContentManager.Instance.LoadModel("armas/Sun/Sun");
         }
         public override void Draw(GameTime gameTime)
         {
             if (!Collided)
                 Model.Draw(World, MapRepo.CurrentMap.Camera.View, MapRepo.CurrentMap.Camera.Projection);
         }
-        public Missile(float baseDamage, Vector3 speed, Vector3 initialPos, Vector3 hitboxSize, Vector3 explosionSize) : base(baseDamage, speed, initialPos, hitboxSize)
+        public MissileExplosion(float baseDamage, Vector3 speed, Vector3 initialPos, Vector3 hitboxSize, Vector3 explosionSize) : base(baseDamage, speed, initialPos, hitboxSize)
         {
             SpawnPoint = initialPos;
             Speed = speed * 400f;
@@ -73,8 +74,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
             if(!Collided)
             {
                 Console.WriteLine("Colision de Misil");
-                MapRepo.CurrentMap.AddBullet(new MissileExplosion(20f, new Vector3(0,0,0), CurrentPosition,new Vector3(1,1,1),new Vector3(1,1,1)));
-                Collided = true;
+                // Collided = true;
             }
         }
     }
