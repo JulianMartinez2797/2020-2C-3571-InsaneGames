@@ -88,7 +88,6 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
         }
         public override void Load()
         {
-            Console.WriteLine("Loaded Explosion model");
             //Model = ContentManager.Instance.LoadModel("armas/Sun/Sun");
 
             Model = ContentManager.Instance.LoadModel("armas/sphere/sphere");
@@ -114,7 +113,6 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
         {
             if (explosion_going)
             {
-                Console.WriteLine("Colision de Misil con enemigo");
                 enemy.RemoveFromLife(2000);
                 CollidedWith();
             }
@@ -128,7 +126,6 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
         {
             if(!Collided)
             {
-                Console.WriteLine("Colision de Misil");
                 Collided = true;
             }
         }

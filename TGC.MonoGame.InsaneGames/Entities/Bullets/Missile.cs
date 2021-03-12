@@ -49,7 +49,6 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
         }
         public override void Load()
         {
-            Console.WriteLine("Loaded Missile model");
             Model = ContentManager.Instance.LoadModel("armas/missile/Aim-54_Phoenix");
         }
         public override void Draw(GameTime gameTime)
@@ -65,14 +64,12 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
         }
         public override void CollidedWith(Enemy enemy)
         {
-            Console.WriteLine("Colision de Misil (no explosion) con enemigo");
             CollidedWith();
         }
         public override void CollidedWith()
         {
             if(!Collided)
             {
-                Console.WriteLine("Colision de Misil");
                 MapRepo.CurrentMap.AddBullet(new MissileExplosion(20f, new Vector3(0,0,0), CurrentPosition,new Vector3(1,1,1),new Vector3(1,1,1)));
                 Collided = true;
             }
