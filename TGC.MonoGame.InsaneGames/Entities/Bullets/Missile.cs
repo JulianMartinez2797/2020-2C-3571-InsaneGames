@@ -65,7 +65,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
         }
         public override void CollidedWith(Enemy enemy)
         {
-            Console.WriteLine("Colision de Misil con enemigo");
+            Console.WriteLine("Colision de Misil (no explosion) con enemigo");
             CollidedWith();
         }
         public override void CollidedWith()

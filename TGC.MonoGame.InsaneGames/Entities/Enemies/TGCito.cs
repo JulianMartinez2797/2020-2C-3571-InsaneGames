@@ -18,7 +18,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
         private const string ModelName = "tgcito/tgcito-classic";
         protected Model Model { get; set; }
         private readonly Vector3 HitboxSize = new Vector3(10, 16, 10);
-        private readonly float TimePerHit = 2, TimeToRespawn = 10;
+        private readonly float TimePerHit = 2, TimeToRespawn = 4;
         private Matrix Misalignment { get; }
         private Boolean Death = false, PosSet = false;
         private float TimeSinceLastHit = 0, TimeSinceDeath = 0, AnimationTime = 0;
@@ -29,8 +29,15 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
             set
             {
                 CurPosition = Misalignment * Matrix.CreateTranslation(value);
+                hitbox_new_value = value;
+                hitboxNeedsInitialize = true;
                 PosSet = true;
             }
+        }
+        private void setHitboxDimensions(Vector3 val){
+            UpVertex = CurPosition.Translation + HitboxSize / 2;
+            BottomVertex = CurPosition.Translation - HitboxSize / 2;
+            hitboxNeedsInitialize = false;
         }
         public TGCito(Player player, Matrix? spawnPoint = null, Matrix? scaling = null, float life = 100, float damage = 5)
         {
@@ -86,8 +93,11 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
             return angleF;
         }
         private bool _mirandoPlayer = false;
+        private bool hitboxNeedsInitialize = false;
+        private Vector3 hitbox_new_value;
         public override void Update(GameTime gameTime)
         {
+            
             if (Death)
             {
                 IfDeathUpdate(gameTime);
@@ -133,7 +143,9 @@ namespace TGC.MonoGame.InsaneGames.Entities.Enemies
             TimeSinceLastHit += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             MapRepo.CurrentMap.UpdateIluminationParametersInEffect(DeathEffect);
-
+            if (hitboxNeedsInitialize){
+                setHitboxDimensions(hitbox_new_value);
+            }
         }
 
         public override void Load(GraphicsDevice gd)

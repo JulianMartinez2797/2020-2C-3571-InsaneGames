@@ -2,15 +2,16 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.InsaneGames.Maps;
 using Microsoft.Xna.Framework.Audio;
+using System;
 
 namespace TGC.MonoGame.InsaneGames.Weapons
 {
     class MachineGun : Weapon
     {
         static readonly Vector3 BulletSize = new Vector3(1, 1, 1);
-        static readonly double ShootingSpeed = 0.5;
+        static readonly double ShootingSpeed = 0.10;
         static readonly float Damage = 15;
-        protected double TimeSinceLastBullet = 0;
+        protected double TimeSinceLastBullet = 10;
         static protected Matrix RotationMatrix = Matrix.CreateScale(0.02f) *
                                                 /*Matrix.CreateTranslation(0, -0.5f, 0)* */
                                                 Matrix.CreateRotationX(MathHelper.ToRadians(-3f)) * 
@@ -36,22 +37,26 @@ namespace TGC.MonoGame.InsaneGames.Weapons
 
             World = RotationMatrix * weaponWorld;
         }
+        private bool shooting = false;
         public override void Update(GameTime gameTime, Vector3 direction, Vector3 playerPosition)
         {
             Update(gameTime);
             var mouseState = Mouse.GetState();
-            if(mouseState.LeftButton == ButtonState.Released)
-            {
-                TimeSinceLastBullet = 0;
-                return;
-            }
 
-            var elapsedTime = gameTime.ElapsedGameTime.TotalSeconds;
-            TimeSinceLastBullet += elapsedTime;
-            if(TimeSinceLastBullet >= ShootingSpeed)
+            if (mouseState.LeftButton == ButtonState.Pressed)
+                shooting = true;
+            else if (mouseState.LeftButton == ButtonState.Released)
+                shooting = false;
+
+            if (shooting)
             {
-                Maps.MapRepo.CurrentMap.AddBullet(new Entities.Bullets.BasicBullet(Damage, direction * 1000, playerPosition, BulletSize));
-                TimeSinceLastBullet = 0;
+                if (TimeSinceLastBullet > ShootingSpeed)
+                {
+                    SoundEffect.CreateInstance().Play();
+                    Maps.MapRepo.CurrentMap.AddBullet(new Entities.Bullets.BasicBullet(Damage, direction * 1000, playerPosition, BulletSize));
+                    TimeSinceLastBullet = 0;
+                }
+                TimeSinceLastBullet += gameTime.ElapsedGameTime.TotalSeconds;
             }
 
             MapRepo.CurrentMap.UpdateIluminationParametersInEffect(Effect);

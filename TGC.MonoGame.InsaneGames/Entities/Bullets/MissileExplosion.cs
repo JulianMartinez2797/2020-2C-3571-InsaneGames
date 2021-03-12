@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using TGC.MonoGame.InsaneGames.Entities.Enemies;
 using Microsoft.Xna.Framework.Graphics;
 using System.Linq;
@@ -23,7 +24,11 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
 
         public override void Initialize(TGCGame game)
         {
+            HitboxSize = new Vector3(25,25,25);
+            CurrentPosition = SpawnPoint;
+            LastPosition = CurrentPosition;
             current_scale = 10f;
+            // current_scale = 220f;
             is_initialized = true;
             Scale = Matrix.CreateScale(current_scale);
 
@@ -33,7 +38,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
            
             Matrix cameraWorld = Matrix.Invert(MapRepo.CurrentMap.Camera.View);
             cameraWorld.Translation += (cameraWorld.Forward * distInFrontOfCam) + (cameraWorld.Up * upOrDownOffset) + (cameraWorld.Right * leftOrRightOffset);
-            cameraWorld = Matrix.CreateTranslation(SpawnPoint);
+            cameraWorld = Matrix.CreateTranslation(SpawnPoint) * Matrix.CreateTranslation(0,-20,0);
             Position = cameraWorld;
             World = Scale * cameraWorld;
             base.Initialize(game);
@@ -95,7 +100,7 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
         }
         public override void Draw(GameTime gameTime)
         {
-            if ( draw_model)
+            if (draw_model)
                 Model.Draw(World, MapRepo.CurrentMap.Camera.View, MapRepo.CurrentMap.Camera.Projection);
         }
         public MissileExplosion(float baseDamage, Vector3 speed, Vector3 initialPos, Vector3 hitboxSize, Vector3 explosionSize) : base(baseDamage, speed, initialPos, hitboxSize)
@@ -103,11 +108,21 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
             SpawnPoint = initialPos;
             Speed = speed * 400f;
             ExplosionSize = explosionSize;
+            playEffects();
         }
         public override void CollidedWith(Enemy enemy)
         {
-            Console.WriteLine("Colision de Misil con enemigo");
-            CollidedWith();
+            if (explosion_going)
+            {
+                Console.WriteLine("Colision de Misil con enemigo");
+                enemy.RemoveFromLife(2000);
+                CollidedWith();
+            }
+        }
+        private void playEffects()
+        {
+            Maps.MapRepo.CurrentMap.Player.generateExplosionEffect();
+            SoundEffect.CreateInstance().Play();
         }
         public override void CollidedWith()
         {
@@ -116,6 +131,10 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
                 Console.WriteLine("Colision de Misil");
                 Collided = true;
             }
+        }
+        public SoundEffect SoundEffect
+        {
+            get { return ContentManager.Instance.LoadSoundEffect("bom"); }
         }
     }
 }
