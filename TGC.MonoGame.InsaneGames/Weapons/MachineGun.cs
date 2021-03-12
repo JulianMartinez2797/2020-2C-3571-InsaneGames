@@ -7,7 +7,6 @@ namespace TGC.MonoGame.InsaneGames.Weapons
 {
     class MachineGun : Weapon
     {
-        protected Matrix World;
         static readonly Vector3 BulletSize = new Vector3(1, 1, 1);
         static readonly double ShootingSpeed = 0.5;
         static readonly float Damage = 15;
@@ -37,10 +36,6 @@ namespace TGC.MonoGame.InsaneGames.Weapons
 
             World = RotationMatrix * weaponWorld;
         }
-        public override void Draw(GameTime gameTime)
-        {
-            Model.Draw(World, MapRepo.CurrentMap.Camera.View, MapRepo.CurrentMap.Camera.Projection);
-        }
         public override void Update(GameTime gameTime, Vector3 direction, Vector3 playerPosition)
         {
             Update(gameTime);
@@ -58,6 +53,9 @@ namespace TGC.MonoGame.InsaneGames.Weapons
                 Maps.MapRepo.CurrentMap.AddBullet(new Entities.Bullets.BasicBullet(Damage, direction * 1000, playerPosition, BulletSize));
                 TimeSinceLastBullet = 0;
             }
+
+            MapRepo.CurrentMap.UpdateIluminationParametersInEffect(Effect);
+
         }
         public override SoundEffect SoundEffect
         {

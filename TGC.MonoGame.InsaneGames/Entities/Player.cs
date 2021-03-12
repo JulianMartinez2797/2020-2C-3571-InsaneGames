@@ -265,6 +265,11 @@ namespace TGC.MonoGame.InsaneGames.Entities
             // Draw gun
             CurrentWeapon.Draw(gameTime);
         }
+        public override void DrawBlack(GameTime gameTime)
+        {
+            // Draw gun
+            CurrentWeapon.DrawBlack(gameTime);
+        }
         public void AddToLife(float amount)
         {
             Life = Math.Min(Life + amount, 100);

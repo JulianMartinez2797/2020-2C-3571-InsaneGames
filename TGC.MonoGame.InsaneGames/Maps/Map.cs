@@ -109,7 +109,14 @@ namespace TGC.MonoGame.InsaneGames.Maps
             GraphicsDevice.SetRenderTarget(FirstPassBloomRenderTarget);
             GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.Black, 1f, 0);
 
-            Player.Draw(gameTime);
+            if (Game.godMode)
+            {
+                Player.Draw(gameTime);
+            }
+            else
+            {
+                Player.DrawBlack(gameTime);
+            }
 
             foreach (var room in Rooms)
                 room.DrawBlack(gameTime);

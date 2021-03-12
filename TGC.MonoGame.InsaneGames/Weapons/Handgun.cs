@@ -7,7 +7,6 @@ namespace TGC.MonoGame.InsaneGames.Weapons
 {
     class Handgun : Weapon
     {
-        protected Matrix World;
         private bool Shooting = false;
         static readonly float Damage = 20;
         static readonly Vector3 BulletSize = new Vector3(1, 1, 1);
@@ -38,39 +37,6 @@ namespace TGC.MonoGame.InsaneGames.Weapons
 
             MapRepo.CurrentMap.UpdateIluminationParametersInEffect(Effect);
 
-        }
-        public override void Draw(GameTime gameTime)
-        {
-
-            var world = World;
-            var view = MapRepo.CurrentMap.Camera.View;
-            var projection = MapRepo.CurrentMap.Camera.Projection;
-
-            //Model.Draw(world, view, projection);
-
-            
-            // We assign the effect to each one of the models
-            foreach (var modelMesh in Model.Meshes)
-                foreach (var meshPart in modelMesh.MeshParts)
-                    meshPart.Effect = Effect;
-
-            foreach (var modelMesh in Model.Meshes)
-            {
-                // We set the main matrices for each mesh to draw
-                var worldMatrix = world;
-                // World is used to transform from model space to world space
-                Effect.CurrentTechnique = Effect.Techniques["Ilumination"];
-                Effect.Parameters["World"].SetValue(worldMatrix);
-                Effect.Parameters["View"].SetValue(view);
-                Effect.Parameters["Projection"].SetValue(projection);
-                // InverseTransposeWorld is used to rotate normals
-                Effect.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(worldMatrix)));
-                Effect.Parameters["ModelTexture"]?.SetValue(Texture);
-                //Effect.Parameters["Time"]?.SetValue(time);
-
-                modelMesh.Draw();
-            }
-            
         }
         public override void Update(GameTime gameTime, Vector3 direction, Vector3 playerPosition)
         {

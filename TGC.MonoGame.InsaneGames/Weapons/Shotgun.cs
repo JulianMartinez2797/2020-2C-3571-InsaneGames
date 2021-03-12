@@ -7,7 +7,6 @@ namespace TGC.MonoGame.InsaneGames.Weapons
 {
     class Shotgun : Weapon
     {
-        protected Matrix World;
         static protected Matrix RotationMatrix = Matrix.CreateScale(0.2f) *
                                                 /*Matrix.CreateTranslation(0, -0.5f, 0)*/
                                                 Matrix.CreateRotationX(MathHelper.ToRadians(-3f)) * 
@@ -37,10 +36,6 @@ namespace TGC.MonoGame.InsaneGames.Weapons
 
             World = RotationMatrix * weaponWorld;
         }
-        public override void Draw(GameTime gameTime)
-        {
-            Model.Draw(World, MapRepo.CurrentMap.Camera.View, MapRepo.CurrentMap.Camera.Projection);
-        }
         public override void Update(GameTime gameTime, Vector3 direction, Vector3 playerPosition)
         {
             Update(gameTime);
@@ -54,6 +49,9 @@ namespace TGC.MonoGame.InsaneGames.Weapons
             {
                 Shooting = false;
             }
+
+            MapRepo.CurrentMap.UpdateIluminationParametersInEffect(Effect);
+
         }
         public override SoundEffect SoundEffect
         {

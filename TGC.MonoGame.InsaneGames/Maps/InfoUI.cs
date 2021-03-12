@@ -42,6 +42,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
             if(Game.godMode)
                 SpriteBatch.DrawString(Font, "GOD_MODE", new Vector2(GraphicsDevice.Viewport.Width - 200, 10), Color.Green);
             SpriteBatch.End();
+            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
         }
     }
