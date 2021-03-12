@@ -11,6 +11,8 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
         protected float BaseDamage;
         protected Vector3 Position;
         protected Vector3 FrontRadius;
+        private double TimeSinceShooted = 0;
+        private bool destroy_bullet = false;
         protected float Radius;
         protected bool HalfExplosion;
         public override void Draw(GameTime gameTime)
@@ -34,6 +36,9 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+            TimeSinceShooted += gameTime.ElapsedGameTime.TotalSeconds;
+            if (TimeSinceShooted > 0.5)
+                destroy_bullet = true;
             remove = true;
         }
         public override bool CollidesWith(Vector3 bVertex, Vector3 uVertex)
@@ -60,6 +65,8 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
         }
         public override void CollidedWith(Enemy enemy)
         {
+            if (destroy_bullet)
+                return;
             var mult = (1 - (enemy.Position - Position).Length() / Radius);
             enemy.RemoveFromLife(BaseDamage * mult);
         }

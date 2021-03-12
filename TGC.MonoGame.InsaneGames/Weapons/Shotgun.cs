@@ -12,6 +12,8 @@ namespace TGC.MonoGame.InsaneGames.Weapons
                                                 Matrix.CreateRotationX(MathHelper.ToRadians(-3f)) * 
                                                 Matrix.CreateRotationY(MathHelper.ToRadians(0f));
         static readonly protected float Damage = 100;
+        private double reload_time = 1.4;
+        private double TimeSinceShot = 10;
         static readonly protected Vector3 BulletSize = new Vector3(20, 10, 20); 
         protected bool Shooting = false;
 
@@ -40,8 +42,9 @@ namespace TGC.MonoGame.InsaneGames.Weapons
         {
             Update(gameTime);
             var mouseState = Mouse.GetState();
-            if(!Shooting && mouseState.LeftButton == ButtonState.Pressed)
+            if(!Shooting && mouseState.LeftButton == ButtonState.Pressed && TimeSinceShot > reload_time)
             {
+                TimeSinceShot = 0;
                 Shooting = true;
                 SoundEffect.CreateInstance().Play();
                 Maps.MapRepo.CurrentMap.AddBullet(new Entities.Bullets.FragmentBullet(Damage, direction, playerPosition, BulletSize));
@@ -50,13 +53,13 @@ namespace TGC.MonoGame.InsaneGames.Weapons
             {
                 Shooting = false;
             }
-
+            TimeSinceShot += gameTime.ElapsedGameTime.TotalSeconds;
             MapRepo.CurrentMap.UpdateIluminationParametersInEffect(Effect);
 
         }
         public override SoundEffect SoundEffect
         {
-            get { return ContentManager.Instance.LoadSoundEffect("handgun-shot"); }
+            get { return ContentManager.Instance.LoadSoundEffect("Shotgun-Sound-Effect"); }
         }
     }
 }
