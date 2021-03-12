@@ -43,9 +43,9 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
 
             Texture = ((BasicEffect)Model.Meshes.FirstOrDefault()?.MeshParts.FirstOrDefault()?.Effect)?.Texture;
 
-            Effect = ContentManager.Instance.LoadEffect("Ilumination");
+            Effect = ContentManager.Instance.LoadEffect("Collectible");
 
-            BlackEffect = ContentManager.Instance.LoadEffect("BlackShader");
+            BlackEffect = ContentManager.Instance.LoadEffect("ColorShader");
 
             // Seteo constantes y colores para iluminacion tipo BlinnPhong
             Effect.Parameters["KAmbient"].SetValue(1f);
@@ -103,6 +103,8 @@ namespace TGC.MonoGame.InsaneGames.Entities.Collectibles
             {
                 var view = Maps.MapRepo.CurrentMap.Camera.View;
                 var projection = Maps.MapRepo.CurrentMap.Camera.Projection;
+
+                BlackEffect.Parameters["colorTarget"].SetValue(Color.Black.ToVector4());
 
                 // We assign the effect to each one of the models
                 foreach (var modelMesh in Model.Meshes)

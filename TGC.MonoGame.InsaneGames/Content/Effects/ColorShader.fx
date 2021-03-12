@@ -11,6 +11,8 @@ float4x4 World;
 float4x4 View;
 float4x4 Projection;
 
+float4 colorTarget;
+
 struct VertexShaderInput
 {
 	float4 Position : POSITION0;
@@ -58,7 +60,7 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
-    return input.Color;
+    return colorTarget;
 }
 
 technique BasicColorDrawing

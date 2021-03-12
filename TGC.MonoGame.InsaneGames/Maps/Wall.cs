@@ -62,7 +62,8 @@ namespace TGC.MonoGame.InsaneGames.Maps
 
         public override void Load()
         {
-            BlackEffect = ContentManager.Instance.LoadEffect("BlackShader");
+            BlackEffect = ContentManager.Instance.LoadEffect("ColorShader");
+
             IluminationEffect = ContentManager.Instance.LoadEffect("Ilumination");
 
             // Seteo constantes y colores para iluminacion tipo BlinnPhong
@@ -81,6 +82,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
             var projection = MapRepo.CurrentMap.Camera.Projection;
             var texture = Effect.Texture;
 
+            IluminationEffect.CurrentTechnique = IluminationEffect.Techniques["Ilumination"];
             IluminationEffect.Parameters["World"].SetValue(world);
             IluminationEffect.Parameters["View"].SetValue(view);
             IluminationEffect.Parameters["Projection"].SetValue(projection);
@@ -99,6 +101,7 @@ namespace TGC.MonoGame.InsaneGames.Maps
 
         public override void DrawBlack(GameTime gameTime)
         {
+            BlackEffect.Parameters["colorTarget"].SetValue(Color.Black.ToVector4());
             BlackEffect.Parameters["World"].SetValue(Matrix.Identity);
             BlackEffect.Parameters["View"].SetValue(MapRepo.CurrentMap.Camera.View);
             BlackEffect.Parameters["Projection"].SetValue(MapRepo.CurrentMap.Camera.Projection);

@@ -37,23 +37,29 @@
 /processorParam:Quality=Best
 /build:Audio/Level-complete-sound-effect.mp3
 
-#begin Effects/BasicShader.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Effects/BasicShader.fx
-
 #begin Effects/BlackShader.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Effects/BlackShader.fx
 
+#begin Effects/Bloom.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/Bloom.fx
+
 #begin Effects/Collectible.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Effects/Collectible.fx
+
+#begin Effects/ColorShader.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/ColorShader.fx
 
 #begin Effects/DeathDissolve.fx
 /importer:EffectImporter
@@ -78,12 +84,6 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Effects/Ilumination.fx
-
-#begin Effects/LampBloom.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Effects/LampBloom.fx
 
 #begin Fonts/Basic.spritefont
 /importer:FontDescriptionImporter
