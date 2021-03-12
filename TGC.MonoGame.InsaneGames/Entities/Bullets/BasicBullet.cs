@@ -16,6 +16,10 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
         { 
             get { return LastPosition - HitboxSize / 2; }
         }
+        override public bool isInitialized()
+        {
+            return true;
+        }
         override public Vector3 UpVertex 
         { 
             get { return CurrentPosition + HitboxSize / 2; }
@@ -33,6 +37,11 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
             LastPosition = CurrentPosition;
             HitboxSize = hitboxSize;
         }
+        public override void Draw(GameTime gameTime)
+        {}
+        public override void Load()
+        {}
+
 
         public override void Update(GameTime gameTime)
         {

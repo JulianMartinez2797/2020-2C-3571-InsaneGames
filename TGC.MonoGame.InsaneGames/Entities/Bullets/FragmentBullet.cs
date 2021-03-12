@@ -13,6 +13,14 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
         protected Vector3 FrontRadius;
         protected float Radius;
         protected bool HalfExplosion;
+        public override void Draw(GameTime gameTime)
+        {}
+        public override void Load()
+        {}
+        public override bool isInitialized()
+        {
+            return true;
+        }
         public FragmentBullet(float baseDamage, Vector3 direction, Vector3 position, Vector3 hitboxSize, bool halfExplosion = true)
         {
             BaseDamage = baseDamage;
