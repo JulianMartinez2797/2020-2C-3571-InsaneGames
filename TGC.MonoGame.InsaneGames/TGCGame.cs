@@ -123,10 +123,12 @@ namespace TGC.MonoGame.InsaneGames
         ///     Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones
         ///     ante ellas.
         /// </summary>
+        private KeyboardState m_prev_state;
+        private KeyboardState m_cur_state;
         protected override void Update(GameTime gameTime)
         {
             // Aca deberiamos poner toda la logica de actualizacion del juego.
-
+            m_cur_state = Keyboard.GetState();
             // Capturar Input teclado
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 //Salgo del juego.
@@ -151,7 +153,7 @@ namespace TGC.MonoGame.InsaneGames
 
                 case ST_LEVEL_1:
                     Map.Update(gameTime);
-                    if (Keyboard.GetState().IsKeyDown(Keys.G))
+                    if (m_prev_state.IsKeyUp(Keys.G) && m_cur_state.IsKeyDown(Keys.G))
                         godMode = !godMode;
                     if (Map.playerIsDead())
                     {
@@ -167,7 +169,7 @@ namespace TGC.MonoGame.InsaneGames
                     }
                     break;
             }
-
+            m_prev_state = m_cur_state;
             base.Update(gameTime);
         }
 
