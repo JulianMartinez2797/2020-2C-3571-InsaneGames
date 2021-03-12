@@ -48,6 +48,7 @@ namespace TGC.MonoGame.InsaneGames.Weapons
             if(!Shooting && mouseState.LeftButton == ButtonState.Pressed)
             {
                 Shooting = true;
+                SoundEffect.CreateInstance().Play();
                 Maps.MapRepo.CurrentMap.AddBullet(new Entities.Bullets.FragmentBullet(Damage, direction, playerPosition, BulletSize));
             }
             else if(mouseState.LeftButton == ButtonState.Released)
