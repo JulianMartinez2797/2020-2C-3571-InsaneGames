@@ -19,9 +19,11 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
 
         protected bool is_initialized = false;
 
+        private Texture2D Texture;
+
         public override void Initialize(TGCGame game)
         {
-            current_scale = 0.1f;
+            current_scale = 10f;
             is_initialized = true;
             Scale = Matrix.CreateScale(current_scale);
 
@@ -48,13 +50,13 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
             if (draw_model)
             {
                 if (explosion_going)
-                    current_scale *= 1.275f;
+                    current_scale *= 1.25f;
                 else
-                    current_scale -= 0.1f;
+                    current_scale -= 8f;
                 
-                if (current_scale > 3.5f)
+                if (current_scale > 220f)
                     explosion_going = false;
-                if (!explosion_going && current_scale <= 0.1f)
+                if (!explosion_going && current_scale <= 10f)
                     draw_model = false;
                 World = Matrix.CreateScale(current_scale) * Position;
             }
@@ -82,7 +84,14 @@ namespace TGC.MonoGame.InsaneGames.Entities.Bullets
         public override void Load()
         {
             Console.WriteLine("Loaded Explosion model");
-            Model = ContentManager.Instance.LoadModel("armas/Sun/Sun");
+            //Model = ContentManager.Instance.LoadModel("armas/Sun/Sun");
+
+            Model = ContentManager.Instance.LoadModel("armas/sphere/sphere");
+
+            Texture = ContentManager.Instance.LoadTexture2D("explosion/lava");
+
+            ((BasicEffect)Model.Meshes[0].Effects[0]).Texture = Texture;
+            ((BasicEffect)Model.Meshes[0].Effects[0]).TextureEnabled = true;
         }
         public override void Draw(GameTime gameTime)
         {

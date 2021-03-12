@@ -13,7 +13,7 @@ namespace TGC.MonoGame.InsaneGames.Weapons
                                                 Matrix.CreateRotationX(MathHelper.ToRadians(-3f)) * 
                                                 Matrix.CreateRotationY(MathHelper.ToRadians(-90f));
         static readonly protected float Damage = 100;
-        static readonly protected Vector3 BulletSize = new Vector3(20, 20, 20); 
+        static readonly protected Vector3 BulletSize = new Vector3(30, 30, 30); 
         static readonly protected Vector3 ExplosionSize = new Vector3(30, 30, 30);
         protected bool Shooting = false;
         public Rpg7 () : base("armas/rpg7/Rpg7") {}
