@@ -20,6 +20,23 @@ namespace TGC.MonoGame.InsaneGames.Weapons
             World = Matrix.CreateScale(0.1f);
             base.Initialize(game);
         } 
+        private float anim_time = 10f;
+        private bool playing_animation = false;
+        private void shooting_animation(GameTime time){
+            float rot_speed = 1.5f;
+            if(anim_time < 0.05f)
+            {
+                RotationMatrix*= Matrix.CreateRotationX(rot_speed * (float)time.ElapsedGameTime.TotalSeconds);
+            }
+            else if (anim_time < 0.1f) {
+                RotationMatrix*= Matrix.CreateRotationX(-rot_speed * (float)time.ElapsedGameTime.TotalSeconds);
+            }
+            anim_time += (float)time.ElapsedGameTime.TotalSeconds;
+            if(anim_time >= 0.1f)
+            {
+
+            }
+        } 
         public override void Update(GameTime gameTime)
         {
             Matrix cameraWorld = Matrix.Invert(MapRepo.CurrentMap.Camera.View);
@@ -44,6 +61,8 @@ namespace TGC.MonoGame.InsaneGames.Weapons
             var mouseState = Mouse.GetState();
             if(!Shooting && mouseState.LeftButton == ButtonState.Pressed)
             {
+                playing_animation = true;
+                anim_time = 0f;
                 SoundEffect.CreateInstance().Play();
                 Shooting = true;
                 MapRepo.CurrentMap.AddBullet(new Entities.Bullets.BasicBullet(Damage, direction * 1000, playerPosition, BulletSize));
@@ -51,7 +70,9 @@ namespace TGC.MonoGame.InsaneGames.Weapons
             else if(mouseState.LeftButton == ButtonState.Released)
             {
                 Shooting = false;
+                // playing_animation = false;
             }
+            shooting_animation(gameTime);
         }
 
         public override SoundEffect SoundEffect

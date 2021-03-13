@@ -12,6 +12,7 @@ namespace TGC.MonoGame.InsaneGames.Weapons
         static readonly double ShootingSpeed = 0.10;
         static readonly float Damage = 15;
         protected double TimeSinceLastBullet = 10;
+        private Matrix default_rotation;
         static protected Matrix RotationMatrix = Matrix.CreateScale(0.02f) *
                                                 /*Matrix.CreateTranslation(0, -0.5f, 0)* */
                                                 Matrix.CreateRotationX(MathHelper.ToRadians(-3f)) * 
@@ -19,8 +20,31 @@ namespace TGC.MonoGame.InsaneGames.Weapons
 
         public MachineGun () : base("armas/rifle/mp5k") {}
         public override void Initialize(TGCGame game) {
+            default_rotation = RotationMatrix;
             World = Matrix.CreateScale(0.1f);
             base.Initialize(game);
+        }
+        private float anim_time = 0f;
+        private void shooting_animation(GameTime time){
+            if (!shooting)
+            {
+                RotationMatrix = default_rotation;
+                return;
+            }
+            float rot_speed = 1.5f;
+            if(anim_time < 0.05f)
+            {
+                RotationMatrix*= Matrix.CreateRotationX(rot_speed * (float)time.ElapsedGameTime.TotalSeconds);
+            }
+            else if (anim_time < 0.1f) {
+                RotationMatrix*= Matrix.CreateRotationX(-rot_speed * (float)time.ElapsedGameTime.TotalSeconds);
+            }
+            anim_time += (float)time.ElapsedGameTime.TotalSeconds;
+            if(anim_time >= 0.1f)
+            {
+                anim_time = 0f;
+                // Shooting = false;
+            }
         } 
         public override void Update(GameTime gameTime)
         {
@@ -58,7 +82,7 @@ namespace TGC.MonoGame.InsaneGames.Weapons
                 }
                 TimeSinceLastBullet += gameTime.ElapsedGameTime.TotalSeconds;
             }
-
+            shooting_animation(gameTime);
             MapRepo.CurrentMap.UpdateIluminationParametersInEffect(Effect);
 
         }

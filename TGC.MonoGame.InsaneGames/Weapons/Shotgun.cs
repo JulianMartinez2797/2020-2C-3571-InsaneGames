@@ -22,6 +22,25 @@ namespace TGC.MonoGame.InsaneGames.Weapons
             World = Matrix.CreateScale(0.1f);
             base.Initialize(game);
         } 
+        float anim_time = 0f;
+        private void shooting_animation(GameTime time, bool playing){
+            if (!playing)
+                return;
+            float rot_speed = 1.5f;
+            if(anim_time < 0.15f)
+            {
+                RotationMatrix*= Matrix.CreateRotationX(rot_speed * (float)time.ElapsedGameTime.TotalSeconds);//* Matrix.CreateTranslation(0,0.06f,-0.25f);
+            }
+            else if (anim_time < 0.3f) {
+                RotationMatrix*= Matrix.CreateRotationX(-rot_speed * (float)time.ElapsedGameTime.TotalSeconds);
+            }
+            anim_time += (float)time.ElapsedGameTime.TotalSeconds;
+            if(anim_time >= 0.3f)
+            {
+                anim_time = 0f;
+                Shooting = false;
+            }
+        }
         public override void Update(GameTime gameTime)
         {
             
@@ -42,17 +61,18 @@ namespace TGC.MonoGame.InsaneGames.Weapons
         {
             Update(gameTime);
             var mouseState = Mouse.GetState();
-            if(!Shooting && mouseState.LeftButton == ButtonState.Pressed && TimeSinceShot > reload_time)
+            if(mouseState.LeftButton == ButtonState.Pressed && TimeSinceShot > reload_time)
             {
                 TimeSinceShot = 0;
                 Shooting = true;
                 SoundEffect.CreateInstance().Play();
                 Maps.MapRepo.CurrentMap.AddBullet(new Entities.Bullets.FragmentBullet(Damage, direction, playerPosition, BulletSize));
             }
-            else if(mouseState.LeftButton == ButtonState.Released)
+            if(TimeSinceShot > reload_time)
             {
                 Shooting = false;
             }
+            shooting_animation(gameTime, Shooting);
             TimeSinceShot += gameTime.ElapsedGameTime.TotalSeconds;
             MapRepo.CurrentMap.UpdateIluminationParametersInEffect(Effect);
 
