@@ -79,7 +79,7 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
     return output;
 }
 
-float4 calculatePointLight(float3 lightPosition, float3 worldPosition, float2 textureCoordinates, float3 normal)
+float4 calculatePointLight(float3 lightPosition, float3 worldPosition, float2 textureCoordinates, float3 normal, int i)
 {
     // Base vectors
     float3 lightDirection = normalize(lightPosition - worldPosition);
@@ -87,7 +87,13 @@ float4 calculatePointLight(float3 lightPosition, float3 worldPosition, float2 te
     float3 halfVector = normalize(lightDirection + viewDirection);
     
     float distance = length(lightPosition - worldPosition);
+    
     float attenuation = 1.0 / (constant + linearTerm * distance + quadratic * (distance * distance));
+    // Si es la luz del player le aumento la atenuacion
+    if (i == 0)
+    {
+        attenuation *= 2;
+    }
     
 	// Get the texture texel
     float4 texelColor = tex2D(textureSampler, textureCoordinates);
@@ -114,7 +120,7 @@ float4 calculatePointLight(float3 lightPosition, float3 worldPosition, float2 te
     return finalColor;
 }
 
-float4 calculatePointLightWithOutTexture(float3 lightPosition, float3 worldPosition, float4 color, float3 normal)
+float4 calculatePointLightWithOutTexture(float3 lightPosition, float3 worldPosition, float4 color, float3 normal, int i)
 {
     // Base vectors
     float3 lightDirection = normalize(lightPosition - worldPosition);
@@ -122,7 +128,14 @@ float4 calculatePointLightWithOutTexture(float3 lightPosition, float3 worldPosit
     float3 halfVector = normalize(lightDirection + viewDirection);
     
     float distance = length(lightPosition - worldPosition);
-    float attenuation = 1.0 / (constant + linearTerm * distance + quadratic * (distance * distance));
+    
+    int attenuation = 1.0 / (constant + linearTerm * distance + quadratic * (distance * distance));
+    // Si es la luz del player le aumento la atenuacion
+    if (i == 0)
+    {
+        attenuation *= 2;
+    }
+
     
     // Calculate the ambient light
     float3 ambientLight = ambientColor * KAmbient;
@@ -154,7 +167,8 @@ float4 MainPS(VertexShaderOutput input) : COLOR
         result += calculatePointLight(lightsPositions[i],
                                     input.WorldPosition.xyz,
                                     input.TextureCoordinates,
-                                    input.Normal.xyz);
+                                    input.Normal.xyz,
+                                    i);
     }
 
     return result;
@@ -168,7 +182,8 @@ float4 MainPSWithOutTexture(VertexShaderOutput input) : COLOR
         result += calculatePointLightWithOutTexture(lightsPositions[i],
                                     input.WorldPosition.xyz,
                                     modelColor,
-                                    input.Normal.xyz);
+                                    input.Normal.xyz,
+                                    i);
     }
 
     return result;
