@@ -68,7 +68,7 @@ float Time = 0;
 float minY = 0;
 float maxY = 0;
 
-float4 calculatePointLight(float3 lightPosition, float3 worldPosition, float2 textureCoordinates, float3 normal)
+float4 calculatePointLight(float3 lightPosition, float3 worldPosition, float2 textureCoordinates, float3 normal, int i)
 {
     // Base vectors
     float3 lightDirection = normalize(lightPosition - worldPosition);
@@ -76,7 +76,13 @@ float4 calculatePointLight(float3 lightPosition, float3 worldPosition, float2 te
     float3 halfVector = normalize(lightDirection + viewDirection);
     
     float distance = length(lightPosition - worldPosition);
+    
     float attenuation = 1.0 / (constant + linearTerm * distance + quadratic * (distance * distance));
+    // Si es la luz del player le aumento la atenuacion
+    if (i == 0)
+    {
+        attenuation *= 2;
+    }
     
 	// Get the texture texel
     float4 texelColor = tex2D(textureSampler, textureCoordinates);
@@ -153,7 +159,8 @@ float4 MainPS(VertexShaderOutput input) : COLOR
         finalColor += calculatePointLight(lightsPositions[i],
                                     input.WorldPosition.xyz,
                                     input.TextureCoordinate,
-                                    input.Normal.xyz);
+                                    input.Normal.xyz,
+                                    i);
     }
     return lerp(finalColor, float4(0.8, 0, 0, 1), cyan);
 }
