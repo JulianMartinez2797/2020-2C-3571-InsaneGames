@@ -21,7 +21,6 @@ namespace TGC.MonoGame.InsaneGames.Weapons
             base.Initialize(game);
         } 
         private float anim_time = 10f;
-        private bool playing_animation = false;
         private void shooting_animation(GameTime time){
             float rot_speed = 1.5f;
             if(anim_time < 0.05f)
@@ -32,10 +31,6 @@ namespace TGC.MonoGame.InsaneGames.Weapons
                 RotationMatrix*= Matrix.CreateRotationX(-rot_speed * (float)time.ElapsedGameTime.TotalSeconds);
             }
             anim_time += (float)time.ElapsedGameTime.TotalSeconds;
-            if(anim_time >= 0.1f)
-            {
-
-            }
         } 
         public override void Update(GameTime gameTime)
         {
@@ -61,7 +56,6 @@ namespace TGC.MonoGame.InsaneGames.Weapons
             var mouseState = Mouse.GetState();
             if(!Shooting && mouseState.LeftButton == ButtonState.Pressed)
             {
-                playing_animation = true;
                 anim_time = 0f;
                 SoundEffect.CreateInstance().Play();
                 Shooting = true;
@@ -70,7 +64,6 @@ namespace TGC.MonoGame.InsaneGames.Weapons
             else if(mouseState.LeftButton == ButtonState.Released)
             {
                 Shooting = false;
-                // playing_animation = false;
             }
             shooting_animation(gameTime);
         }
